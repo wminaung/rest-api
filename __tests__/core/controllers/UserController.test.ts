@@ -1,7 +1,7 @@
-import { UserController } from "../../core/controllers/UserController";
+import { UserController } from "../../../src/core/controllers/UserController";
 import { Request, Response } from "express";
-import { IUserRepo } from "../../core/repositories/IUserRepo";
-import { UserService } from "../../core/services/UserService";
+import { IUserRepo } from "../../../src/core/repositories/IUserRepo";
+import { UserService } from "../../../src/core/services/UserService";
 const users = [
   {
     id: "1",
