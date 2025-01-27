@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# TypeScript build output
+/dist/
+/build/
+
+# Log files
+*.log
+*.log.*
+
+# OS-specific files (macOS, Windows, Linux)
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env*
+!.env.example
+
+
+# TypeScript cache (if you're using ts-loader or tsc)
+*.tsbuildinfo
+
+# IDE/editor specific files
+!.vscode/
+.idea/
+
+# Miscellaneous
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional: exclude test coverage or other temporary files
+coverage/
+*.tgz
+
+# Ignore generated files from build tools like Webpack, Babel, etc.
+*.map
+
