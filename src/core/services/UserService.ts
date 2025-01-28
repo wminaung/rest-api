@@ -12,16 +12,14 @@ export class UserService {
   constructor(private userRepo: IUserRepo) {}
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
-    try {
-      createUserSchema.parse(data);
-    } catch (err) {
-      if (err instanceof ZodError) {
-        throw err;
+    const { success, data: safeData, error } = createUserSchema.safeParse(data);
+    if (error || !success) {
+      if (error instanceof ZodError) {
+        throw error;
       }
-      throw err;
+      throw new Error("Invalid data to update user");
     }
-    // If validation passes, call the repository to create the user
-    return this.userRepo.createUser(data);
+    return this.userRepo.createUser(safeData);
   }
 
   async getAllUsers(): Promise<UserDTO[]> {
@@ -36,12 +34,16 @@ export class UserService {
     if (!userFromDb) {
       throw new Error("User not found to update");
     }
-    try {
-      updateUserSchema.parse(data);
-    } catch (error) {
-      throw error;
+    const { success, data: safeData, error } = updateUserSchema.safeParse(data);
+
+    if (error || !success) {
+      if (error instanceof ZodError) {
+        throw error;
+      }
+      throw new Error("Invalid data to update user");
     }
-    return await this.userRepo.updateUser(id, data);
+
+    return await this.userRepo.updateUser(id, safeData);
   }
 
   async deleteUser(id: string): Promise<UserDTO> {
