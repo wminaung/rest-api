@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { UserService } from "../../../src/core/services/UserService";
-import { UserRepo } from "../../../src/core/repositories/UserRepo";
+import { UserRepo } from "../../../src/core/repositories/implementations/UserRepo";
 
 describe("UserService", () => {
   let prisma: PrismaClient;

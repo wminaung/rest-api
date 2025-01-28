@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { UserRepo } from "./repositories/UserRepo";
 import { UserService } from "./services/UserService";
 import { UserController } from "./controllers/UserController";
+import { UserRepo } from "./repositories/implementations/UserRepo";
 
 export const createUserController = () => {
   const prisma = new PrismaClient();

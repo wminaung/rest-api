@@ -1,17 +1,17 @@
 import { ZodError } from "zod";
 import { UserDTO } from "../dtos/UserDTO";
-import { IUserRepo } from "../repositories/IUserRepo";
 import {
-  CreateUserData,
-  createUserDataSchema,
-} from "../schemas/CreateUserDataSchema";
+  CreateUserSchema,
+  createUserSchema,
+} from "../schemas/CreateUserSchema";
+import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 
 export class UserService {
   constructor(private userRepo: IUserRepo) {}
 
-  async createUser(data: CreateUserData): Promise<UserDTO> {
+  async createUser(data: CreateUserSchema): Promise<UserDTO> {
     try {
-      createUserDataSchema.parse(data);
+      createUserSchema.parse(data);
     } catch (err) {
       if (err instanceof ZodError) {
         throw err;

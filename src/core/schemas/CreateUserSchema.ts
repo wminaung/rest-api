@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createUserDataSchema = z.object({
+export const createUserSchema = z.object({
   name: z
     .string()
     .min(3, "Name must be at least 3 characters long")
@@ -15,4 +15,4 @@ export const createUserDataSchema = z.object({
     .nullable(),
 });
 
-export type CreateUserData = z.infer<typeof createUserDataSchema>;
+export type CreateUserSchema = z.infer<typeof createUserSchema>;

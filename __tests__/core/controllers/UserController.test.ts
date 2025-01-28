@@ -1,6 +1,6 @@
 import { UserController } from "../../../src/core/controllers/UserController";
 import { Request, Response } from "express";
-import { IUserRepo } from "../../../src/core/repositories/IUserRepo";
+import { IUserRepo } from "../../../src/core/repositories/interfaces/IUserRepo";
 import { UserService } from "../../../src/core/services/UserService";
 const users = [
   {

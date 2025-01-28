@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { handleError } from "../utils/errorHandler";
-import { CreateUserData } from "../schemas/CreateUserDataSchema";
+import { CreateUserSchema } from "../schemas/CreateUserSchema";
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -17,7 +17,7 @@ export class UserController {
   }
 
   async createUser(
-    req: Request<{}, {}, CreateUserData>,
+    req: Request<{}, {}, CreateUserSchema>,
     res: Response
   ): Promise<void> {
     try {

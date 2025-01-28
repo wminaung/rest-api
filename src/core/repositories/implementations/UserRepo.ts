@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { UserDTO } from "../dtos/UserDTO";
-import { CreateUserData } from "../schemas/CreateUserDataSchema";
-import { IUserRepo } from "./IUserRepo";
+import { IUserRepo } from "../interfaces/IUserRepo";
+import { UserDTO } from "../../dtos/UserDTO";
+import { CreateUserSchema } from "../../schemas/CreateUserSchema";
 
 export class UserRepo implements IUserRepo {
   constructor(private prisma: PrismaClient) {}
@@ -15,7 +15,7 @@ export class UserRepo implements IUserRepo {
     return userDTOs;
   }
 
-  async createUser(data: CreateUserData): Promise<UserDTO> {
+  async createUser(data: CreateUserSchema): Promise<UserDTO> {
     const user = await this.prisma.user.create({ data });
 
     const { password, ...userDTO } = user;
