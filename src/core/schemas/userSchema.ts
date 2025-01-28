@@ -15,4 +15,12 @@ export const createUserSchema = z.object({
     .nullable(),
 });
 
+export const updateUserSchema = z.object({
+  name: z.string().min(3).max(50).optional(),
+  email: z.string().email().optional(),
+  profilePicture: z.string().url().optional().nullable(),
+  bio: z.string().max(250).optional().nullable(),
+});
+
 export type CreateUserSchema = z.infer<typeof createUserSchema>;
+export type UpdateUserSchema = z.infer<typeof updateUserSchema>;

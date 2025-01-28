@@ -3,7 +3,9 @@ import { UserDTO } from "../dtos/UserDTO";
 import {
   CreateUserSchema,
   createUserSchema,
-} from "../schemas/CreateUserSchema";
+  updateUserSchema,
+  UpdateUserSchema,
+} from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 
 export class UserService {
@@ -25,6 +27,29 @@ export class UserService {
   async getAllUsers(): Promise<UserDTO[]> {
     return await this.userRepo.getAllUsers();
   }
+  async getUserById(id: string): Promise<UserDTO | null> {
+    return await this.userRepo.getUserById(id);
+  }
 
-  // end
+  async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
+    const userFromDb = await this.getUserById(id);
+    if (!userFromDb) {
+      throw new Error("User not found to update");
+    }
+    try {
+      updateUserSchema.parse(data);
+    } catch (error) {
+      throw error;
+    }
+    return await this.userRepo.updateUser(id, data);
+  }
+
+  async deleteUser(id: string): Promise<UserDTO> {
+    const userFromDb = await this.getUserById(id);
+    if (!userFromDb) {
+      throw new Error("User not found to delete");
+    }
+
+    return await this.userRepo.deleteUser(id);
+  }
 }

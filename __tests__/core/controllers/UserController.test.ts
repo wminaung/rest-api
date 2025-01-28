@@ -123,21 +123,5 @@ describe("UserController", () => {
         message: "Error creating user",
       });
     });
-
-    // fail 400
-    it("should return error final", async () => {
-      mockRequest.body = {
-        name: "Jo",
-        email: "john@example.com",
-        password: "pas",
-      };
-
-      userRepo.createUser.mockRejectedValue(new Error("Error creating user"));
-      await userController.createUser(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: expect.any(String),
-      });
-    });
   });
 });

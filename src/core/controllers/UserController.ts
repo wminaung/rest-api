@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { handleError } from "../utils/errorHandler";
-import { CreateUserSchema } from "../schemas/CreateUserSchema";
+import { CreateUserSchema } from "../schemas/userSchema";
 
 export class UserController {
   constructor(private userService: UserService) {}
