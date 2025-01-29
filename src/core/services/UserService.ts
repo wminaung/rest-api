@@ -37,10 +37,7 @@ export class UserService {
     const { success, data: safeData, error } = updateUserSchema.safeParse(data);
 
     if (error || !success) {
-      if (error instanceof ZodError) {
-        throw error;
-      }
-      throw new Error("Invalid data to update user");
+      throw error;
     }
 
     return await this.userRepo.updateUser(validId, safeData);
@@ -55,10 +52,7 @@ export class UserService {
     const { success, data, error } = checkIdSchema.safeParse({ id });
 
     if (error || !success) {
-      if (error instanceof ZodError) {
-        throw error;
-      }
-      throw new Error("Invalid id to update user");
+      throw error;
     }
     return data.id;
   }

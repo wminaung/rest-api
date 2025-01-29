@@ -1,8 +1,8 @@
 import { Response } from "express";
 import { ZodError } from "zod";
 import { handleError } from "../../../src/core/utils/errorHandler";
+import { NotFoundError } from "../../../src/core/errors/NotFoundError";
 
-const mockZodError = new ZodError([]);
 describe("handleError", () => {
   let res: Response;
 
@@ -13,6 +13,7 @@ describe("handleError", () => {
   });
 
   it("should handle errors from zod : status 400", () => {
+    const mockZodError = new ZodError([]);
     handleError(mockZodError, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -24,6 +25,13 @@ describe("handleError", () => {
     const mockError = new Error("Something went wrong");
     handleError(mockError, res);
     expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: mockError.message });
+  });
+
+  it("should handle errors from NotFound error : status 404", () => {
+    const mockError = new NotFoundError();
+    handleError(mockError, res);
+    expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ message: mockError.message });
   });
 });

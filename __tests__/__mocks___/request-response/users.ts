@@ -10,29 +10,47 @@ export const userMockRequest = {
    * @param body The body of the request
    * @returns A mock request with the body
    */
-  create: (body: CreateUserSchema) =>
-    ({
+  create: (body: CreateUserSchema) => {
+    return {
       body,
-    } as unknown as Request<{}, {}, CreateUserSchema>),
+    } as unknown as Request<{}, {}, CreateUserSchema>;
+  },
 
-  getAll: () => ({} as unknown as Request),
+  /**
+   * Creates a mock request for getting all users
+   * @returns A mock request
+   */
+  getAll: () => {
+    return {} as unknown as Request;
+  },
 
   /**
    * Creates a mock request for getting a user by id
    * @param id The id of the user
    * @returns A mock request with the id in the params
    */
-  getById: (id: string) =>
-    ({
+  getById: (id: string) => {
+    return {
       params: { id },
-    } as Request<{ id: string }, {}, {}>),
+    } as Request<{ id: string }, {}, {}>;
+  },
 
-  update: (id: string, data: UpdateUserSchema) =>
-    ({ params: { id }, body: data } as unknown as Request<
+  update: (id: string, data: UpdateUserSchema) => {
+    return { params: { id }, body: data } as unknown as Request<
       { id: string },
       {},
       UpdateUserSchema
-    >),
+    >;
+  },
+
+  /**
+   * Creates a mock request for deleting a user by id
+   * @param id The id of the user to be deleted
+   * @returns A mock request with the id in the params
+   */
+  delete: (id: string) => {
+    return { params: { id } } as unknown as Request<{ id: string }, {}, {}>;
+  },
 };
 
 const createMockResponse = () =>

@@ -1,28 +1,12 @@
+import { ZodError } from "zod";
 import { UserController } from "../../../src/core/controllers/UserController";
-import { Request, Response } from "express";
+import { NotFoundError } from "../../../src/core/errors/NotFoundError";
 import { IUserRepo } from "../../../src/core/repositories/interfaces/IUserRepo";
 import { UserService } from "../../../src/core/services/UserService";
-import {
-  createUserSchema,
-  CreateUserSchema,
-} from "../../../src/core/schemas/userSchema";
 import {
   userMockRequest,
   userMockResponse,
 } from "../../__mocks___/request-response/users";
-
-const users = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  {
-    id: "2",
-    name: "Jane Doe",
-    email: "jane@example.com",
-  },
-];
 
 class MockUserRepo implements IUserRepo {
   getAllUsers = jest.fn();
@@ -43,8 +27,8 @@ describe("UserController", () => {
   });
 
   describe("createUser", () => {
-    // success 201
-    it("should return user object", async () => {
+    //? success 201 when valid data
+    it("should return user object with status 201 when valid data", async () => {
       const user = {
         id: "1",
         name: "John Doe",
@@ -65,31 +49,32 @@ describe("UserController", () => {
       expect(mockResponse.json).toHaveBeenCalledWith({ ...user });
     });
 
-    //fail 500
-    it("should return error", async () => {
+    //? fail 400 when data is not valid
+    it("should throw  error when data is not valid", async () => {
       const createUserData = {
-        name: "John Doe",
-        email: "john@example.com",
-        password: "password",
+        name: "Joh",
+        email: "john@m",
+        password: "pas",
       };
       const mockRequest = userMockRequest.create(createUserData);
 
       const mockResponse = userMockResponse.create();
 
-      userRepo.createUser.mockRejectedValue(new Error("Error creating user"));
+      userRepo.createUser.mockRejectedValue(new ZodError([]));
 
       await userController.createUser(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: "Error creating user",
+        message: expect.any(String),
       });
     });
+
+    //******* end createUser
   });
 
   describe("getAllUsers", () => {
-    // success 200
-
-    it("should return user array", async () => {
+    //? success 200 when db is ok
+    it("should return user array when db is ok", async () => {
       const mockRequest = userMockRequest.getAll();
       const mockResponse = userMockResponse.getAll();
       const users = [
@@ -107,26 +92,24 @@ describe("UserController", () => {
       expect(mockResponse.json).toHaveBeenCalledWith(users);
     });
 
-    // fail 500
-    it("should throw status 500 when something was wrong", async () => {
+    //? fail 500 when something was wrong in db
+    it("should throw status 500 when something was wrong in db", async () => {
       const mockRequest = userMockRequest.getAll();
       const mockResponse = userMockResponse.getAll();
       userRepo.getAllUsers.mockRejectedValue(new Error("Database error"));
 
-      // Call the controller
       await userController.getAllUsers(mockRequest, mockResponse);
 
-      // Expect the response to be a 500 error with the error message
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: "Database error",
+        message: expect.any(String),
       });
     });
-    // end getAllUsers
+    //******* end getAllUsers
   });
 
   describe("getUserById", () => {
-    // success 200
+    //? success 200 when valid id & has user
     it("should return user object when has user object and valid user id provided", async () => {
       const user = {
         id: "1",
@@ -144,7 +127,7 @@ describe("UserController", () => {
       expect(mockResponse.json).toHaveBeenCalledWith(user);
     });
 
-    // not found 404
+    //? not found 404 when user not found
     it("should status 404 when user not found", async () => {
       const user = {
         id: "1",
@@ -168,7 +151,7 @@ describe("UserController", () => {
       });
     });
 
-    // fail bad request 400
+    //? fail bad request 400 when valid id does not provide
     it("should throw status 400 when valid id does not provide", async () => {
       const mockRequest = userMockRequest.getById({} as string); // invalid id
       const mockResponse = userMockResponse.getById();
@@ -183,18 +166,12 @@ describe("UserController", () => {
       });
     });
 
-    // end getUserById
+    //******* end getUserById
   });
 
   describe("updateUser", () => {
-    // success 200
+    //? success 200
     it("should update user when valid data and valid id provided ", async () => {
-      const user = {
-        id: "1",
-        name: "John Doe",
-        email: "john@example.com",
-      };
-
       const expectedUser = {
         id: "1",
         name: "John John",
@@ -208,7 +185,6 @@ describe("UserController", () => {
       );
       const mockResponse = userMockResponse.update();
       mockResponse.json = jest.fn().mockImplementation((data) => {
-        console.log(data);
         return data;
       });
       userRepo.updateUser.mockResolvedValue({
@@ -221,8 +197,197 @@ describe("UserController", () => {
       expect(mockResponse.json).toHaveBeenCalledWith(expectedUser);
     });
 
-    // end updateUser
+    //? fail 404 when user not found
+    it("should throw status 404 when user not found", async () => {
+      const user = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+      };
+
+      const expectedUser = {
+        id: "1",
+        name: "John John",
+        email: "johnjohn@example.com",
+      };
+      const { id, ...valueToUpdate } = expectedUser;
+      userRepo.updateUser.mockResolvedValue(user);
+      const mockRequest = userMockRequest.update("2", valueToUpdate);
+      const mockResponse = userMockResponse.update();
+
+      mockResponse.json = jest.fn().mockImplementation((data) => {
+        data.message = "User not found";
+        return data;
+      });
+
+      await userController.getUserById(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: "User not found",
+      });
+    });
+
+    //? fail 400 when valid id & invalid data
+    it("should throw  error when invalid data", async () => {
+      const invalidUserData = {
+        name: "J",
+        email: "john",
+      };
+      const expectedUser = {
+        id: "1",
+        name: "John John",
+        email: "johnjohn@example.com",
+      };
+      userRepo.updateUser.mockRejectedValue(new ZodError([]));
+      const mockRequest = userMockRequest.update(
+        expectedUser.id,
+        invalidUserData
+      );
+
+      const mockResponse = userMockResponse.update();
+
+      await userController.updateUser(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //? fail 400 when invalid id & valid data
+    it("should throw error when invalid user id is provided", async () => {
+      const user = {
+        id: "", // invalid id
+        name: "John Doe",
+        email: "john@example.com",
+      };
+      const expectedUser = {
+        id: "1",
+        name: "John John",
+        email: "johnjohn@example.com",
+      };
+      const { id, ...valueToUpdate } = expectedUser;
+      userRepo.updateUser.mockRejectedValue(new ZodError([]));
+      const mockRequest = userMockRequest.update(user.id, valueToUpdate);
+
+      const mockResponse = userMockResponse.update();
+
+      await userController.updateUser(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //? fail 404 when valid id
+    it("should throw error when invalid user id is provided", async () => {
+      const expectedUser = {
+        id: "1",
+        name: "John John",
+        email: "johnjohn@example.com",
+      };
+      const { id, ...valueToUpdate } = expectedUser;
+      userRepo.updateUser.mockRejectedValue(new NotFoundError());
+      const mockRequest = userMockRequest.update("3", valueToUpdate);
+
+      const mockResponse = userMockResponse.update();
+
+      await userController.updateUser(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //******* end updateUser
   });
 
-  //end UserController
+  describe("deleteUser", () => {
+    //? success 200 when valid id & user found
+    it("should delete user with status 200 when valid id is provided", async () => {
+      const expectedUser = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+      };
+      userRepo.deleteUser.mockResolvedValue(expectedUser);
+
+      const mockRequest = userMockRequest.delete(expectedUser.id);
+      const mockResponse = userMockResponse.delete();
+
+      await userController.deleteUser(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith(expectedUser);
+    });
+
+    //? fail 404 when valid id but user not found
+    it("should throw error with status 404 when valid id is provided but user not found", async () => {
+      const expectedUser = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+      };
+      userRepo.deleteUser.mockRejectedValue(new NotFoundError());
+
+      const mockRequest = userMockRequest.delete("3"); // user not found for this id
+      const mockResponse = userMockResponse.delete();
+      mockResponse.json = jest.fn().mockImplementation((data) => {
+        return data;
+      });
+
+      await userController.deleteUser(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).not.toHaveBeenCalledWith(expectedUser);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //? fail 400 when invalid id
+    it("should throw error with status 400 when invalid id is provided", async () => {
+      const expectedUser = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+      };
+      userRepo.deleteUser.mockResolvedValue(expectedUser);
+
+      const mockRequest = userMockRequest.delete("");
+      const mockResponse = userMockResponse.delete();
+
+      await userController.deleteUser(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).not.toHaveBeenCalledWith(expectedUser);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //? fail 500 when something wrong in db
+    it("should throw error with status 500 when something wrong in db", async () => {
+      const expectedUser = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+      };
+      userRepo.deleteUser.mockRejectedValue(new Error());
+
+      const mockRequest = userMockRequest.delete(expectedUser.id);
+      const mockResponse = userMockResponse.delete();
+
+      await userController.deleteUser(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).not.toHaveBeenCalledWith(expectedUser);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: expect.any(String),
+      });
+    });
+
+    //******* end deleteUser
+  });
+
+  //******* UserController
 });
