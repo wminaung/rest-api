@@ -36,7 +36,11 @@ export class UserController {
     try {
       const id = req.params.id;
       const user = await this.userService.getUserById(id);
-      res.status(200).json(user);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(200).json(user);
+      }
     } catch (err: unknown) {
       handleError(err, res);
     }

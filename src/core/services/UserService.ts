@@ -7,6 +7,7 @@ import {
   UpdateUserSchema,
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
+import { checkIdSchema } from "../schemas/checkIdSchema";
 
 export class UserService {
   constructor(private userRepo: IUserRepo) {}
@@ -26,14 +27,13 @@ export class UserService {
     return await this.userRepo.getAllUsers();
   }
   async getUserById(id: string): Promise<UserDTO | null> {
-    return await this.userRepo.getUserById(id);
+    const validId = this.getValidId(id);
+    return await this.userRepo.getUserById(validId);
   }
 
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
-    const userFromDb = await this.getUserById(id);
-    if (!userFromDb) {
-      throw new Error("User not found to update");
-    }
+    const validId = this.getValidId(id);
+
     const { success, data: safeData, error } = updateUserSchema.safeParse(data);
 
     if (error || !success) {
@@ -43,15 +43,23 @@ export class UserService {
       throw new Error("Invalid data to update user");
     }
 
-    return await this.userRepo.updateUser(id, safeData);
+    return await this.userRepo.updateUser(validId, safeData);
   }
 
   async deleteUser(id: string): Promise<UserDTO> {
-    const userFromDb = await this.getUserById(id);
-    if (!userFromDb) {
-      throw new Error("User not found to delete");
-    }
+    const validId = this.getValidId(id);
+    return await this.userRepo.deleteUser(validId);
+  }
 
-    return await this.userRepo.deleteUser(id);
+  private getValidId(id: string): string {
+    const { success, data, error } = checkIdSchema.safeParse({ id });
+
+    if (error || !success) {
+      if (error instanceof ZodError) {
+        throw error;
+      }
+      throw new Error("Invalid id to update user");
+    }
+    return data.id;
   }
 }

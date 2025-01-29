@@ -3,7 +3,6 @@ import { IUserRepo } from "../interfaces/IUserRepo";
 import { UserDTO } from "../../dtos/UserDTO";
 import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
 import { UserSelectQuery } from "../../types/userSelectQuery";
-import { User } from "../../entities/User";
 
 export class UserRepo implements IUserRepo {
   constructor(private prisma: PrismaClient) {}
@@ -37,6 +36,10 @@ export class UserRepo implements IUserRepo {
     });
   }
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
+    const userFromDb = await this.getUserById(id);
+    if (!userFromDb) {
+      throw new Error("User not found to update");
+    }
     return await this.prisma.user.update({
       where: { id },
       data,
@@ -44,6 +47,10 @@ export class UserRepo implements IUserRepo {
     });
   }
   async deleteUser(id: string): Promise<UserDTO> {
+    const userFromDb = await this.getUserById(id);
+    if (!userFromDb) {
+      throw new Error("User not found to delete");
+    }
     return await this.prisma.user.delete({
       where: { id },
       select: this.selectQuery,
