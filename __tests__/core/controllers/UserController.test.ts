@@ -1,12 +1,12 @@
 import { ZodError } from "zod";
 import { UserController } from "../../../src/core/controllers/UserController";
-import { NotFoundError } from "../../../src/core/errors/NotFoundError";
 import { IUserRepo } from "../../../src/core/repositories/interfaces/IUserRepo";
 import { UserService } from "../../../src/core/services/UserService";
 import {
   userMockRequest,
   userMockResponse,
 } from "../../__mocks___/request-response/users";
+import { NotFoundError } from "../../../src/errors";
 
 class MockUserRepo implements IUserRepo {
   getAllUsers = jest.fn();

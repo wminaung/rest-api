@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { ZodError } from "zod";
 import { handleError } from "../../../src/core/utils/errorHandler";
-import { NotFoundError } from "../../../src/core/errors/NotFoundError";
+import { BaseError, NotFoundError } from "../../../src/errors";
 
 describe("handleError", () => {
   let res: Response;
@@ -22,7 +22,7 @@ describe("handleError", () => {
   });
 
   it("should handle errors from other sources : status 500", () => {
-    const mockError = new Error("Something went wrong");
+    const mockError = new BaseError();
     handleError(mockError, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: mockError.message });

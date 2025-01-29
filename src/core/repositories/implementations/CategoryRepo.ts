@@ -17,13 +17,26 @@ export class CategoryRepo implements ICategoryRepo {
   async getAllCategories(): Promise<CategoryDTO[]> {
     return this.prisma.category.findMany();
   }
-  getCategoryById(id: string): Promise<CategoryDTO | null> {
-    throw new Error("Method not implemented.");
+  async getCategoryById(id: string): Promise<CategoryDTO | null> {
+    return this.prisma.category.findUnique({ where: { id } });
   }
-  updateCategory(id: string, data: UpdateCategorySchema): Promise<CategoryDTO> {
-    throw new Error("Method not implemented.");
+  async updateCategory(
+    id: string,
+    data: UpdateCategorySchema
+  ): Promise<CategoryDTO> {
+    const userFromDb = await this.getCategoryById(id);
+    if (!userFromDb) {
+      throw new Error("Category not found");
+    }
+    return this.prisma.category.update({ where: { id }, data });
   }
-  deleteCategory(id: string): Promise<CategoryDTO> {
-    throw new Error("Method not implemented.");
+  async deleteCategory(id: string): Promise<CategoryDTO> {
+    const userFromDb = await this.getCategoryById(id);
+    if (!userFromDb) {
+      throw new Error("Category not found");
+    }
+    return this.prisma.category.delete({ where: { id } });
   }
+
+  //***** CategoryRepo *****/
 }

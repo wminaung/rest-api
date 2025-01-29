@@ -8,18 +8,13 @@ import {
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { checkIdSchema } from "../schemas/checkIdSchema";
+import { getValidId } from "../utils/getValidId";
 
 export class UserService {
   constructor(private userRepo: IUserRepo) {}
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
-    const { success, data: safeData, error } = createUserSchema.safeParse(data);
-    if (error || !success) {
-      if (error instanceof ZodError) {
-        throw error;
-      }
-      throw new Error("Invalid data to update user");
-    }
+    const safeData = this.validateCreateUserData(data);
     return this.userRepo.createUser(safeData);
   }
 
@@ -27,33 +22,37 @@ export class UserService {
     return await this.userRepo.getAllUsers();
   }
   async getUserById(id: string): Promise<UserDTO | null> {
-    const validId = this.getValidId(id);
+    const validId = getValidId(id);
     return await this.userRepo.getUserById(validId);
   }
 
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
-    const validId = this.getValidId(id);
+    const validId = getValidId(id);
 
-    const { success, data: safeData, error } = updateUserSchema.safeParse(data);
-
-    if (error || !success) {
-      throw error;
-    }
+    const safeData = this.validateUpdateUserData(data);
 
     return await this.userRepo.updateUser(validId, safeData);
   }
 
   async deleteUser(id: string): Promise<UserDTO> {
-    const validId = this.getValidId(id);
+    const validId = getValidId(id);
     return await this.userRepo.deleteUser(validId);
   }
 
-  private getValidId(id: string): string {
-    const { success, data, error } = checkIdSchema.safeParse({ id });
-
+  private validateCreateUserData(data: CreateUserSchema) {
+    const { success, data: safeData, error } = createUserSchema.safeParse(data);
     if (error || !success) {
       throw error;
     }
-    return data.id;
+    return safeData;
   }
+  private validateUpdateUserData(data: UpdateUserSchema) {
+    const { success, data: safeData, error } = updateUserSchema.safeParse(data);
+    if (error || !success) {
+      throw error;
+    }
+    return safeData;
+  }
+
+  //**** UserService ****/
 }

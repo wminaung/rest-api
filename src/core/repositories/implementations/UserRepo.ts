@@ -3,7 +3,7 @@ import { IUserRepo } from "../interfaces/IUserRepo";
 import { UserDTO } from "../../dtos/UserDTO";
 import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
 import { UserSelectQuery } from "../../types/userSelectQuery";
-import { NotFoundError } from "../../errors/NotFoundError";
+import { NotFoundError } from "../../../errors/NotFoundError";
 
 export class UserRepo implements IUserRepo {
   constructor(private prisma: PrismaClient) {}
