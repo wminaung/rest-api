@@ -41,6 +41,9 @@ export class CategoryRepo implements ICategoryRepo {
       }
       return category;
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new InternalServerError("Error fetching category by ID");
     }
   }
