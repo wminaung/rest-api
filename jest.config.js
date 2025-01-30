@@ -1,6 +1,8 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-export default {
+module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
+  verbose: true,
   testMatch: ["**/__tests__/**/*.test.ts"],
+  setupFilesAfterEnv: ["<rootDir>/__tests__/prisma.ts"],
 };

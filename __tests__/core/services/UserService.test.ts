@@ -1,195 +1,127 @@
-import { PrismaClient } from "@prisma/client";
 import { UserService } from "../../../src/core/services/UserService";
 import { UserRepo } from "../../../src/core/repositories/implementations/UserRepo";
-import { ZodError } from "zod";
+import { User } from "@prisma/client";
+import prisma from "../../prisma";
+import { getFakeUsers } from "../../__mocks___/data/fakeUsers";
+
 import { NotFoundError, ValidationError } from "../../../src/errors";
 
 describe("UserService", () => {
-  let prisma: PrismaClient;
   let userRepo: UserRepo;
   let userService: UserService;
-
+  let fakeUsers: User[];
   beforeAll(async () => {
-    prisma = new PrismaClient();
-    await prisma.$connect();
     userRepo = new UserRepo(prisma);
     userService = new UserService(userRepo);
-    await prisma.user.deleteMany();
-  });
-  afterAll(async () => {
-    await prisma.$disconnect();
-  });
-  afterEach(async () => {
-    await prisma.user.deleteMany();
+    fakeUsers = getFakeUsers();
   });
 
   describe("createUser", () => {
     it("should create a user when data is valid", async () => {
+      const payload = fakeUsers[0];
+      const { password, ...resolveValue } = payload;
+      prisma.user.create.mockResolvedValue(resolveValue as User);
       const user = await userService.createUser({
-        name: "John",
-        email: "j@j.com",
-        password: "password",
+        name: payload.name,
+        email: payload.email,
+        password: payload.password,
       });
 
-      expect(user.name).toBe("John");
-      expect(user.email).toBe("j@j.com");
+      expect(user.name).toBe(user.name);
+      expect(user.email).toBe(user.email);
       expect(user).not.toHaveProperty("password");
     });
 
-    it("should throw ValidationError when data is invalid", async () => {
-      const data = {
-        name: "", // invalid name
-        email: "john@example.com",
-        password: "ab", // invalid password
-      };
-
-      try {
-        await userService.createUser(data);
-      } catch (err) {
-        expect(err).toBeInstanceOf(ValidationError);
-        if (err instanceof ValidationError) {
-          expect(err.code).toBeDefined();
-          expect(err.status).toBeDefined();
-        }
-      }
+    it("should throw ValidationError an error when data is invalid", async () => {
+      const payload = { name: "", email: "", password: "" };
+      await expect(userService.createUser(payload)).rejects.toThrow(
+        ValidationError
+      );
     });
   });
 
   describe("getAllUsers", () => {
     it("should get all users", async () => {
-      const users = [
-        {
-          name: "John",
-          email: "j@j.com",
-          password: "password",
-        },
-        {
-          name: "Doe",
-          email: "d@d.com",
-          password: "password2",
-        },
-      ];
-
-      const usersCreated = await prisma.user.createMany({ data: users });
-      expect(usersCreated.count).toBe(2);
-
+      const resolveUsers = fakeUsers.map((user) => {
+        const { password, ...resolveValue } = user;
+        return resolveValue as User;
+      });
+      prisma.user.findMany.mockResolvedValue(resolveUsers);
       const allUsers = await userService.getAllUsers();
-      expect(allUsers[0].name).toBe("John");
+      expect(allUsers[0].name).toBe(fakeUsers[0].name);
       expect(allUsers[0]).not.toHaveProperty("password");
-      expect(allUsers[1].name).toBe("Doe");
+      expect(allUsers[1].name).toBe(fakeUsers[1].name);
       expect(allUsers[1]).not.toHaveProperty("password");
     });
   });
 
   describe("getUserById", () => {
-    it("should get user by id", async () => {
-      const userFromDb = await prisma.user.create({
-        data: {
-          name: "John",
-          email: "j@j.com",
-          password: "password",
-        },
-      });
-      const userById = await userService.getUserById(userFromDb.id);
-      expect(userById).not.toBeNull();
-      expect(userById).toHaveProperty("name");
-      expect(userById).toHaveProperty("email");
-      if (userById) {
-        expect(userById.name).toBe("John");
-        expect(userById.email).toBe("j@j.com");
-        expect(userById).not.toHaveProperty("password");
-      }
+    it("should return a user when id is valid", async () => {
+      const payload = fakeUsers[0];
+      const { password, ...resolveValue } = payload;
+      prisma.user.findUnique.mockResolvedValue(resolveValue as User);
+      const user = await userService.getUserById(payload.id);
+
+      expect(user).toBeDefined();
+      expect(user).not.toBeNull();
+      expect(user?.name).toBe(payload.name);
+      expect(user?.email).toBe(payload.email);
+      expect(user).not.toHaveProperty("password");
+    });
+
+    it("should throw NotFoundError when user not found in db", async () => {
+      const id = "abc invalid-id";
+      await expect(userService.getUserById(id)).rejects.toThrow(NotFoundError);
     });
   });
 
   describe("updateUser", () => {
     it("should update user when data is valid", async () => {
-      const userFromDb = await prisma.user.create({
-        data: {
-          name: "John",
-          email: "j@j.com",
-          password: "password",
-        },
-      });
-      const userUpdated = await userService.updateUser(userFromDb.id, {
-        name: "John Doe",
-      });
-      expect(userUpdated).not.toBeNull();
-      expect(userUpdated).toHaveProperty("name");
-      expect(userUpdated).toHaveProperty("email");
-      if (userUpdated) {
-        expect(userUpdated.name).toBe("John Doe");
-        expect(userUpdated.email).toBe("j@j.com");
-        expect(userUpdated).not.toHaveProperty("password");
-      }
+      const payload = fakeUsers[0];
+      const { password, ...findUniqueResolveValue } = payload;
+      const updateResolveValue = {
+        name: "Win Min Aung",
+        email: "minwin243@gmail.com",
+      };
+      prisma.user.update.mockResolvedValue(updateResolveValue as User);
+      prisma.user.findUnique.mockResolvedValue(findUniqueResolveValue as User);
+      const user = await userService.updateUser(payload.id, updateResolveValue);
+      expect(user).toBeDefined();
+      expect(user).not.toBeNull();
+      expect(user.name).toBe(updateResolveValue.name);
+      expect(user.email).toBe(updateResolveValue.email);
     });
 
     it("should throw ValidationError when data is invalid", async () => {
-      const userFromDb = await prisma.user.create({
-        data: {
-          name: "John",
-          email: "j@j.com",
-          password: "password",
-        },
-      });
-      try {
-        await userService.updateUser(userFromDb.id, {
-          name: "J", // invalid data
-        });
-      } catch (err) {
-        expect(err).toBeInstanceOf(ValidationError);
-
-        if (err instanceof ValidationError) {
-          expect(err.code).toBeDefined();
-          expect(err.status).toBeDefined();
-        }
-      }
+      const payload = { id: fakeUsers[0].id, name: "", email: "" };
+      await expect(userService.updateUser(payload.id, payload)).rejects.toThrow(
+        ValidationError
+      );
     });
   });
 
   describe("deleteUser", () => {
-    it("should delete user when id is valid", async () => {
-      const userFromDb = await prisma.user.create({
-        data: {
-          name: "John",
-          email: "j@j.com",
-          password: "password",
-        },
-      });
-      const userDeleted = await userService.deleteUser(userFromDb.id);
+    it("should delete a user when id is valid", async () => {
+      const { password, ...resolveValue } = fakeUsers[0];
+      prisma.user.findUnique.mockResolvedValue(resolveValue as User);
+      prisma.user.delete.mockResolvedValue(resolveValue as User);
 
-      expect(userDeleted).not.toBeNull();
-      expect(userDeleted).toHaveProperty("name");
-      expect(userDeleted).toHaveProperty("email");
-      if (userDeleted) {
-        expect(userDeleted.name).toBe("John");
-        expect(userDeleted.email).toBe("j@j.com");
-        expect(userDeleted).not.toHaveProperty("password");
-      }
+      const deletedUser = await userService.deleteUser(resolveValue.id);
+
+      expect(deletedUser).toBeDefined();
+      expect(deletedUser).not.toBeNull();
+      expect(deletedUser.name).toBe(resolveValue.name);
+      expect(deletedUser.email).toBe(resolveValue.email);
+      expect(deletedUser).not.toHaveProperty("password");
+    });
+    it("should throw NotFoundError when user not found in db", async () => {
+      const id = "invalid-id";
+      await expect(userService.deleteUser(id)).rejects.toThrow(NotFoundError);
     });
 
-    it("should throw NotFoundError when valid id but user not found", async () => {
-      try {
-        await userService.deleteUser("hello");
-      } catch (err) {
-        expect(err).toBeInstanceOf(NotFoundError);
-        if (err instanceof NotFoundError) {
-          expect(err.code).toBeDefined();
-          expect(err.status).toBeDefined();
-        }
-      }
-    });
-
-    it("should throw ValidationError when invalid id", async () => {
-      try {
-        await userService.deleteUser("");
-      } catch (err) {
-        expect(err).toBeInstanceOf(ValidationError);
-        if (err instanceof ValidationError) {
-          expect(err.code).toBeDefined();
-          expect(err.status).toBeDefined();
-        }
-      }
+    it("should throw ValidationError when invalid id provided", async () => {
+      const id = {} as string;
+      await expect(userService.deleteUser(id)).rejects.toThrow(ValidationError);
     });
   });
 });

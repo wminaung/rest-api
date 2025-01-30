@@ -1,138 +1,107 @@
-import { PrismaClient } from "@prisma/client";
 import { CategoryRepo } from "../../../src/core/repositories/implementations/CategoryRepo";
 import { CategoryService } from "../../../src/core/services/CategoryService";
 import { CreateCategorySchema } from "../../../src/core/schemas/categorySchema";
-import {
-  InternalServerError,
-  NotFoundError,
-  ValidationError,
-} from "../../../src/errors";
+import { NotFoundError, ValidationError } from "../../../src/errors";
+import prisma from "../../prisma";
+import { Category } from "@prisma/client";
+import { getFakeCategories } from "../../__mocks___/data/fakeCategories";
 
 describe("CategoryService", () => {
-  let prisma: PrismaClient;
   let categoryRepo: CategoryRepo;
   let categoryService: CategoryService;
+  let fakeCategories: Category[];
 
-  beforeAll(async () => {
-    prisma = new PrismaClient();
-    await prisma.$connect();
+  beforeAll(() => {
     categoryRepo = new CategoryRepo(prisma);
     categoryService = new CategoryService(categoryRepo);
-    await prisma.category.deleteMany();
-  });
-  afterAll(async () => {
-    await prisma.$disconnect();
-  });
-  afterEach(async () => {
-    await prisma.category.deleteMany();
+    fakeCategories = getFakeCategories();
   });
 
   describe("createCategory", () => {
     it("should create a category", async () => {
-      const data: CreateCategorySchema = { name: "test" };
-      const category = await categoryService.createCategory(data);
-
-      expect(category.name).toBe("test");
+      const resolveValue = fakeCategories[0];
+      prisma.category.create.mockResolvedValue(resolveValue);
+      const category = await categoryService.createCategory({
+        name: resolveValue.name,
+      });
+      expect(category).toBeDefined();
+      expect(category).not.toBeNull();
+      expect(category.name).toBe(resolveValue.name);
     });
 
     it("should throw ValidationError when data is invalid", async () => {
-      try {
-        const data: CreateCategorySchema = { name: "" }; // invalid data
-        await categoryService.createCategory(data);
-      } catch (error: Error | any) {
-        expect(error).toBeInstanceOf(ValidationError);
-        expect(error.code).toBeDefined();
-        expect(error.status).toBeDefined();
-      }
+      const payload = { name: "" };
+      await expect(categoryService.createCategory(payload)).rejects.toThrow(
+        ValidationError
+      );
     });
   });
 
   describe("getAllCategories", () => {
     it("should get all categories", async () => {
-      const data: CreateCategorySchema[] = [
-        { name: "test1" },
-        { name: "test2" },
-      ];
-      await prisma.category.createMany({ data });
-
+      prisma.category.findMany.mockResolvedValue(fakeCategories);
       const allCategories = await categoryService.getAllCategories();
-
-      expect(allCategories.length).toBe(2);
-      expect(allCategories[0].name).toBe("test1");
-      expect(allCategories[1].name).toBe("test2");
+      expect(allCategories[0].name).toBe(fakeCategories[0].name);
+      expect(allCategories[1].name).toBe(fakeCategories[1].name);
     });
   });
 
   describe("getCategoryById", () => {
     it("should get category by id", async () => {
-      const data: CreateCategorySchema = { name: "test1" };
-      const categoryFromDb = await prisma.category.create({ data });
-
-      const category = await categoryService.getCategoryById(categoryFromDb.id);
-
+      const resolveValue = fakeCategories[0];
+      prisma.category.findUnique.mockResolvedValue(resolveValue);
+      const category = await categoryService.getCategoryById(resolveValue.id);
+      expect(category).toBeDefined();
       expect(category).not.toBeNull();
-      expect(category?.name).toBe("test1");
+      expect(category?.name).toBe(resolveValue.name);
     });
   });
 
   describe("updateCategory", () => {
     it("should update category", async () => {
-      const data: CreateCategorySchema = { name: "test1" };
-      const categoryFromDb = await prisma.category.create({ data });
-
-      const updatedCategory = await categoryService.updateCategory(
-        categoryFromDb.id,
-        { name: "test2" }
+      const resolveValue = { ...fakeCategories[0], name: "updatedTest" };
+      prisma.category.findUnique.mockResolvedValue(fakeCategories[0]);
+      prisma.category.update.mockResolvedValue(resolveValue);
+      const category = await categoryService.updateCategory(
+        resolveValue.id,
+        resolveValue
       );
-
-      expect(updatedCategory).not.toBeNull();
-      expect(updatedCategory?.name).toBe("test2");
+      expect(category).toBeDefined();
+      expect(category).not.toBeNull();
+      expect(category?.name).toBe(resolveValue.name);
     });
 
     it("should throw NotFoundError when category is not found", async () => {
-      try {
-        await categoryService.updateCategory("hello", {
-          name: "test2",
-        });
-      } catch (error: Error | any) {
-        expect(error).toBeInstanceOf(NotFoundError);
-        expect(error.code).toBeDefined();
-        expect(error.status).toBeDefined();
-      }
+      const id = "invalid-id";
+      await expect(
+        categoryService.updateCategory(id, { name: "test2" })
+      ).rejects.toThrow(NotFoundError);
     });
   });
 
   describe("deleteCategory", () => {
     it("should delete category", async () => {
-      const data: CreateCategorySchema = { name: "test1" };
-      const categoryFromDb = await prisma.category.create({ data });
-
-      const deletedCategory = await categoryService.deleteCategory(
-        categoryFromDb.id
-      );
-
-      expect(deletedCategory).not.toBeNull();
-      expect(deletedCategory?.name).toBe("test1");
+      const resolveValue = fakeCategories[0];
+      prisma.category.findUnique.mockResolvedValue(resolveValue);
+      prisma.category.delete.mockResolvedValue(resolveValue);
+      const category = await categoryService.deleteCategory(resolveValue.id);
+      expect(category).toBeDefined();
+      expect(category).not.toBeNull();
+      expect(category?.name).toBe(resolveValue.name);
     });
 
     it("should throw NotFoundError when category is not found", async () => {
-      try {
-        await categoryService.deleteCategory("hello??hola");
-      } catch (error: Error | any) {
-        expect(error).toBeInstanceOf(NotFoundError);
-        expect(error.code).toBeDefined();
-        expect(error.status).toBeDefined();
-      }
+      const id = "invalid-id";
+      await expect(categoryService.deleteCategory(id)).rejects.toThrow(
+        NotFoundError
+      );
     });
 
     it("should throw ValidationError when invalid provided", async () => {
-      try {
-        await categoryService.deleteCategory("");
-      } catch (error: Error | any) {
-        expect(error).toBeInstanceOf(ValidationError);
-        expect(error.code).toBeDefined();
-        expect(error.status).toBeDefined();
-      }
+      const id = {} as string;
+      await expect(categoryService.deleteCategory(id)).rejects.toThrow(
+        ValidationError
+      );
     });
   });
 

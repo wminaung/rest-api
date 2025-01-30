@@ -1,0 +1,66 @@
+import { User } from "@prisma/client";
+
+const fakeUsers: User[] = [
+  {
+    id: "1",
+    name: "John",
+    email: "j@j.com",
+    password: "password1",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "2",
+    name: "Doe",
+    email: "d@d.com",
+    password: "password2",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "3",
+    name: "Alice",
+    email: "a@a.com",
+    password: "password3",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "4",
+    name: "Bob",
+    email: "b@b.com",
+    password: "password4",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "5",
+    name: "Charlie",
+    email: "c@c.com",
+    password: "password5",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "6",
+    name: "Eve",
+    email: "e@e.com",
+    password: "password6",
+    bio: null,
+    profilePicture: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+export const getFakeUsers = () => fakeUsers;
