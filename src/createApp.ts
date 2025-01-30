@@ -1,5 +1,6 @@
 import express from "express";
 import usersRouter from "./routes/users";
+import categoriesRouter from "./routes/categories";
 
 export function createApp() {
   const app = express();
@@ -12,6 +13,7 @@ export function createApp() {
   });
 
   app.use("/api/users", usersRouter);
+  app.use("/api/categories", categoriesRouter);
 
   return app;
 }
