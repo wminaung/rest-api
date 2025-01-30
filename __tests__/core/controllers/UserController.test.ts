@@ -33,6 +33,10 @@ describe("UserController", () => {
     userController = new UserController(userService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("createUser", () => {
     //? success 201 when valid data
     it("should create a new user status 201", async () => {
@@ -191,9 +195,6 @@ describe("UserController", () => {
         valueToUpdate
       );
       const mockResponse = userMockResponse.update();
-      mockResponse.json = jest.fn().mockImplementation((data) => {
-        return data;
-      });
       userRepo.updateUser.mockResolvedValue({
         id: "1",
         name: "John John",
