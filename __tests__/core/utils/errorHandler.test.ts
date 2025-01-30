@@ -1,37 +1,191 @@
 import { Response } from "express";
+import {
+  formatErrorResponse,
+  handleError,
+} from "../../../src/core/utils/errorHandler";
+import {
+  NotFoundError,
+  ValidationError,
+  UnauthorizedError,
+  ForbiddenError,
+  ConflictError,
+  InternalServerError,
+  BadRequestError,
+  NotImplementedError,
+  ServiceUnavailableError,
+  UnexpectedError,
+  BaseError,
+} from "../../../src/errors";
 import { ZodError } from "zod";
-import { handleError } from "../../../src/core/utils/errorHandler";
-import { BaseError, NotFoundError } from "../../../src/errors";
+import { ErrorCode } from "../../../src/enums/ErrorCode";
 
-describe("handleError", () => {
-  let res: Response;
+describe("errorHandler", () => {
+  describe("handleError", () => {
+    let res: Response;
 
-  beforeEach(() => {
-    res = {} as Response;
-    res.status = jest.fn().mockReturnThis();
-    res.json = jest.fn().mockReturnThis();
-  });
+    beforeEach(() => {
+      res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+      } as any;
+    });
 
-  it("should handle errors from zod : status 400", () => {
-    const mockZodError = new ZodError([]);
-    handleError(mockZodError, res);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      message: mockZodError.errors.map((e) => e.message).join(", "),
+    it("should handle NotFoundError", () => {
+      const error = new NotFoundError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle ValidationError", () => {
+      const zodError = new ZodError([]);
+      const error = new ValidationError(zodError);
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: { message: error.message, code: error.code, status: 400 },
+      });
+    });
+
+    it("should handle UnauthorizedError", () => {
+      const error = new UnauthorizedError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle ForbiddenError", () => {
+      const error = new ForbiddenError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle ConflictError", () => {
+      const error = new ConflictError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle InternalServerError", () => {
+      const error = new InternalServerError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle BadRequestError", () => {
+      const error = new BadRequestError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle NotImplementedError", () => {
+      const error = new NotImplementedError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle ServiceUnavailableError", () => {
+      const error = new ServiceUnavailableError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(error.status);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      });
+    });
+
+    it("should handle unknown errors as UnexpectedError", () => {
+      const error = new Error("Unknown error");
+      const unexpectedError = new UnexpectedError();
+      handleError(error, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        error: {
+          message: unexpectedError.message,
+          code: unexpectedError.code,
+          status: unexpectedError.status,
+        },
+      });
     });
   });
+  describe("formatErrorResponse", () => {
+    it("should format a valid BaseError object", () => {
+      const error = new BaseError(
+        "Test error message",
+        500,
+        ErrorCode.INTERNAL_SERVER_ERROR
+      );
+      const expectedResponse = {
+        error: {
+          message: "Test error message",
+          code: error.code,
+          status: 500,
+        },
+      };
+      expect(formatErrorResponse(error)).toEqual(expectedResponse);
+    });
 
-  it("should handle errors from other sources : status 500", () => {
-    const mockError = new BaseError();
-    handleError(mockError, res);
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ message: mockError.message });
-  });
+    it("should format an Error object that extends BaseError", () => {
+      const error = new ForbiddenError();
 
-  it("should handle errors from NotFound error : status 404", () => {
-    const mockError = new NotFoundError();
-    handleError(mockError, res);
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: mockError.message });
+      const expectedResponse = {
+        error: {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+        },
+      };
+      expect(formatErrorResponse(error)).toEqual(expectedResponse);
+    });
   });
 });

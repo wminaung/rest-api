@@ -1,3 +1,4 @@
+import { ValidationError } from "../../errors";
 import { CategoryDTO } from "../dtos/CategoryDTO";
 import { ICategoryRepo } from "../repositories/interfaces/ICategoryRepo";
 import {
@@ -52,7 +53,7 @@ export class CategoryService {
       error,
     } = createCategorySchema.safeParse(data);
     if (error || !success) {
-      throw error;
+      throw new ValidationError(error);
     }
     return safeData;
   }

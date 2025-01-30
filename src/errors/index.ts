@@ -8,3 +8,4 @@ export * from "./InternalServerError";
 export * from "./BadRequestError";
 export * from "./NotImplementedError";
 export * from "./ServiceUnavailableError";
+export * from "./UnexpectedError";

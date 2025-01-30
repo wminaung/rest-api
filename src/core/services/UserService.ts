@@ -7,7 +7,6 @@ import {
   UpdateUserSchema,
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
-import { checkIdSchema } from "../schemas/checkIdSchema";
 import { getValidId } from "../utils/getValidId";
 import { ValidationError } from "../../errors";
 
@@ -40,6 +39,14 @@ export class UserService {
     return await this.userRepo.deleteUser(validId);
   }
 
+  /**
+   * Validates the user creation data against the CreateUserSchema.
+   * Returns the parsed data if it is valid, otherwise throws a ValidationError.
+   * @param data - The creation data to be validated.
+   * @returns The parsed and validated data.
+   * @throws ValidationError if the creation data is invalid.
+   */
+
   private validateCreateUserData(data: CreateUserSchema) {
     const { success, data: safeData, error } = createUserSchema.safeParse(data);
     if (error || !success) {
@@ -47,6 +54,14 @@ export class UserService {
     }
     return safeData;
   }
+  /**
+   * Validates the user update data against the UpdateUserSchema.
+   * Returns the parsed data if it is valid, otherwise throws a ValidationError.
+   * @param data - The update data to be validated.
+   * @returns The parsed and validated data.
+   * @throws ValidationError if the update data is invalid.
+   */
+
   private validateUpdateUserData(data: UpdateUserSchema) {
     const { success, data: safeData, error } = updateUserSchema.safeParse(data);
     if (error || !success) {

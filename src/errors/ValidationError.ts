@@ -7,6 +7,10 @@ export const formatZodErrorMessages = (err: ZodError) => {
 };
 
 export class ValidationError extends BaseError {
+  /**
+   * Creates a new ValidationError instance from a ZodError.
+   * @param err ZodError to format
+   */
   constructor(err: ZodError) {
     super(formatZodErrorMessages(err), 400, ErrorCode.VALIDATION_ERROR);
   }

@@ -10,8 +10,8 @@ import {
   NotImplementedError,
   ServiceUnavailableError,
   BaseError,
+  UnexpectedError,
 } from "../../errors";
-import { UnexpectedError } from "../../errors/UnexpectedError";
 
 /**
  * Formats a BaseError into an object that is suitable to be returned in a json
@@ -24,13 +24,15 @@ import { UnexpectedError } from "../../errors/UnexpectedError";
  *   },
  * }
  */
-export const formatErrorResponse = (error: BaseError) => ({
-  error: {
-    message: error.message,
-    code: error.code,
-    status: error.status,
-  },
-});
+export const formatErrorResponse = (error: BaseError) => {
+  return {
+    error: {
+      message: error.message,
+      code: error.code,
+      status: error.status,
+    },
+  };
+};
 
 /**
  * Handles an error by sending an appropriate response to the client.
