@@ -4,6 +4,7 @@ import { UserDTO } from "../../dtos/UserDTO";
 import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
 import { UserSelectQuery } from "../../types/userSelectQuery";
 import { NotFoundError } from "../../../errors/NotFoundError";
+import { InternalServerError } from "../../../errors";
 
 export class UserRepo implements IUserRepo {
   constructor(private prisma: PrismaClient) {}
@@ -20,41 +21,61 @@ export class UserRepo implements IUserRepo {
   };
 
   async getAllUsers(): Promise<UserDTO[]> {
-    return await this.prisma.user.findMany({ select: this.selectQuery });
+    try {
+      return await this.prisma.user.findMany({ select: this.selectQuery });
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
-    return await this.prisma.user.create({
-      data,
-      select: this.selectQuery,
-    });
+    try {
+      return await this.prisma.user.create({
+        data,
+        select: this.selectQuery,
+      });
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
 
   async getUserById(id: string): Promise<UserDTO | null> {
-    return await this.prisma.user.findUnique({
-      where: { id },
-      select: this.selectQuery,
-    });
+    try {
+      return await this.prisma.user.findUnique({
+        where: { id },
+        select: this.selectQuery,
+      });
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
     const userFromDb = await this.getUserById(id);
     if (!userFromDb) {
-      throw new Error("User not found to update");
+      throw new NotFoundError();
     }
-    return await this.prisma.user.update({
-      where: { id },
-      data,
-      select: this.selectQuery,
-    });
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data,
+        select: this.selectQuery,
+      });
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
   async deleteUser(id: string): Promise<UserDTO> {
     const userFromDb = await this.getUserById(id);
     if (!userFromDb) {
-      throw new NotFoundError("User not found to delete");
+      throw new NotFoundError();
     }
-    return await this.prisma.user.delete({
-      where: { id },
-      select: this.selectQuery,
-    });
+    try {
+      return await this.prisma.user.delete({
+        where: { id },
+        select: this.selectQuery,
+      });
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
 }

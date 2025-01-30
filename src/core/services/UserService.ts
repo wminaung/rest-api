@@ -9,6 +9,7 @@ import {
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { checkIdSchema } from "../schemas/checkIdSchema";
 import { getValidId } from "../utils/getValidId";
+import { ValidationError } from "../../errors";
 
 export class UserService {
   constructor(private userRepo: IUserRepo) {}
@@ -42,14 +43,14 @@ export class UserService {
   private validateCreateUserData(data: CreateUserSchema) {
     const { success, data: safeData, error } = createUserSchema.safeParse(data);
     if (error || !success) {
-      throw error;
+      throw new ValidationError(error);
     }
     return safeData;
   }
   private validateUpdateUserData(data: UpdateUserSchema) {
     const { success, data: safeData, error } = updateUserSchema.safeParse(data);
     if (error || !success) {
-      throw error;
+      throw new ValidationError(error);
     }
     return safeData;
   }

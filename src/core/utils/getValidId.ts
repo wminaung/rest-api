@@ -1,3 +1,4 @@
+import { ValidationError } from "../../errors";
 import { checkIdSchema } from "../schemas/checkIdSchema";
 
 /**
@@ -11,7 +12,7 @@ export const getValidId = (id: string): string => {
   const { success, data, error } = checkIdSchema.safeParse({ id });
 
   if (error || !success) {
-    throw error;
+    throw new ValidationError(error);
   }
   return data.id;
 };
