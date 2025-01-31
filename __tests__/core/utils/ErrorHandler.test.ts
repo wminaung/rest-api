@@ -14,13 +14,16 @@ import {
 } from "../../../src/errors";
 import { ZodError } from "zod";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
-import { ErrorHandler } from "../../../src/core/utils/errorHandler";
+import { ErrorHandler } from "../../../src/core/utils/ErrorHandler";
 import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
 
 describe("ErrorHandler", () => {
-  const errorFormatter = new ErrorFormatter();
-  const { formatErrorResponse } = errorFormatter;
-  const { handleError } = new ErrorHandler(errorFormatter);
+  let formatter: ErrorFormatter;
+  let handler: ErrorHandler;
+  beforeAll(() => {
+    formatter = new ErrorFormatter();
+    handler = new ErrorHandler(formatter);
+  });
 
   describe("handleError", () => {
     let res: Response;
@@ -33,7 +36,7 @@ describe("ErrorHandler", () => {
 
     it("should handle NotFoundError", () => {
       const error = new NotFoundError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -47,7 +50,7 @@ describe("ErrorHandler", () => {
     it("should handle ValidationError", () => {
       const zodError = new ZodError([]);
       const error = new ValidationError(zodError);
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
         error: { message: error.message, code: error.code, status: 400 },
@@ -56,7 +59,7 @@ describe("ErrorHandler", () => {
 
     it("should handle UnauthorizedError", () => {
       const error = new UnauthorizedError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -69,7 +72,7 @@ describe("ErrorHandler", () => {
 
     it("should handle ForbiddenError", () => {
       const error = new ForbiddenError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -82,7 +85,7 @@ describe("ErrorHandler", () => {
 
     it("should handle ConflictError", () => {
       const error = new ConflictError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -95,7 +98,7 @@ describe("ErrorHandler", () => {
 
     it("should handle InternalServerError", () => {
       const error = new InternalServerError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -108,7 +111,7 @@ describe("ErrorHandler", () => {
 
     it("should handle BadRequestError", () => {
       const error = new BadRequestError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -121,7 +124,7 @@ describe("ErrorHandler", () => {
 
     it("should handle NotImplementedError", () => {
       const error = new NotImplementedError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -134,7 +137,7 @@ describe("ErrorHandler", () => {
 
     it("should handle ServiceUnavailableError", () => {
       const error = new ServiceUnavailableError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(error.status);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -148,7 +151,7 @@ describe("ErrorHandler", () => {
     it("should handle unknown errors as UnexpectedError", () => {
       const error = new Error("Unknown error");
       const unexpectedError = new UnexpectedError();
-      handleError(error, res);
+      handler.handleError(error, res);
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         error: {
@@ -173,7 +176,7 @@ describe("ErrorHandler", () => {
           status: 500,
         },
       };
-      expect(formatErrorResponse(error)).toEqual(expectedResponse);
+      expect(formatter.formatErrorResponse(error)).toEqual(expectedResponse);
     });
 
     it("should format an Error object that extends BaseError", () => {
@@ -186,7 +189,7 @@ describe("ErrorHandler", () => {
           status: error.status,
         },
       };
-      expect(formatErrorResponse(error)).toEqual(expectedResponse);
+      expect(formatter.formatErrorResponse(error)).toEqual(expectedResponse);
     });
   });
 });
