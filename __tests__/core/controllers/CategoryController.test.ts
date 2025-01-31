@@ -9,12 +9,12 @@ import {
   UnexpectedError,
   ValidationError,
 } from "../../../src/errors";
-import { formatErrorResponse } from "../../../src/core/utils/errorHandler";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
 import {
   categoryMockRequest,
   categoryMockResponse,
 } from "../../__mocks___/request-response/categories.mock";
+import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
 
 class MockCategoryRepo implements ICategoryRepo {
   getAllCategories = jest.fn();
@@ -28,11 +28,12 @@ describe("CategoryController", () => {
   let categoryController: CategoryController;
   let categoryRepo: MockCategoryRepo;
   let categoryService: CategoryService;
-
+  let errorFormatter: ErrorFormatter;
   beforeEach(() => {
     categoryRepo = new MockCategoryRepo();
     categoryService = new CategoryService(categoryRepo);
     categoryController = new CategoryController(categoryService);
+    errorFormatter = new ErrorFormatter();
   });
 
   afterEach(() => {
@@ -74,7 +75,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -111,7 +112,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -143,7 +144,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -157,7 +158,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -192,7 +193,7 @@ describe("CategoryController", () => {
       await categoryController.updateCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -212,7 +213,7 @@ describe("CategoryController", () => {
       await categoryController.updateCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -261,7 +262,7 @@ describe("CategoryController", () => {
       await categoryController.deleteCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -275,7 +276,7 @@ describe("CategoryController", () => {
       await categoryController.deleteCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(error.status);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
   });

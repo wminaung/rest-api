@@ -1,14 +1,16 @@
 // src/controllers/CategoryController.ts
 import { Request, Response } from "express";
 import { CategoryService } from "../services/CategoryService";
-import { handleError } from "../utils/errorHandler";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
 } from "../schemas/categorySchema";
+import { Controller } from "./Controller";
 
-export class CategoryController {
-  constructor(private categoryService: CategoryService) {}
+export class CategoryController extends Controller {
+  constructor(private categoryService: CategoryService) {
+    super();
+  }
 
   async createCategory(
     req: Request<{}, {}, CreateCategorySchema>,
@@ -19,7 +21,7 @@ export class CategoryController {
       const category = await this.categoryService.createCategory(data);
       res.status(201).json(category);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -28,7 +30,7 @@ export class CategoryController {
       const categories = await this.categoryService.getAllCategories();
       res.status(200).json(categories);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -45,7 +47,7 @@ export class CategoryController {
         res.status(200).json(category);
       }
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -59,7 +61,7 @@ export class CategoryController {
       const category = await this.categoryService.updateCategory(id, data);
       res.status(200).json(category);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -72,9 +74,9 @@ export class CategoryController {
       const category = await this.categoryService.deleteCategory(id);
       res.status(200).json(category);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
-  //* end
+  //* end CategoryController
 }

@@ -1,9 +1,5 @@
 import { Response } from "express";
 import {
-  formatErrorResponse,
-  handleError,
-} from "../../../src/core/utils/errorHandler";
-import {
   NotFoundError,
   ValidationError,
   UnauthorizedError,
@@ -18,11 +14,16 @@ import {
 } from "../../../src/errors";
 import { ZodError } from "zod";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
+import { ErrorHandler } from "../../../src/core/utils/errorHandler";
+import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
 
-describe("errorHandler", () => {
+describe("ErrorHandler", () => {
+  const errorFormatter = new ErrorFormatter();
+  const { formatErrorResponse } = errorFormatter;
+  const { handleError } = new ErrorHandler(errorFormatter);
+
   describe("handleError", () => {
     let res: Response;
-
     beforeEach(() => {
       res = {
         status: jest.fn().mockReturnThis(),

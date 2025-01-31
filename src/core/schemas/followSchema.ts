@@ -14,4 +14,19 @@ export const createFollowSchema = z
     }
   });
 
+export const deleteFollowSchema = z
+  .object({
+    followerId: z.string().uuid(),
+    followingId: z.string().uuid(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.followerId === data.followingId) {
+      ctx.addIssue({
+        code: "custom",
+        message: "A user cannot unfollow themselves.",
+      });
+    }
+  });
+
 export type CreateFollowSchema = z.infer<typeof createFollowSchema>;
+export type DeleteFollowSchema = z.infer<typeof deleteFollowSchema>;

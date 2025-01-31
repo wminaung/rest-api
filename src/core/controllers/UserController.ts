@@ -1,11 +1,13 @@
 // src/controllers/UserController.ts
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
-import { handleError } from "../utils/errorHandler";
 import { CreateUserSchema, UpdateUserSchema } from "../schemas/userSchema";
+import { Controller } from "./Controller";
 
-export class UserController {
-  constructor(private userService: UserService) {}
+export class UserController extends Controller {
+  constructor(private userService: UserService) {
+    super();
+  }
 
   /**
    * Creates a new user from the data in the request body
@@ -23,7 +25,7 @@ export class UserController {
       const user = await this.userService.createUser(data);
       res.status(201).json(user);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -39,7 +41,7 @@ export class UserController {
       const users = await this.userService.getAllUsers();
       res.status(200).json(users);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -63,7 +65,7 @@ export class UserController {
         res.status(200).json(user);
       }
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -84,7 +86,7 @@ export class UserController {
       const user = await this.userService.updateUser(id, data);
       res.status(200).json(user);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
@@ -101,9 +103,9 @@ export class UserController {
       const user = await this.userService.deleteUser(id);
       res.status(200).json(user);
     } catch (err: unknown) {
-      handleError(err, res);
+      this.handleError(err, res);
     }
   }
 
-  //* end
+  //* end UserController
 }

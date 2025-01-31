@@ -23,11 +23,16 @@ export class FollowRepo extends PrismaHelper implements IFollowRepo {
     );
   }
 
+  /**
+   * Retrieves all the users that follow the given user.
+   * @param userId The id of the user to retrieve the followers for.
+   * @returns A list of FollowDTOs representing the followers of the given user.
+   */
   async getFollowers(userId: string): Promise<FollowDTO[]> {
     return this.executePrismaQuery(
       () =>
         this.prisma.follow.findMany({
-          where: { followingId: userId }, // Users who are following this user
+          where: { followingId: userId },
         }),
       "Error fetching followers"
     );

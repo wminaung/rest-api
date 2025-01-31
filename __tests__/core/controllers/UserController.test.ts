@@ -12,8 +12,8 @@ import {
   UnexpectedError,
   ValidationError,
 } from "../../../src/errors";
-import { formatErrorResponse } from "../../../src/core/utils/errorHandler";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
+import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
 
 class MockUserRepo implements IUserRepo {
   getAllUsers = jest.fn();
@@ -27,10 +27,12 @@ describe("UserController", () => {
   let userController: UserController;
   let userRepo: MockUserRepo;
   let userService: UserService;
+  let errorFormatter: ErrorFormatter;
   beforeEach(() => {
     userRepo = new MockUserRepo();
     userService = new UserService(userRepo);
     userController = new UserController(userService);
+    errorFormatter = new ErrorFormatter();
   });
 
   afterEach(() => {
@@ -79,7 +81,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -117,7 +119,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
     //******* end getAllUsers
@@ -158,7 +160,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -173,7 +175,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -219,7 +221,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -246,7 +248,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -301,7 +303,7 @@ describe("UserController", () => {
       await userController.deleteUser(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -316,7 +318,7 @@ describe("UserController", () => {
       await userController.deleteUser(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(error.status);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatErrorResponse(error)
+        errorFormatter.formatErrorResponse(error)
       );
     });
 

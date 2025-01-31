@@ -6,7 +6,10 @@ import {
 import { FollowDTO } from "../dtos/FollowDTO";
 import { IFollowRepo } from "../repositories/interfaces/IFollowRepo";
 import { checkIdSchema } from "../schemas/checkIdSchema";
-import { CreateFollowSchema } from "../schemas/followSchema";
+import {
+  CreateFollowSchema,
+  DeleteFollowSchema,
+} from "../schemas/followSchema";
 import { ServiceHelper } from "../helpers/ServiceHelper";
 
 export class FollowService extends ServiceHelper {
@@ -14,12 +17,22 @@ export class FollowService extends ServiceHelper {
     super();
   }
 
-  async createFollow(data: CreateFollowSchema): Promise<FollowDTO> {
+  async followUser(data: CreateFollowSchema): Promise<FollowDTO> {
     if (data.followerId === data.followingId) {
       throw new UnauthorizedError("You cannot follow yourself");
     }
+    const followerId = this.getValidId(data.followerId);
+    const followingId = this.getValidId(data.followingId);
 
-    return this.followRepo.createFollow(data);
+    return this.followRepo.createFollow({ followerId, followingId });
+  }
+  async unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO> {
+    if (data.followerId === data.followingId) {
+      throw new UnauthorizedError("You cannot unfollow yourself");
+    }
+    const followerId = this.getValidId(data.followerId);
+    const followingId = this.getValidId(data.followingId);
+    return this.followRepo.deleteFollow(followerId, followingId);
   }
 
   async getFollowers(userId: string): Promise<FollowDTO[]> {
@@ -36,17 +49,5 @@ export class FollowService extends ServiceHelper {
       throw new NotFoundError("You are not following anyone");
     }
     return following;
-  }
-
-  // Delete a follow relationship
-  async deleteFollow(
-    followerId: string,
-    followingId: string
-  ): Promise<FollowDTO> {
-    if (followerId === followingId) {
-      throw new UnauthorizedError("You cannot unfollow yourself");
-    }
-
-    return this.followRepo.deleteFollow(followerId, followingId);
   }
 }
