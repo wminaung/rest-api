@@ -75,6 +75,8 @@ model Follow {
   followingId String
   follower    User     @relation("Following", fields: [followerId], references: [id])
   following   User     @relation("FollowedBy", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
 }
 
 model Notification {

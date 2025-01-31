@@ -1,4 +1,3 @@
-import { ZodError } from "zod";
 import { UserDTO } from "../dtos/UserDTO";
 import {
   CreateUserSchema,
@@ -7,11 +6,13 @@ import {
   UpdateUserSchema,
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
-import { getValidId } from "../utils/getValidId";
 import { ValidationError } from "../../errors";
+import { ServiceHelper } from "../helpers/ServiceHelper";
 
-export class UserService {
-  constructor(private userRepo: IUserRepo) {}
+export class UserService extends ServiceHelper {
+  constructor(private userRepo: IUserRepo) {
+    super();
+  }
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
     const safeData = this.validateCreateUserData(data);
@@ -22,12 +23,12 @@ export class UserService {
     return await this.userRepo.getAllUsers();
   }
   async getUserById(id: string): Promise<UserDTO | null> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
     return await this.userRepo.getUserById(validId);
   }
 
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
 
     const safeData = this.validateUpdateUserData(data);
 
@@ -35,7 +36,7 @@ export class UserService {
   }
 
   async deleteUser(id: string): Promise<UserDTO> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
     return await this.userRepo.deleteUser(validId);
   }
 

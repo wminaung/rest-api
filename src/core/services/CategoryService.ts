@@ -1,15 +1,18 @@
 import { ValidationError } from "../../errors";
 import { CategoryDTO } from "../dtos/CategoryDTO";
+import { ServiceHelper } from "../helpers/ServiceHelper";
 import { ICategoryRepo } from "../repositories/interfaces/ICategoryRepo";
 import {
   createCategorySchema,
   CreateCategorySchema,
+  updateCategorySchema,
   UpdateCategorySchema,
 } from "../schemas/categorySchema";
-import { getValidId } from "../utils/getValidId";
 
-export class CategoryService {
-  constructor(private categoryRepo: ICategoryRepo) {}
+export class CategoryService extends ServiceHelper {
+  constructor(private categoryRepo: ICategoryRepo) {
+    super();
+  }
 
   async createCategory(data: CreateCategorySchema): Promise<CategoryDTO> {
     const safeData = this.validateCreateCategoryData(data);
@@ -21,7 +24,7 @@ export class CategoryService {
   }
 
   async getCategoryById(id: string): Promise<CategoryDTO | null> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
     return this.categoryRepo.getCategoryById(validId);
   }
 
@@ -29,13 +32,13 @@ export class CategoryService {
     id: string,
     data: UpdateCategorySchema
   ): Promise<CategoryDTO> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
     const safeData = this.validateUpdateCategoryData(data);
     return this.categoryRepo.updateCategory(validId, safeData);
   }
 
   async deleteCategory(id: string): Promise<CategoryDTO> {
-    const validId = getValidId(id);
+    const validId = this.getValidId(id);
     return this.categoryRepo.deleteCategory(validId);
   }
 
@@ -70,7 +73,7 @@ export class CategoryService {
       success,
       data: safeData,
       error,
-    } = createCategorySchema.safeParse(data);
+    } = updateCategorySchema.safeParse(data);
     if (error || !success) {
       throw error;
     }
