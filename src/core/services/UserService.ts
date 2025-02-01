@@ -7,9 +7,9 @@ import {
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { ValidationError } from "../../errors";
-import { ServiceHelper } from "../helpers/ServiceHelper";
+import { Service } from "./Service";
 
-export class UserService extends ServiceHelper {
+export class UserService extends Service {
   constructor(private userRepo: IUserRepo) {
     super();
   }

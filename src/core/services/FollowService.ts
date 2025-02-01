@@ -1,18 +1,13 @@
-import {
-  NotFoundError,
-  UnauthorizedError,
-  ValidationError,
-} from "../../errors";
+import { NotFoundError, UnauthorizedError } from "../../errors";
 import { FollowDTO } from "../dtos/FollowDTO";
 import { IFollowRepo } from "../repositories/interfaces/IFollowRepo";
-import { checkIdSchema } from "../schemas/checkIdSchema";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
 } from "../schemas/followSchema";
-import { ServiceHelper } from "../helpers/ServiceHelper";
+import { Service } from "./Service";
 
-export class FollowService extends ServiceHelper {
+export class FollowService extends Service {
   constructor(private followRepo: IFollowRepo) {
     super();
   }

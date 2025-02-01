@@ -5,15 +5,13 @@ import {
   CreateCategorySchema,
   UpdateCategorySchema,
 } from "../../schemas/categorySchema";
-import {
-  ConflictError,
-  InternalServerError,
-  NotFoundError,
-} from "../../../errors";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { InternalServerError, NotFoundError } from "../../../errors";
+import { Repository } from "../Repository";
 
-export class CategoryRepo implements ICategoryRepo {
-  constructor(private prisma: PrismaClient) {}
+export class CategoryRepo extends Repository implements ICategoryRepo {
+  constructor(private prisma: PrismaClient) {
+    super();
+  }
 
   async createCategory(data: CreateCategorySchema): Promise<CategoryDTO> {
     try {

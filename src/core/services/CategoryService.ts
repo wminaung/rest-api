@@ -1,6 +1,5 @@
 import { ValidationError } from "../../errors";
 import { CategoryDTO } from "../dtos/CategoryDTO";
-import { ServiceHelper } from "../helpers/ServiceHelper";
 import { ICategoryRepo } from "../repositories/interfaces/ICategoryRepo";
 import {
   createCategorySchema,
@@ -8,8 +7,9 @@ import {
   updateCategorySchema,
   UpdateCategorySchema,
 } from "../schemas/categorySchema";
+import { Service } from "./Service";
 
-export class CategoryService extends ServiceHelper {
+export class CategoryService extends Service {
   constructor(private categoryRepo: ICategoryRepo) {
     super();
   }

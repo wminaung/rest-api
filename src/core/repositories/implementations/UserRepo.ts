@@ -6,9 +6,12 @@ import { UserSelectQuery } from "../../types/userSelectQuery";
 import { NotFoundError } from "../../../errors/NotFoundError";
 import { ConflictError, InternalServerError } from "../../../errors";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { Repository } from "../Repository";
 
-export class UserRepo implements IUserRepo {
-  constructor(private prisma: PrismaClient) {}
+export class UserRepo extends Repository implements IUserRepo {
+  constructor(private prisma: PrismaClient) {
+    super();
+  }
 
   private selectQuery: UserSelectQuery = {
     password: false,

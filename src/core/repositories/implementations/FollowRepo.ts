@@ -3,9 +3,9 @@ import { FollowDTO } from "../../dtos/FollowDTO";
 import { CreateFollowSchema } from "../../schemas/followSchema";
 import { IFollowRepo } from "../interfaces/IFollowRepo";
 import { NotFoundError } from "../../../errors";
-import { PrismaHelper } from "../../helpers/PrismaHelper";
+import { Repository } from "../Repository";
 
-export class FollowRepo extends PrismaHelper implements IFollowRepo {
+export class FollowRepo extends Repository implements IFollowRepo {
   constructor(private prisma: PrismaClient) {
     super();
   }
