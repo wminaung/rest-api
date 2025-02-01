@@ -1,8 +1,6 @@
 import { FollowController } from "../../../src/core/controllers/FollowController";
 import { FollowService } from "../../../src/core/services/FollowService";
 import { IFollowRepo } from "../../../src/core/repositories/interfaces/IFollowRepo";
-import { FollowDTO } from "../../../src/core/dtos/FollowDTO";
-import { CreateFollowSchema } from "../../../src/core/schemas/followSchema";
 import { Request, Response } from "express";
 import { UnauthorizedError, ValidationError } from "../../../src/errors";
 import { ZodError } from "zod";

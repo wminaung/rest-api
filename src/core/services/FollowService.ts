@@ -2,7 +2,9 @@ import { NotFoundError, UnauthorizedError } from "../../errors";
 import { FollowDTO } from "../dtos/FollowDTO";
 import { IFollowRepo } from "../repositories/interfaces/IFollowRepo";
 import {
+  createFollowSchema,
   CreateFollowSchema,
+  deleteFollowSchema,
   DeleteFollowSchema,
 } from "../schemas/followSchema";
 import { Service } from "./Service";
@@ -13,26 +15,16 @@ export class FollowService extends Service {
   }
 
   async followUser(data: CreateFollowSchema): Promise<FollowDTO> {
-    if (data.followerId === data.followingId) {
-      throw new UnauthorizedError("You cannot follow yourself");
-    }
-    const followerId = this.getValidId(data.followerId);
-    const followingId = this.getValidId(data.followingId);
+    const { followerId, followingId } = this.validate(data, createFollowSchema);
 
     const follow = await this.followRepo.getFollow(followerId, followingId);
-
     if (follow) {
       throw new UnauthorizedError("You are already following this user");
     }
     return this.followRepo.createFollow({ followerId, followingId });
   }
   async unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO> {
-    if (data.followerId === data.followingId) {
-      throw new UnauthorizedError("You cannot unfollow yourself");
-    }
-    const followerId = this.getValidId(data.followerId);
-    const followingId = this.getValidId(data.followingId);
-
+    const { followerId, followingId } = this.validate(data, deleteFollowSchema);
     const follow = await this.followRepo.getFollow(followerId, followingId);
 
     if (!follow) {

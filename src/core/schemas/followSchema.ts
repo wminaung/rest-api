@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const createFollowSchema = z
   .object({
-    followerId: z.string().uuid(),
-    followingId: z.string().uuid(),
+    followerId: z.string(),
+    followingId: z.string(),
   })
   .superRefine((data, ctx) => {
     if (data.followerId === data.followingId) {
@@ -16,8 +16,8 @@ export const createFollowSchema = z
 
 export const deleteFollowSchema = z
   .object({
-    followerId: z.string().uuid(),
-    followingId: z.string().uuid(),
+    followerId: z.string(),
+    followingId: z.string(),
   })
   .superRefine((data, ctx) => {
     if (data.followerId === data.followingId) {

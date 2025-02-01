@@ -3,15 +3,13 @@ import { checkIdSchema } from "../schemas/checkIdSchema";
 
 export class ServiceHelper {
   /**
-   * Validates the provided id against the predefined schema. If the id is valid,
-   * it returns the parsed id. Otherwise, it throws a ValidationError.
-   *
-   * @param id - The id to validate by the schema.
-   * @returns The validated id format should string.
-   * @throws ValidationError - If the id is invalid means it does not match the schema.
+   * Returns the validated id if it is valid, otherwise throws ValidationError.
+   * Uses checkIdSchema to validate the id.
+   * @param id - The id to be validated.
+   * @returns The validated id if validation is successful.
+   * @throws {ValidationError} If the validation fails.
    */
-
-  getValidId(id: string): string {
+  static getValidId(id: string): string {
     const { success, data, error } = checkIdSchema.safeParse({ id });
 
     if (error || !success) {

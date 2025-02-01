@@ -15,7 +15,7 @@ export class UserService extends Service {
   }
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
-    const safeData = this.validateCreateUserData(data);
+    const safeData = this.validate(data, createUserSchema);
     return this.userRepo.createUser(safeData);
   }
 
@@ -29,46 +29,13 @@ export class UserService extends Service {
 
   async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
     const validId = this.getValidId(id);
-
-    const safeData = this.validateUpdateUserData(data);
-
+    const safeData = this.validate(data, updateUserSchema);
     return await this.userRepo.updateUser(validId, safeData);
   }
 
   async deleteUser(id: string): Promise<UserDTO> {
     const validId = this.getValidId(id);
     return await this.userRepo.deleteUser(validId);
-  }
-
-  /**
-   * Validates the user creation data against the CreateUserSchema.
-   * Returns the parsed data if it is valid, otherwise throws a ValidationError.
-   * @param data - The creation data to be validated.
-   * @returns The parsed and validated data.
-   * @throws ValidationError if the creation data is invalid.
-   */
-
-  private validateCreateUserData(data: CreateUserSchema) {
-    const { success, data: safeData, error } = createUserSchema.safeParse(data);
-    if (error || !success) {
-      throw new ValidationError(error);
-    }
-    return safeData;
-  }
-  /**
-   * Validates the user update data against the UpdateUserSchema.
-   * Returns the parsed data if it is valid, otherwise throws a ValidationError.
-   * @param data - The update data to be validated.
-   * @returns The parsed and validated data.
-   * @throws ValidationError if the update data is invalid.
-   */
-
-  private validateUpdateUserData(data: UpdateUserSchema) {
-    const { success, data: safeData, error } = updateUserSchema.safeParse(data);
-    if (error || !success) {
-      throw new ValidationError(error);
-    }
-    return safeData;
   }
 
   //**** UserService ****/

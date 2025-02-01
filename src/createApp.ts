@@ -2,6 +2,7 @@ import express from "express";
 import usersRouter from "./routes/users";
 import categoriesRouter from "./routes/categories";
 import followsRouter from "./routes/follows";
+import postRouter from "./routes/posts";
 
 export function createApp() {
   const app = express();
@@ -16,6 +17,7 @@ export function createApp() {
   app.use("/api/users", usersRouter);
   app.use("/api/categories", categoriesRouter);
   app.use("/api/follows", followsRouter);
+  app.use("/api/posts", postRouter);
 
   return app;
 }
