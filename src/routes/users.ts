@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userController } from "../core";
+import { followController, userController } from "../core";
 
 const router = Router();
 
@@ -13,6 +13,14 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   userController.getUserById(req, res);
+});
+
+router.get("/:id/followers", (req, res) => {
+  followController.getFollowers(req, res);
+});
+
+router.get("/:id/following", (req, res) => {
+  followController.getFollowing(req, res);
 });
 
 router.put("/:id", (req, res) => {

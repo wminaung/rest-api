@@ -9,7 +9,12 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "paths": {
+      "src/*": ["src/*"],
+      "__tests__/*": ["__tests__/*"]
+    }
   },
   "include": ["src/**/*", "__tests__", "__tests__/__mocks___"],
   "exclude": [

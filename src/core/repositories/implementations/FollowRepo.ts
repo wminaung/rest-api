@@ -9,6 +9,17 @@ export class FollowRepo extends Repository implements IFollowRepo {
   constructor(private prisma: PrismaClient) {
     super();
   }
+  async getFollow(
+    followerId: string,
+    followingId: string
+  ): Promise<FollowDTO | null> {
+    return this.prisma.follow.findFirst({
+      where: {
+        followerId,
+        followingId,
+      },
+    });
+  }
 
   async createFollow(data: CreateFollowSchema): Promise<FollowDTO> {
     return this.executePrismaQuery(

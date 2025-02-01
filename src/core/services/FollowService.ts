@@ -19,6 +19,11 @@ export class FollowService extends Service {
     const followerId = this.getValidId(data.followerId);
     const followingId = this.getValidId(data.followingId);
 
+    const follow = await this.followRepo.getFollow(followerId, followingId);
+
+    if (follow) {
+      throw new UnauthorizedError("You are already following this user");
+    }
     return this.followRepo.createFollow({ followerId, followingId });
   }
   async unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO> {
@@ -27,22 +32,21 @@ export class FollowService extends Service {
     }
     const followerId = this.getValidId(data.followerId);
     const followingId = this.getValidId(data.followingId);
+
+    const follow = await this.followRepo.getFollow(followerId, followingId);
+
+    if (!follow) {
+      throw new NotFoundError("You are not following this user");
+    }
+
     return this.followRepo.deleteFollow(followerId, followingId);
   }
 
   async getFollowers(userId: string): Promise<FollowDTO[]> {
-    const followers = await this.followRepo.getFollowers(userId);
-    if (followers.length === 0) {
-      throw new NotFoundError("No followers found for this user");
-    }
-    return followers;
+    return await this.followRepo.getFollowers(userId);
   }
 
   async getFollowing(userId: string): Promise<FollowDTO[]> {
-    const following = await this.followRepo.getFollowing(userId);
-    if (following.length === 0) {
-      throw new NotFoundError("You are not following anyone");
-    }
-    return following;
+    return await this.followRepo.getFollowing(userId);
   }
 }
