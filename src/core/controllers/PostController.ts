@@ -61,5 +61,15 @@ export class PostController extends Controller {
     }
   }
 
+  async getCategory(req: Request<{ id: string }>, res: Response) {
+    try {
+      const id = req.params.id;
+      const category = await this.postService.getCategory(id);
+      this.sendOk(res, category);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   //** end ** */
 }

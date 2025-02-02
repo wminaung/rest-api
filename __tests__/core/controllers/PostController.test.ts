@@ -10,6 +10,7 @@ import {
 } from "../../__mocks___/request-response/posts.mock";
 import { Post } from "@prisma/client";
 import { getFakePosts } from "../../__mocks___/data/fakePosts";
+import { CategoryDTO } from "../../../src/core/dtos/CategoryDTO";
 
 class MockPostRepo implements IPostRepo {
   getAll = jest.fn();
@@ -17,6 +18,10 @@ class MockPostRepo implements IPostRepo {
   create = jest.fn();
   update = jest.fn();
   delete = jest.fn();
+  getCategoryByPostId = jest.fn();
+  getCommentsByPostId = jest.fn();
+  getLikesByPostId = jest.fn();
+  getTagsByPostId = jest.fn();
 }
 
 describe("PostController", () => {

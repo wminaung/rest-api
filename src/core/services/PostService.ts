@@ -1,4 +1,5 @@
 import { NotFoundError, ValidationError } from "../../errors";
+import { CategoryDTO } from "../dtos/CategoryDTO";
 import { PostDTO } from "../dtos/PostDTO";
 import { IPostRepo } from "../repositories/interfaces/IPostRepo";
 import {
@@ -38,6 +39,11 @@ export class PostService extends Service {
   async delete(id: string): Promise<PostDTO> {
     const validId = this.getValidId(id);
     return this.postRepo.delete(validId);
+  }
+
+  async getCategory(postId: string): Promise<CategoryDTO | null> {
+    const validPostId = this.getValidId(postId);
+    return this.postRepo.getCategoryByPostId(validPostId);
   }
 
   //**** End of Class *****/

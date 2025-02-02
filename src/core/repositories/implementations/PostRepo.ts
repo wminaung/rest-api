@@ -4,11 +4,16 @@ import { IPostRepo } from "../interfaces/IPostRepo";
 import { PostDTO } from "../../dtos/PostDTO";
 import { CreatePostSchema, UpdatePostSchema } from "../../schemas/postSchema";
 import { NotFoundError } from "../../../errors";
+import { CategoryDTO } from "../../dtos/CategoryDTO";
+import { CommentDTO } from "../../dtos/CommentDTO";
+import { LikeDTO } from "../../dtos/LikeDTO";
+import { TagDTO } from "../../dtos/TagDTO";
 
 export class PostRepo extends Repository implements IPostRepo {
   constructor(private prisma: PrismaClient) {
     super();
   }
+
   async getAll(): Promise<PostDTO[]> {
     return this.executePrismaQuery(
       () => this.prisma.post.findMany(),
@@ -44,4 +49,31 @@ export class PostRepo extends Repository implements IPostRepo {
       `post cannot delete`
     );
   }
+
+  async getCategoryByPostId(id: string): Promise<CategoryDTO | null> {
+    const aaa = await this.prisma.category.findFirst({
+      where: {
+        posts: {
+          some: {
+            id: id,
+          },
+        },
+      },
+    });
+    return aaa;
+  }
+
+  async getCommentsByPostId(id: string): Promise<CommentDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  async getLikesByPostId(id: string): Promise<LikeDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  async getTagsByPostId(id: string): Promise<TagDTO[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  //** end Class */
 }

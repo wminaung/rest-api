@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { followController } from "src/core";
+import { followController } from "../core";
 
 const router = Router();
 
