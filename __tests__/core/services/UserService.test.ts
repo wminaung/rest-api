@@ -5,14 +5,17 @@ import prisma from "../../prisma";
 import { getFakeUsers } from "../../__mocks___/data/fakeUsers";
 
 import { NotFoundError, ValidationError } from "../../../src/errors";
+import { PasswordHasher } from "../../../src/core/helpers/PasswordHasher";
 
 describe("UserService", () => {
   let userRepo: UserRepo;
   let userService: UserService;
   let fakeUsers: User[];
+  let passwordHasher: PasswordHasher;
   beforeAll(async () => {
     userRepo = new UserRepo(prisma);
-    userService = new UserService(userRepo);
+    passwordHasher = new PasswordHasher(10);
+    userService = new UserService(userRepo, passwordHasher);
     fakeUsers = getFakeUsers();
   });
 

@@ -28,14 +28,13 @@ describe("PostController", () => {
   let postController: PostController;
   let postRepo: MockPostRepo;
   let postService: PostService;
-  let errorFormatter: ErrorFormatter;
   let fakePosts: Post[];
 
   beforeEach(() => {
     postRepo = new MockPostRepo();
     postService = new PostService(postRepo);
     postController = new PostController(postService);
-    errorFormatter = new ErrorFormatter();
+
     fakePosts = getFakePosts();
   });
 
@@ -79,7 +78,7 @@ describe("PostController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -123,7 +122,7 @@ describe("PostController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });

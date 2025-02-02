@@ -1,8 +1,9 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ErrorCode } from "../enums/ErrorCode";
 import { BaseError } from "./BaseError";
 
 export class ConflictError extends BaseError {
-  constructor(message: string = "Conflict occurred") {
+  constructor(message: string = "Conflict") {
     super(message, 409, ErrorCode.CONFLICT);
   }
 }

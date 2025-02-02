@@ -26,4 +26,6 @@ export abstract class Service {
   protected validate<T>(dataToValidate: T, schema: z.ZodType<T>): T {
     return ValidationHelper.validate(dataToValidate, schema);
   }
+
+  //***  end class ***/
 }

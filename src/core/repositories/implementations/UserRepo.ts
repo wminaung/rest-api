@@ -101,7 +101,9 @@ export class UserRepo extends Repository implements IUserRepo {
   private handlePrismaError(error: any, message: string): Error {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        return new ConflictError(message);
+        return new ConflictError(
+          `The username or email address you provided is already in use. Please choose a different one.`
+        );
       }
     } else if (error instanceof NotFoundError) {
       throw error;

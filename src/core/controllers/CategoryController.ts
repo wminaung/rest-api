@@ -6,6 +6,7 @@ import {
   UpdateCategorySchema,
 } from "../schemas/categorySchema";
 import { Controller } from "./Controller";
+import { ErrorHandler } from "../utils/ErrorHandler";
 
 export class CategoryController extends Controller {
   constructor(private categoryService: CategoryService) {

@@ -14,6 +14,7 @@ import {
 } from "../../../src/errors";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
 import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
+import { PasswordHasher } from "../../../src/core/helpers/PasswordHasher";
 
 class MockUserRepo implements IUserRepo {
   getAllUsers = jest.fn();
@@ -27,12 +28,12 @@ describe("UserController", () => {
   let userController: UserController;
   let userRepo: MockUserRepo;
   let userService: UserService;
-  let errorFormatter: ErrorFormatter;
+  let passwordHasher: PasswordHasher;
   beforeEach(() => {
     userRepo = new MockUserRepo();
-    userService = new UserService(userRepo);
+    passwordHasher = new PasswordHasher(10);
+    userService = new UserService(userRepo, passwordHasher);
     userController = new UserController(userService);
-    errorFormatter = new ErrorFormatter();
   });
 
   afterEach(() => {
@@ -50,7 +51,7 @@ describe("UserController", () => {
       const createUserData = {
         name: "John Doe",
         email: "john@example.com",
-        password: "password",
+        password: "Password123@",
       };
       const mockRequest = userMockRequest.create(createUserData);
       const mockResponse = userMockResponse.create();
@@ -67,7 +68,7 @@ describe("UserController", () => {
       const createUserData = {
         name: "John Doe",
         email: "john@example.com",
-        password: "password",
+        password: "Password123@",
       };
 
       const mockZodError = new ZodError([]);
@@ -81,7 +82,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -119,7 +120,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
     //******* end getAllUsers
@@ -160,7 +161,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -175,7 +176,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -221,7 +222,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -248,7 +249,7 @@ describe("UserController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -303,7 +304,7 @@ describe("UserController", () => {
       await userController.deleteUser(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -318,7 +319,7 @@ describe("UserController", () => {
       await userController.deleteUser(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(error.status);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 

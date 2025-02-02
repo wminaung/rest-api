@@ -3,18 +3,14 @@ import { BaseError, UnexpectedError } from "./../../errors";
 import { ErrorFormatter } from "../helpers/ErrorFormatter";
 
 export class ErrorHandler {
-  private formatter: ErrorFormatter;
+  constructor() {}
 
-  constructor(formatter: ErrorFormatter) {
-    this.formatter = formatter;
-  }
-
-  public handleError(err: unknown, res: Response): void {
+  static handleError(err: unknown, res: Response): void {
     if (err instanceof BaseError) {
-      res.status(err.status).json(this.formatter.formatErrorResponse(err));
+      res.status(err.status).json(ErrorFormatter.formatErrorResponse(err));
     } else {
       const error = new UnexpectedError();
-      res.status(error.status).json(this.formatter.formatErrorResponse(error));
+      res.status(error.status).json(ErrorFormatter.formatErrorResponse(error));
     }
   }
 }

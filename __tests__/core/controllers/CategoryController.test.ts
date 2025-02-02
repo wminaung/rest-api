@@ -28,12 +28,11 @@ describe("CategoryController", () => {
   let categoryController: CategoryController;
   let categoryRepo: MockCategoryRepo;
   let categoryService: CategoryService;
-  let errorFormatter: ErrorFormatter;
+
   beforeEach(() => {
     categoryRepo = new MockCategoryRepo();
     categoryService = new CategoryService(categoryRepo);
     categoryController = new CategoryController(categoryService);
-    errorFormatter = new ErrorFormatter();
   });
 
   afterEach(() => {
@@ -75,7 +74,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -112,7 +111,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -144,7 +143,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -158,7 +157,7 @@ describe("CategoryController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -193,7 +192,7 @@ describe("CategoryController", () => {
       await categoryController.updateCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -213,7 +212,7 @@ describe("CategoryController", () => {
       await categoryController.updateCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });
@@ -262,7 +261,7 @@ describe("CategoryController", () => {
       await categoryController.deleteCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -276,7 +275,7 @@ describe("CategoryController", () => {
       await categoryController.deleteCategory(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(error.status);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        errorFormatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
   });

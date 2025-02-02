@@ -6,7 +6,12 @@ export const createUserSchema = z.object({
     .min(3, "Name must be at least 3 characters long")
     .max(50, "Name must be at most 50 characters long"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])(?=.{8,})/,
+      "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character."
+    ),
   profilePicture: z.string().url().optional().nullable(),
   bio: z
     .string()

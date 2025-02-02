@@ -18,13 +18,11 @@ describe("FollowController", () => {
   let followController: FollowController;
   let followRepo: MockFollowRepo;
   let followService: FollowService;
-  let formatter: ErrorFormatter;
 
   beforeEach(() => {
     followRepo = new MockFollowRepo();
     followService = new FollowService(followRepo);
     followController = new FollowController(followService);
-    formatter = new ErrorFormatter();
   });
 
   afterEach(() => {
@@ -74,7 +72,7 @@ describe("FollowController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatter.formatErrorResponse(error)
+        ErrorFormatter.formatErrorResponse(error)
       );
     });
 
@@ -98,7 +96,7 @@ describe("FollowController", () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(401);
       expect(mockResponse.json).toHaveBeenCalledWith(
-        formatter.formatErrorResponse(err)
+        ErrorFormatter.formatErrorResponse(err)
       );
     });
   });

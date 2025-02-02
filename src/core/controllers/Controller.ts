@@ -1,16 +1,11 @@
 import { Response } from "express";
-import { ErrorFormatter } from "../helpers/ErrorFormatter";
 import { ErrorHandler } from "../utils/ErrorHandler";
 
 export abstract class Controller {
-  private errorHandler: ErrorHandler;
-  constructor() {
-    const errorFormatter = new ErrorFormatter();
-    this.errorHandler = new ErrorHandler(errorFormatter);
-  }
+  constructor() {}
 
   protected handleError(err: unknown, res: Response): void {
-    this.errorHandler.handleError(err, res);
+    ErrorHandler.handleError(err, res);
   }
 
   protected sendOk(res: Response, data: any): void {

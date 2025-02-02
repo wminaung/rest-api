@@ -6,17 +6,25 @@ import {
   UpdateUserSchema,
 } from "../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
-import { ValidationError } from "../../errors";
 import { Service } from "./Service";
+import { PasswordHasher } from "../helpers/PasswordHasher";
 
 export class UserService extends Service {
-  constructor(private userRepo: IUserRepo) {
+  constructor(
+    private userRepo: IUserRepo,
+    private passwordHasher: PasswordHasher
+  ) {
     super();
+  }
+
+  private hashPassword(password: string): Promise<string> {
+    return this.passwordHasher.hashPassword(password);
   }
 
   async createUser(data: CreateUserSchema): Promise<UserDTO> {
     const safeData = this.validate(data, createUserSchema);
-    return this.userRepo.createUser(safeData);
+    const hashedPassword = await this.hashPassword(safeData.password);
+    return this.userRepo.createUser({ ...safeData, password: hashedPassword });
   }
 
   async getAllUsers(): Promise<UserDTO[]> {
