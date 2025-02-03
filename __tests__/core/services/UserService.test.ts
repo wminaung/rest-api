@@ -20,16 +20,19 @@ describe("UserService", () => {
   });
 
   describe("createUser", () => {
-    it("should create a user when data is valid", async () => {
+    it("should create a user when data is valid ", async () => {
       const payload = fakeUsers[0];
       const { password, ...resolveValue } = payload;
       prisma.user.create.mockResolvedValue(resolveValue as User);
-      const user = await userService.createUser({
-        name: payload.name,
-        email: payload.email,
-        password: payload.password,
-        role: "USER",
-      });
+      const user = await userService.createUser(
+        {
+          name: payload.name,
+          email: payload.email,
+          password: payload.password,
+          role: "USER",
+        },
+        { role: "ADMIN" } as any
+      );
 
       expect(user.name).toBe(user.name);
       expect(user.email).toBe(user.email);

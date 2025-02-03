@@ -33,7 +33,7 @@ export class UserRepo extends Repository implements IUserRepo {
     return !!user;
   }
 
-  async getAllUsers(): Promise<UserDTO[]> {
+  async getAll(): Promise<UserDTO[]> {
     try {
       return this.prisma.user.findMany({ select: this.selectQuery });
     } catch (error) {
@@ -41,7 +41,7 @@ export class UserRepo extends Repository implements IUserRepo {
     }
   }
 
-  async createUser(data: CreateUserSchema): Promise<UserDTO> {
+  async create(data: CreateUserSchema): Promise<UserDTO> {
     try {
       return await this.prisma.user.create({
         data,
@@ -52,7 +52,7 @@ export class UserRepo extends Repository implements IUserRepo {
     }
   }
 
-  async getUserById(id: string): Promise<UserDTO | null> {
+  async get(id: string): Promise<UserDTO | null> {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id },
@@ -68,7 +68,7 @@ export class UserRepo extends Repository implements IUserRepo {
     }
   }
 
-  async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
+  async update(id: string, data: UpdateUserSchema): Promise<UserDTO> {
     try {
       const userExists = await this.userExists(id);
 
@@ -86,7 +86,7 @@ export class UserRepo extends Repository implements IUserRepo {
     }
   }
 
-  async deleteUser(id: string): Promise<UserDTO> {
+  async delete(id: string): Promise<UserDTO> {
     try {
       const userExists = await this.userExists(id);
       if (!userExists) {

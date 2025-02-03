@@ -1,4 +1,4 @@
-import { CategoryDTO } from "../../dtos/CategoryDTO";
+import { CategoryDTO } from "../../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,

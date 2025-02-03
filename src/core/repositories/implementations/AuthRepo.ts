@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { IAuthRepo } from "../interfaces/IAuthRepo";
-import { Role } from "../../../enums/Role";
 import { Repository } from "../Repository";
-import { AuthDTO } from "../../dtos/AuthDTO";
 import { CreateUserSchema } from "../../../schemas/userSchema";
-import { UserDTO } from "../../dtos/UserDTO";
 import { InternalServerError } from "../../../errors";
+import { AuthDTO } from "../../../dtos/AuthDTO";
+import { UserDTO } from "../../../dtos/UserDTO";
 
 export class AuthRepo extends Repository implements IAuthRepo {
   constructor(private prisma: PrismaClient) {
@@ -35,7 +34,7 @@ export class AuthRepo extends Repository implements IAuthRepo {
           name: data.name,
           email: data.email,
           password: data.password,
-          role: Role.USER,
+          role: data.role,
         },
       });
       const { password, ...userDTO } = user;

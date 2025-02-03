@@ -4,7 +4,7 @@ import categoriesRouter from "./routes/categories";
 import followsRouter from "./routes/follows";
 import postRouter from "./routes/posts";
 import authRouter from "./routes/auth";
-import { authMiddleware } from "./middlewares/jwt-utils";
+import { authenticationToken } from "./middlewares/jwt-utils";
 
 export function createApp() {
   const app = express();
@@ -16,14 +16,11 @@ export function createApp() {
     next();
   });
 
-  app.use("/protected", authMiddleware, (req, res) => {
-    res.send("This is a protected route");
-  });
   app.use("/api/auth", authRouter);
-  app.use("/api/users", usersRouter);
+  app.use("/api/users", authenticationToken, usersRouter);
   app.use("/api/categories", categoriesRouter);
   app.use("/api/follows", followsRouter);
-  app.use("/api/posts", postRouter);
+  app.use("/api/posts", authenticationToken, postRouter);
 
   return app;
 }

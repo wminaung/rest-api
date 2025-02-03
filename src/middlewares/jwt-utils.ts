@@ -1,30 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtManager } from "../helpers/JwtManager";
-import { redis } from "../lib/redis";
 
-async function isTokenBlacklisted(token: string) {
-  const decoded = JwtManager.verifyRefreshToken(token);
-  if (!decoded) return false;
-
-  const tokenId = decoded.jti;
-  const isBlacklisted = await redis.get(`blacklist:${tokenId}`);
-
-  return isBlacklisted === "blacklisted";
-}
-
-export const authMiddleware = async (
+export const authenticationToken = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
     res.status(401).json({ message: "Token is required" });
     return;
   }
-  if (await isTokenBlacklisted(token)) {
-    res.status(401).json({ message: "Token has been invalidated" });
+  const decoded = JwtManager.verifyAccessToken(token);
+
+  if (!decoded || !decoded.email || !decoded.id) {
+    res.status(403).json({ message: "Invalid Token" });
     return;
   }
+  console.log(`valid token`);
+
+  req.user = decoded;
+
   next();
 };

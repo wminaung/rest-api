@@ -1,8 +1,8 @@
-import { CategoryDTO } from "../../dtos/CategoryDTO";
-import { CommentDTO } from "../../dtos/CommentDTO";
-import { LikeDTO } from "../../dtos/LikeDTO";
-import { PostDTO } from "../../dtos/PostDTO";
-import { TagDTO } from "../../dtos/TagDTO";
+import { CategoryDTO } from "../../../dtos/CategoryDTO";
+import { CommentDTO } from "../../../dtos/CommentDTO";
+import { LikeDTO } from "../../../dtos/LikeDTO";
+import { PostDTO } from "../../../dtos/PostDTO";
+import { TagDTO } from "../../../dtos/TagDTO";
 import {
   CreatePostSchema,
   UpdatePostSchema,

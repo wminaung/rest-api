@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
-import configs from "../../configs";
-import { JwtAuthPayload } from "../../../types/jwtAuthPayload";
-import { StringValue } from "../../../types/ms.namespace.copy";
+import { JwtAuthPayload } from "../types/jwtAuthPayload";
+import { StringValue } from "../types/ms.namespace.copy";
+import configs from "../configs";
 
 export class JwtManager {
   static generateAccessToken(
     payload: JwtAuthPayload,
-    expiresIn: number | StringValue | undefined = "1h"
+    expiresIn: number | StringValue | undefined = "15M"
   ): string {
     return jwt.sign(payload, configs.jwtAccessTokenSecret, {
       expiresIn: expiresIn,
@@ -32,6 +32,7 @@ export class JwtManager {
 
   static verifyRefreshToken(token: string): JwtAuthPayload | null {
     try {
+      console.log(token);
       return jwt.verify(token, configs.jwtRefreshTokenSecret) as JwtAuthPayload;
     } catch {
       return null;

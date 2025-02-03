@@ -8,8 +8,11 @@ import {
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { Service } from "./Service";
 import { PasswordHasher } from "../../helpers/PasswordHasher";
+import { JwtAuthPayload } from "../../types/jwtAuthPayload";
+import { UnauthorizedError } from "../../errors";
+import { IUserService } from "./serviceInterface/IUserService";
 
-export class UserService extends Service {
+export class UserService extends Service implements IUserService {
   constructor(
     private userRepo: IUserRepo,
     private passwordHasher: PasswordHasher
@@ -21,29 +24,36 @@ export class UserService extends Service {
     return this.passwordHasher.hashPassword(password);
   }
 
-  async createUser(data: CreateUserSchema): Promise<UserDTO> {
+  async create(
+    data: CreateUserSchema,
+    user?: JwtAuthPayload
+  ): Promise<UserDTO> {
+    // authorization check for admin role
+    if (user?.role !== "ADMIN") {
+      throw new UnauthorizedError("Only admin can create User");
+    }
     const safeData = this.validate(data, createUserSchema);
     const hashedPassword = await this.hashPassword(safeData.password);
-    return this.userRepo.createUser({ ...safeData, password: hashedPassword });
+    return this.userRepo.create({ ...safeData, password: hashedPassword });
   }
 
-  async getAllUsers(): Promise<UserDTO[]> {
-    return await this.userRepo.getAllUsers();
+  async getAll(): Promise<UserDTO[]> {
+    return await this.userRepo.getAll();
   }
-  async getUserById(id: string): Promise<UserDTO | null> {
+  async get(id: string): Promise<UserDTO | null> {
     const validId = this.getValidId(id);
-    return await this.userRepo.getUserById(validId);
+    return await this.userRepo.get(validId);
   }
 
-  async updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO> {
+  async update(id: string, data: UpdateUserSchema): Promise<UserDTO> {
     const validId = this.getValidId(id);
     const safeData = this.validate(data, updateUserSchema);
-    return await this.userRepo.updateUser(validId, safeData);
+    return await this.userRepo.update(validId, safeData);
   }
 
-  async deleteUser(id: string): Promise<UserDTO> {
+  async delete(id: string): Promise<UserDTO> {
     const validId = this.getValidId(id);
-    return await this.userRepo.deleteUser(validId);
+    return await this.userRepo.delete(validId);
   }
 
   //**** UserService ****/

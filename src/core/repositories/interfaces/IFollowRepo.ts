@@ -1,4 +1,4 @@
-import { FollowDTO } from "../../dtos/FollowDTO";
+import { FollowDTO } from "../../../dtos/FollowDTO";
 import { CreateFollowSchema } from "../../../schemas/followSchema";
 
 export interface IFollowRepo {

@@ -5,9 +5,12 @@ import { Service } from "./Service";
 import { createUserSchema, CreateUserSchema } from "../../schemas/userSchema";
 import { ForbiddenError, UnauthorizedError } from "../../errors";
 import { PasswordHasher } from "../../helpers/PasswordHasher";
-import configs from "../../configs";
 import { JwtManager } from "../../helpers/JwtManager";
+import { redis } from "../../lib/redis";
 
+type LoginReturnType = { accessToken: string; refreshToken: string };
+type RefreshAccessTokenReturnType = { accessToken: string };
+type LogoutReturnType = { message: string };
 export class AuthService extends Service {
   constructor(
     private authRepository: IAuthRepo,
@@ -33,7 +36,7 @@ export class AuthService extends Service {
   }
 
   // Login and generate access and refresh tokens
-  async login(email: string, password: string) {
+  async login(email: string, password: string): Promise<LoginReturnType> {
     const user = await this.authRepository.findByEmail(email);
     if (!user)
       throw new UnauthorizedError("Invalid credentials - user not found");
@@ -45,44 +48,70 @@ export class AuthService extends Service {
     if (!isValidPassword)
       throw new UnauthorizedError("Invalid credentials - wrong password");
 
-    // Remove password from user object
-    const { password: _, ...userWithoutPassword } = user;
-
+    const { email: db_email, id, name, role } = user;
+    const payload = {
+      id,
+      name,
+      role,
+      email: db_email,
+    };
     // Generate Access Token and Refresh Token
-    const accessToken = JwtManager.generateAccessToken(userWithoutPassword);
-    const refreshToken = JwtManager.generateRefreshToken(userWithoutPassword);
+    const accessToken = JwtManager.generateAccessToken(payload);
 
+    const refreshToken = JwtManager.generateRefreshToken(payload);
+    await redis.set(`refreshToken:${id}`, refreshToken, {
+      ex: 60 * 60 * 24 * 7,
+    });
     return { accessToken, refreshToken };
   }
 
-  // Logout function (just an example, refresh tokens should be stored or invalidated)
-  async logout(token: string) {
-    const decoded = JwtManager.verifyAccessToken(token);
-    if (!decoded) throw new ForbiddenError("Invalid token");
+  async logout(refreshToken: string): Promise<LogoutReturnType> {
+    // Decode and verify the refresh token
+    const decoded = JwtManager.verifyRefreshToken(refreshToken);
+    if (!decoded) throw new UnauthorizedError("Invalid refresh token");
 
-    const expiresIn = (decoded.exp ?? 3600) - Math.floor(Date.now() / 1000);
-    if (expiresIn > 0) {
-      // Optionally handle token blacklist/invalidation here
-      // For example, storing the token in a blacklist database
-    }
+    // Add the refresh token to the blacklist
+    await redis.sadd(`blacklist:${decoded.id}`, refreshToken);
+
+    // remove the refresh token from Redis to make it invalid
+    await redis.del(`refreshToken:${decoded.id}`);
+
+    return { message: "Logged out successfully" };
   }
 
   // Refresh Access Token using Refresh Token
-  async refreshAccessToken(refreshToken: string) {
+  async refreshAccessToken(
+    refreshToken: string
+  ): Promise<RefreshAccessTokenReturnType> {
+    // Decode and verify the refresh token
     const decoded = JwtManager.verifyRefreshToken(refreshToken);
     if (!decoded) throw new ForbiddenError("Invalid refresh token");
 
-    // Here you can fetch user from the database if needed
-    const { username, id, email, name, role, profilePicture } = decoded;
+    const { id, email, name, role } = decoded;
+
+    // Check if the refresh token is blacklisted
+    const isBlacklisted = await redis.sismember(
+      `blacklist:${id}`,
+      refreshToken
+    );
+    if (isBlacklisted) {
+      throw new ForbiddenError(
+        "Refresh token has been invalidated or blacklisted"
+      );
+    }
+
+    // Retrieve the stored refresh token from Redis
+    const storedToken = await redis.get(`refreshToken:${id}`);
+    if (!storedToken || storedToken !== refreshToken) {
+      throw new ForbiddenError("Refresh token is invalid or expired");
+    }
 
     // Generate new access token
     const newAccessToken = JwtManager.generateAccessToken({
-      username,
       id,
       email,
       name,
       role,
-      profilePicture,
     });
 
     return { accessToken: newAccessToken };

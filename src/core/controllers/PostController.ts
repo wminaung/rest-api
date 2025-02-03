@@ -20,6 +20,8 @@ export class PostController extends Controller {
 
   async getAll(req: Request, res: Response) {
     try {
+      // Check if the request is authenticated and has a user object
+
       const posts = await this.postService.getAll();
       this.sendOk(res, posts);
     } catch (error) {

@@ -1,5 +1,5 @@
-import { AuthDTO } from "../../dtos/AuthDTO";
-import { UserDTO } from "../../dtos/UserDTO";
+import { AuthDTO } from "../../../dtos/AuthDTO";
+import { UserDTO } from "../../../dtos/UserDTO";
 import { CreateUserSchema } from "../../../schemas/userSchema";
 
 export interface IAuthRepo {

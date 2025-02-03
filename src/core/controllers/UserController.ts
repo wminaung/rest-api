@@ -1,8 +1,10 @@
 // src/controllers/UserController.ts
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
-import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
+import { UpdateUserSchema } from "../../schemas/userSchema";
 import { Controller } from "./Controller";
+import { Role } from "../../enums/Role";
+import { UnauthorizedError } from "../../errors";
 
 export class UserController extends Controller {
   constructor(private userService: UserService) {
@@ -16,14 +18,11 @@ export class UserController extends Controller {
    * @throws {ZodError} If the request body is invalid
    * @throws {Error} If there is an error creating the user
    */
-  async createUser(
-    req: Request<{}, {}, CreateUserSchema>,
-    res: Response
-  ): Promise<void> {
+  async createUser(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
-      const user = await this.userService.createUser(data);
-      res.status(201).json(user);
+      const user = await this.userService.create(data, req.user);
+      this.sendCreated(res, user);
     } catch (err: unknown) {
       this.handleError(err, res);
     }
@@ -38,7 +37,7 @@ export class UserController extends Controller {
    */
   async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await this.userService.getAllUsers();
+      const users = await this.userService.getAll();
       res.status(200).json(users);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -58,7 +57,7 @@ export class UserController extends Controller {
   ): Promise<void> {
     try {
       const id = req.params.id;
-      const user = await this.userService.getUserById(id);
+      const user = await this.userService.get(id);
       if (!user) {
         res.status(404).json({ message: "User not found" });
       } else {
@@ -83,7 +82,7 @@ export class UserController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const user = await this.userService.updateUser(id, data);
+      const user = await this.userService.update(id, data);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -100,7 +99,7 @@ export class UserController extends Controller {
   async deleteUser(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const user = await this.userService.deleteUser(id);
+      const user = await this.userService.delete(id);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);

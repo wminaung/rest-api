@@ -5,7 +5,6 @@ import { PasswordHasher } from "../helpers/PasswordHasher";
 import { AuthController } from "./controllers/AuthController";
 
 export const createAuthController = (prisma: PrismaClient) => {
-  const categoryRepo = new AuthRepo(prisma);
   const authRepo = new AuthRepo(prisma);
   const passwordHasher = new PasswordHasher(10);
   const categoryService = new AuthService(authRepo, passwordHasher);

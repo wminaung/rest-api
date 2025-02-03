@@ -1,13 +1,13 @@
-import { UserDTO } from "../../dtos/UserDTO";
+import { UserDTO } from "../../../dtos/UserDTO";
 import {
   CreateUserSchema,
   UpdateUserSchema,
 } from "../../../schemas/userSchema";
 
 export interface IUserRepo {
-  getAllUsers(): Promise<UserDTO[]>;
-  getUserById(id: string): Promise<UserDTO | null>;
-  createUser(data: CreateUserSchema): Promise<UserDTO>;
-  updateUser(id: string, data: UpdateUserSchema): Promise<UserDTO>;
-  deleteUser(id: string): Promise<UserDTO>;
+  getAll(): Promise<UserDTO[]>;
+  get(id: string): Promise<UserDTO | null>;
+  create(data: CreateUserSchema): Promise<UserDTO>;
+  update(id: string, data: UpdateUserSchema): Promise<UserDTO>;
+  delete(id: string): Promise<UserDTO>;
 }

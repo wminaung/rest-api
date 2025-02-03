@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from "../../errors";
+import { NotFoundError } from "../../errors";
 import { IPostRepo } from "../repositories/interfaces/IPostRepo";
 import {
   createPostSchema,

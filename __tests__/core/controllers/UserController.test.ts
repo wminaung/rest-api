@@ -53,13 +53,13 @@ describe("UserController", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "Password123@",
-        role: "USER",
+        role: "ADMIN",
       };
       const mockRequest = userMockRequest.create(createUserData);
       const mockResponse = userMockResponse.create();
 
       userRepo.createUser.mockResolvedValue(user);
-
+      userService.createUser(createUserData, { role: "ADMIN" } as any);
       await userController.createUser(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({ ...user });
@@ -71,7 +71,7 @@ describe("UserController", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "Password123@",
-        role: "USER",
+        role: "ADMIN",
       };
 
       const mockZodError = new ZodError([]);
