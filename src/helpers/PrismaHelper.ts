@@ -1,4 +1,4 @@
-import { BaseError, InternalServerError } from "../../errors";
+import { BaseError, InternalServerError } from "../errors";
 import { logError } from "../utils/logError";
 
 export class PrismaHelper {

@@ -1,7 +1,7 @@
 // src/controllers/UserController.ts
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
-import { CreateUserSchema, UpdateUserSchema } from "../schemas/userSchema";
+import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
 import { Controller } from "./Controller";
 
 export class UserController extends Controller {

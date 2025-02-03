@@ -3,9 +3,9 @@ import { UserRepo } from "../../../src/core/repositories/implementations/UserRep
 import { User } from "@prisma/client";
 import prisma from "../../prisma";
 import { getFakeUsers } from "../../__mocks___/data/fakeUsers";
-
 import { NotFoundError, ValidationError } from "../../../src/errors";
-import { PasswordHasher } from "../../../src/core/helpers/PasswordHasher";
+import { PasswordHasher } from "../../../src/helpers/PasswordHasher";
+import { CreateUserSchema } from "../../../src/schemas/userSchema";
 
 describe("UserService", () => {
   let userRepo: UserRepo;
@@ -28,6 +28,7 @@ describe("UserService", () => {
         name: payload.name,
         email: payload.email,
         password: payload.password,
+        role: "USER",
       });
 
       expect(user.name).toBe(user.name);
@@ -36,7 +37,7 @@ describe("UserService", () => {
     });
 
     it("should throw ValidationError an error when data is invalid", async () => {
-      const payload = { name: "", email: "", password: "" };
+      const payload = { name: "", email: "", password: "" } as CreateUserSchema;
       await expect(userService.createUser(payload)).rejects.toThrow(
         ValidationError
       );

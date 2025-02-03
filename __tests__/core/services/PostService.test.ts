@@ -2,7 +2,6 @@ import { PostService } from "../../../src/core/services/PostService";
 import { PostRepo } from "../../../src/core/repositories/implementations/PostRepo";
 import prisma from "../../prisma";
 import { getFakePosts } from "../../__mocks___/data/fakePosts"; // Fake post data
-
 import { NotFoundError, ValidationError } from "../../../src/errors";
 import { Post } from "@prisma/client";
 

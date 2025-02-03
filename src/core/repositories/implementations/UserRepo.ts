@@ -1,8 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { IUserRepo } from "../interfaces/IUserRepo";
-import { UserDTO } from "../../dtos/UserDTO";
-import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
-import { UserSelectQuery } from "../../types/userSelectQuery";
+import { UserDTO } from "../../../dtos/UserDTO";
+import {
+  CreateUserSchema,
+  UpdateUserSchema,
+} from "../../../schemas/userSchema";
+import { UserSelectQuery } from "../../../types/userSelectQuery";
 import { NotFoundError } from "../../../errors/NotFoundError";
 import { ConflictError, InternalServerError } from "../../../errors";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -20,6 +23,7 @@ export class UserRepo extends Repository implements IUserRepo {
     email: true,
     bio: true,
     profilePicture: true,
+    role: true,
     createdAt: true,
     updatedAt: true,
   };
@@ -31,7 +35,7 @@ export class UserRepo extends Repository implements IUserRepo {
 
   async getAllUsers(): Promise<UserDTO[]> {
     try {
-      return await this.prisma.user.findMany({ select: this.selectQuery });
+      return this.prisma.user.findMany({ select: this.selectQuery });
     } catch (error) {
       throw this.handlePrismaError(error, "Error fetching users");
     }

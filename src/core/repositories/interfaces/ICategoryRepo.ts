@@ -2,7 +2,7 @@ import { CategoryDTO } from "../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../schemas/categorySchema";
+} from "../../../schemas/categorySchema";
 
 export interface ICategoryRepo {
   createCategory(data: CreateCategorySchema): Promise<CategoryDTO>;

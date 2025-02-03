@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ServiceHelper } from "../helpers/ServiceHelper";
-import { ValidationHelper } from "../helpers/ValidationHelper";
+import { ServiceHelper } from "../../helpers/ServiceHelper";
+import { ValidationHelper } from "../../helpers/ValidationHelper";
 
 export abstract class Service {
   /**

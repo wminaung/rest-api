@@ -1,14 +1,14 @@
 import { NotFoundError, ValidationError } from "../../errors";
-import { CategoryDTO } from "../dtos/CategoryDTO";
-import { PostDTO } from "../dtos/PostDTO";
 import { IPostRepo } from "../repositories/interfaces/IPostRepo";
 import {
   createPostSchema,
   CreatePostSchema,
   updatePostSchema,
   UpdatePostSchema,
-} from "../schemas/postSchema";
+} from "../../schemas/postSchema";
 import { Service } from "./Service";
+import { PostDTO } from "../../dtos/PostDTO";
+import { CategoryDTO } from "../../dtos/CategoryDTO";
 
 export class PostService extends Service {
   constructor(private postRepo: IPostRepo) {

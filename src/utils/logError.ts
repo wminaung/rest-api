@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { BaseError } from "../../errors";
+import { BaseError } from "../errors";
 
 const logFilePath = path.join(process.cwd(), "error.log");
 

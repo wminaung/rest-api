@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { BaseError, UnexpectedError } from "./../../errors";
+import { BaseError, UnexpectedError } from "./../errors";
 import { ErrorFormatter } from "../helpers/ErrorFormatter";
 
 export class ErrorHandler {

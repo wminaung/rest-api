@@ -1,13 +1,13 @@
-import { UserDTO } from "../dtos/UserDTO";
+import { UserDTO } from "../../dtos/UserDTO";
 import {
   CreateUserSchema,
   createUserSchema,
   updateUserSchema,
   UpdateUserSchema,
-} from "../schemas/userSchema";
+} from "../../schemas/userSchema";
 import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { Service } from "./Service";
-import { PasswordHasher } from "../helpers/PasswordHasher";
+import { PasswordHasher } from "../../helpers/PasswordHasher";
 
 export class UserService extends Service {
   constructor(

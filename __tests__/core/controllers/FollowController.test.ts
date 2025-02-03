@@ -4,7 +4,7 @@ import { IFollowRepo } from "../../../src/core/repositories/interfaces/IFollowRe
 import { Request, Response } from "express";
 import { UnauthorizedError, ValidationError } from "../../../src/errors";
 import { ZodError } from "zod";
-import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
+import { ErrorFormatter } from "../../../src/helpers/ErrorFormatter";
 
 class MockFollowRepo implements IFollowRepo {
   createFollow = jest.fn();

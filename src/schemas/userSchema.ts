@@ -13,6 +13,7 @@ export const createUserSchema = z.object({
       "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character."
     ),
   profilePicture: z.string().url().optional().nullable(),
+  role: z.enum(["USER", "ADMIN"]),
   bio: z
     .string()
     .max(250, "Bio must be at most 250 characters")

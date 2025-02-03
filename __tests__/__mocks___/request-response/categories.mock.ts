@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../../src/core/schemas/categorySchema";
+} from "../../../src/schemas/categorySchema";
 
 export const categoryMockRequest = {
   create: (body: CreateCategorySchema) => {

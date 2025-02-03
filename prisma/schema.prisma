@@ -8,24 +8,23 @@ datasource db {
 }
 
 model User {
-  id               String         @id @default(uuid())
-  name             String
-  email            String         @unique
-  password         String
-  profilePicture   String?
-  bio              String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  resetToken       String?
-  resetTokenExpiry DateTime?
-  role             Role           @default(USER)
-  comments         Comment[]
-  following        Follow[]       @relation("Following")
-  followers        Follow[]       @relation("FollowedBy")
-  likes            Like[]
-  media            Media[]
-  notifications    Notification[]
-  posts            Post[]         @relation("UserPosts")
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  password       String
+  profilePicture String?
+  bio            String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  role          Role           @default(USER)
+  comments      Comment[]
+  following     Follow[]       @relation("Following")
+  followers     Follow[]       @relation("FollowedBy")
+  likes         Like[]
+  media         Media[]
+  notifications Notification[]
+  posts         Post[]         @relation("UserPosts")
 }
 
 model Post {

@@ -1,6 +1,5 @@
 import { CategoryRepo } from "../../../src/core/repositories/implementations/CategoryRepo";
 import { CategoryService } from "../../../src/core/services/CategoryService";
-import { CreateCategorySchema } from "../../../src/core/schemas/categorySchema";
 import { NotFoundError, ValidationError } from "../../../src/errors";
 import prisma from "../../prisma";
 import { Category } from "@prisma/client";

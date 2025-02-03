@@ -14,9 +14,8 @@ import {
 } from "../../../src/errors";
 import { ZodError } from "zod";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
-import { ErrorHandler } from "../../../src/core/utils/ErrorHandler";
-import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { ErrorHandler } from "../../../src/utils/ErrorHandler";
+import { ErrorFormatter } from "../../../src/helpers/ErrorFormatter";
 
 describe("ErrorHandler", () => {
   beforeAll(() => {});

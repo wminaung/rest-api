@@ -3,14 +3,13 @@ import { PostController } from "../../../src/core/controllers/PostController";
 import { IPostRepo } from "../../../src/core/repositories/interfaces/IPostRepo";
 import { PostService } from "../../../src/core/services/PostService";
 import { NotFoundError, ValidationError } from "../../../src/errors";
-import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
 import {
   postMockRequest,
   postMockResponse,
 } from "../../__mocks___/request-response/posts.mock";
 import { Post } from "@prisma/client";
 import { getFakePosts } from "../../__mocks___/data/fakePosts";
-import { CategoryDTO } from "../../../src/core/dtos/CategoryDTO";
+import { ErrorFormatter } from "../../../src/helpers/ErrorFormatter";
 
 class MockPostRepo implements IPostRepo {
   getAll = jest.fn();

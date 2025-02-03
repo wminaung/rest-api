@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";
-import { CategoryDTO } from "../../dtos/CategoryDTO";
+import { CategoryDTO } from "../../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../schemas/categorySchema";
+} from "../../../schemas/categorySchema";
 import { InternalServerError, NotFoundError } from "../../../errors";
 import { Repository } from "../Repository";
 

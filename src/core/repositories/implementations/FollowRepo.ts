@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { FollowDTO } from "../../dtos/FollowDTO";
-import { CreateFollowSchema } from "../../schemas/followSchema";
+import { FollowDTO } from "../../../dtos/FollowDTO";
+import { CreateFollowSchema } from "../../../schemas/followSchema";
 import { IFollowRepo } from "../interfaces/IFollowRepo";
 import { NotFoundError } from "../../../errors";
 import { Repository } from "../Repository";

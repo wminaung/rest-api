@@ -6,5 +6,6 @@ export type UserSelectQuery = {
   bio: boolean;
   profilePicture: boolean;
   createdAt: boolean;
+  role: true;
   updatedAt: boolean;
 };

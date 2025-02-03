@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   CreatePostSchema,
   UpdatePostSchema,
-} from "../../../src/core/schemas/postSchema";
+} from "../../../src/schemas/postSchema";
 
 export const postMockRequest = {
   create: (body: CreatePostSchema) => {

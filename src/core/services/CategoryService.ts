@@ -1,12 +1,11 @@
-import { ValidationError } from "../../errors";
-import { CategoryDTO } from "../dtos/CategoryDTO";
+import { CategoryDTO } from "../../dtos/CategoryDTO";
 import { ICategoryRepo } from "../repositories/interfaces/ICategoryRepo";
 import {
   createCategorySchema,
   CreateCategorySchema,
   updateCategorySchema,
   UpdateCategorySchema,
-} from "../schemas/categorySchema";
+} from "../../schemas/categorySchema";
 import { Service } from "./Service";
 
 export class CategoryService extends Service {

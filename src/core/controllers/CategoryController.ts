@@ -4,9 +4,9 @@ import { CategoryService } from "../services/CategoryService";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../schemas/categorySchema";
+} from "../../schemas/categorySchema";
 import { Controller } from "./Controller";
-import { ErrorHandler } from "../utils/ErrorHandler";
+import { ErrorHandler } from "../../utils/ErrorHandler";
 
 export class CategoryController extends Controller {
   constructor(private categoryService: CategoryService) {

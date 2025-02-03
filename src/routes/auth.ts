@@ -1,12 +1,12 @@
 import { Request, Response, Router } from "express";
-import { CreateUserSchema } from "../core/schemas/userSchema";
+import { CreateUserSchema } from "../schemas/userSchema";
 import { userController } from "../core";
-import { loginSchema, LoginSchema } from "../core/schemas/loginSchema";
+import { loginSchema, LoginSchema } from "../schemas/loginSchema";
 import jwt from "jsonwebtoken";
 import { UserService } from "../core/services/UserService";
 import { UserRepo } from "../core/repositories/implementations/UserRepo";
 import { PrismaClient } from "@prisma/client";
-import { PasswordHasher } from "../core/helpers/PasswordHasher";
+import { PasswordHasher } from "../helpers/PasswordHasher";
 
 const router = Router();
 

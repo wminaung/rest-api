@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   CreateUserSchema,
   UpdateUserSchema,
-} from "../../../src/core/schemas/userSchema";
+} from "../../../src/schemas/userSchema";
 
 export const userMockRequest = {
   /**

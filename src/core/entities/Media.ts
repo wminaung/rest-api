@@ -1,4 +1,4 @@
-import { MediaType } from "../enums/MediaType";
+import { MediaType } from "../../enums/MediaType";
 import { User } from "./User";
 
 export interface Media {

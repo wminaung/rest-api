@@ -6,8 +6,7 @@ const fakeUsers: User[] = [
     name: "John",
     email: "j@j.com",
     password: "Password1@",
-    resetToken: null,
-    resetTokenExpiry: null,
+
     role: "USER",
     bio: null,
     profilePicture: null,
@@ -20,8 +19,7 @@ const fakeUsers: User[] = [
     email: "d@d.com",
     password: "Password2@",
     bio: null,
-    resetToken: null,
-    resetTokenExpiry: null,
+
     role: "USER",
     profilePicture: null,
     createdAt: new Date(),
@@ -32,8 +30,6 @@ const fakeUsers: User[] = [
     name: "Alice",
     email: "a@a.com",
     password: "Password3@",
-    resetToken: null,
-    resetTokenExpiry: null,
     role: "USER",
     bio: null,
     profilePicture: null,
@@ -45,8 +41,7 @@ const fakeUsers: User[] = [
     name: "Bob",
     email: "b@b.com",
     password: "Password4@",
-    resetToken: null,
-    resetTokenExpiry: null,
+
     role: "USER",
     bio: null,
     profilePicture: null,
@@ -58,8 +53,7 @@ const fakeUsers: User[] = [
     name: "Charlie",
     email: "c@c.com",
     password: "Password5@",
-    resetToken: null,
-    resetTokenExpiry: null,
+
     role: "USER",
     bio: null,
     profilePicture: null,
@@ -71,8 +65,7 @@ const fakeUsers: User[] = [
     name: "Eve",
     email: "e@e.com",
     password: "Password6@",
-    resetToken: null,
-    resetTokenExpiry: null,
+
     role: "USER",
     bio: null,
     profilePicture: null,

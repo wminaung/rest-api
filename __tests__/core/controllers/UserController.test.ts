@@ -13,8 +13,9 @@ import {
   ValidationError,
 } from "../../../src/errors";
 import { ErrorCode } from "../../../src/enums/ErrorCode";
-import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
-import { PasswordHasher } from "../../../src/core/helpers/PasswordHasher";
+import { PasswordHasher } from "../../../src/helpers/PasswordHasher";
+import { CreateUserSchema } from "../../../src/schemas/userSchema";
+import { ErrorFormatter } from "../../../src/helpers/ErrorFormatter";
 
 class MockUserRepo implements IUserRepo {
   getAllUsers = jest.fn();
@@ -48,10 +49,11 @@ describe("UserController", () => {
         name: "John Doe",
         email: "john@example.com",
       };
-      const createUserData = {
+      const createUserData: CreateUserSchema = {
         name: "John Doe",
         email: "john@example.com",
         password: "Password123@",
+        role: "USER",
       };
       const mockRequest = userMockRequest.create(createUserData);
       const mockResponse = userMockResponse.create();
@@ -65,10 +67,11 @@ describe("UserController", () => {
 
     //? fail 400 when data is not valid
     it("should handle error status 400", async () => {
-      const createUserData = {
+      const createUserData: CreateUserSchema = {
         name: "John Doe",
         email: "john@example.com",
         password: "Password123@",
+        role: "USER",
       };
 
       const mockZodError = new ZodError([]);

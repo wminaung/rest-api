@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { UserService } from "./services/UserService";
 import { UserController } from "./controllers/UserController";
 import { UserRepo } from "./repositories/implementations/UserRepo";
-import { PasswordHasher } from "./helpers/PasswordHasher";
+import { PasswordHasher } from "../helpers/PasswordHasher";
 
 export const createUserController = (prisma: PrismaClient) => {
   const userRepo = new UserRepo(prisma);

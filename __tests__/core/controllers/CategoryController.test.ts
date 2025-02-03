@@ -14,7 +14,7 @@ import {
   categoryMockRequest,
   categoryMockResponse,
 } from "../../__mocks___/request-response/categories.mock";
-import { ErrorFormatter } from "../../../src/core/helpers/ErrorFormatter";
+import { ErrorFormatter } from "../../../src/helpers/ErrorFormatter";
 
 class MockCategoryRepo implements ICategoryRepo {
   getAllCategories = jest.fn();

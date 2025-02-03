@@ -1,13 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { Repository } from "../Repository";
 import { IPostRepo } from "../interfaces/IPostRepo";
-import { PostDTO } from "../../dtos/PostDTO";
-import { CreatePostSchema, UpdatePostSchema } from "../../schemas/postSchema";
+import { PostDTO } from "../../../dtos/PostDTO";
+import {
+  CreatePostSchema,
+  UpdatePostSchema,
+} from "../../../schemas/postSchema";
 import { NotFoundError } from "../../../errors";
-import { CategoryDTO } from "../../dtos/CategoryDTO";
-import { CommentDTO } from "../../dtos/CommentDTO";
-import { LikeDTO } from "../../dtos/LikeDTO";
-import { TagDTO } from "../../dtos/TagDTO";
+import { CategoryDTO } from "../../../dtos/CategoryDTO";
+import { CommentDTO } from "../../../dtos/CommentDTO";
+import { LikeDTO } from "../../../dtos/LikeDTO";
+import { TagDTO } from "../../../dtos/TagDTO";
 
 export class PostRepo extends Repository implements IPostRepo {
   constructor(private prisma: PrismaClient) {

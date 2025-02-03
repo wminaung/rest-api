@@ -3,7 +3,10 @@ import { CommentDTO } from "../../dtos/CommentDTO";
 import { LikeDTO } from "../../dtos/LikeDTO";
 import { PostDTO } from "../../dtos/PostDTO";
 import { TagDTO } from "../../dtos/TagDTO";
-import { CreatePostSchema, UpdatePostSchema } from "../../schemas/postSchema";
+import {
+  CreatePostSchema,
+  UpdatePostSchema,
+} from "../../../schemas/postSchema";
 
 export interface IPostRepo {
   getAll: () => Promise<PostDTO[]>;

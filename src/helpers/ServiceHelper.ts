@@ -1,4 +1,4 @@
-import { ValidationError } from "../../errors";
+import { ValidationError } from "../errors";
 import { checkIdSchema } from "../schemas/checkIdSchema";
 
 export class ServiceHelper {

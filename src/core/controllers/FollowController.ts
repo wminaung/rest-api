@@ -4,7 +4,7 @@ import { Controller } from "./Controller";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
-} from "../schemas/followSchema";
+} from "../../schemas/followSchema";
 
 export class FollowController extends Controller {
   constructor(private followService: FollowService) {

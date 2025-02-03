@@ -1,5 +1,8 @@
 import { UserDTO } from "../../dtos/UserDTO";
-import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
+import {
+  CreateUserSchema,
+  UpdateUserSchema,
+} from "../../../schemas/userSchema";
 
 export interface IUserRepo {
   getAllUsers(): Promise<UserDTO[]>;

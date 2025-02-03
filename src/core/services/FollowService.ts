@@ -1,12 +1,12 @@
 import { NotFoundError, UnauthorizedError } from "../../errors";
-import { FollowDTO } from "../dtos/FollowDTO";
+import { FollowDTO } from "../../dtos/FollowDTO";
 import { IFollowRepo } from "../repositories/interfaces/IFollowRepo";
 import {
   createFollowSchema,
   CreateFollowSchema,
   deleteFollowSchema,
   DeleteFollowSchema,
-} from "../schemas/followSchema";
+} from "../../schemas/followSchema";
 import { Service } from "./Service";
 
 export class FollowService extends Service {

@@ -1,5 +1,5 @@
 import { FollowDTO } from "../../dtos/FollowDTO";
-import { CreateFollowSchema } from "../../schemas/followSchema";
+import { CreateFollowSchema } from "../../../schemas/followSchema";
 
 export interface IFollowRepo {
   createFollow(data: CreateFollowSchema): Promise<FollowDTO>;

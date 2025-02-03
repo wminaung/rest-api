@@ -1,4 +1,4 @@
-import { FollowDTO } from "../../../src/core/dtos/FollowDTO";
+import { FollowDTO } from "../../../src/dtos/FollowDTO";
 import { FollowRepo } from "../../../src/core/repositories/implementations/FollowRepo";
 import { FollowService } from "../../../src/core/services/FollowService";
 import prisma from "./../../prisma";
