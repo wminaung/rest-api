@@ -1,9 +1,10 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { followController, userController } from "../core";
+import { adminRoleCheck } from "../middlewares/jwt-utils";
 
 const router = Router();
 
-router.post("/", (req, res) => {
+router.post("/", adminRoleCheck, (req, res) => {
   userController.create(req, res);
 });
 

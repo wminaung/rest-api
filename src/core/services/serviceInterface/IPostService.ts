@@ -3,6 +3,7 @@ import {
   CreatePostSchema,
   UpdatePostSchema,
 } from "../../../schemas/postSchema";
+import { JwtAuthPayload } from "../../../types/jwtAuthPayload";
 
 export interface IPostService {
   create(createCategoryData: CreatePostSchema): Promise<PostDTO>;

@@ -9,7 +9,6 @@ import { IUserRepo } from "../repositories/interfaces/IUserRepo";
 import { Service } from "./Service";
 import { PasswordHasher } from "../../helpers/PasswordHasher";
 import { JwtAuthPayload } from "../../types/jwtAuthPayload";
-import { UnauthorizedError } from "../../errors";
 import { IUserService } from "./serviceInterface/IUserService";
 
 export class UserService extends Service implements IUserService {
@@ -24,23 +23,19 @@ export class UserService extends Service implements IUserService {
     return this.passwordHasher.hashPassword(password);
   }
 
-  async create(
-    createUserData: CreateUserSchema,
-    user?: JwtAuthPayload
-  ): Promise<UserDTO> {
-    // authorization check for admin role
-    if (user?.role !== "ADMIN") {
-      throw new UnauthorizedError("Only admin can create User");
-    }
+  async create(createUserData: CreateUserSchema): Promise<UserDTO> {
+    // Olny admin can create user
     const safeData = this.validate(createUserData, createUserSchema);
     const hashedPassword = await this.hashPassword(safeData.password);
     return this.userRepo.create({ ...safeData, password: hashedPassword });
   }
 
-  async getAll(): Promise<UserDTO[]> {
+  async getAll(user?: JwtAuthPayload): Promise<UserDTO[]> {
+    // this.authorizeUserOrThrow(user);
     return await this.userRepo.getAll();
   }
   async get(userId: string): Promise<UserDTO | null> {
+    // this.authorizeUserOrThrow(user);
     const validId = this.getValidId(userId);
     return await this.userRepo.get(validId);
   }

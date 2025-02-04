@@ -3,6 +3,7 @@ import { CreateUserSchema } from "../../../schemas/userSchema";
 import {
   LoginReturnType,
   LogoutReturnType,
+  LogoutTokens,
   RefreshAccessTokenReturnType,
 } from "../../../types/auth";
 
@@ -11,7 +12,7 @@ export interface IAuthService {
 
   login(email: string, password: string): Promise<LoginReturnType>;
 
-  logout(refreshToken: string): Promise<LogoutReturnType>;
+  logout(logoutTokens: LogoutTokens): Promise<LogoutReturnType>;
 
   refreshAccessToken(
     refreshToken: string

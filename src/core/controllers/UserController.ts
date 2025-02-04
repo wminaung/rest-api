@@ -79,7 +79,7 @@ export class UserController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const user = await this.userService.update(id, data);
+      const user = await this.userService.update(id, data, req.user);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -96,7 +96,7 @@ export class UserController extends Controller {
   async deleteUser(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const user = await this.userService.delete(id);
+      const user = await this.userService.delete(id, req.user);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);

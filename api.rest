@@ -1,0 +1,39 @@
+
+@apiUrl = http://localhost:3000/api
+// register
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "winner1",
+    "email": "winner1@gmail.com",
+    "password":"#@ABcdef1234"
+}
+
+
+
+### login
+# @name login
+POST {{ apiUrl }}/auth/login
+Content-Type: application/json
+
+{
+  "email":"j@d5232.com",
+  "password":"passwOrd10*"
+}
+
+### logout
+
+@accessToken = {{ login.response.body.$.accessToken }}
+@refreshToken ={{ login.response.body.$.refreshToken }}
+POST http://localhost:3000/api/auth/logout
+Content-Type: application/json
+
+{
+  "accessToken": "{{ accessToken }}",
+  "refreshToken": "{{refreshToken}}"
+}
+ 
+### get all users
+GET http://localhost:3000/api/users
+Authorization: Bearer {{ accessToken }}

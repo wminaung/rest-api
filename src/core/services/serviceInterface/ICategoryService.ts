@@ -6,16 +6,12 @@ import {
 import { JwtAuthPayload } from "../../../types/jwtAuthPayload";
 
 export interface ICategoryService {
-  create(
-    createCategoryData: CreateCategorySchema,
-    user?: JwtAuthPayload
-  ): Promise<CategoryDTO>;
+  create(createCategoryData: CreateCategorySchema): Promise<CategoryDTO>;
   getAll(): Promise<CategoryDTO[]>;
   get(categoryId: string): Promise<CategoryDTO | null>;
   update(
     categoryId: string,
-    updateCategoryData: UpdateCategorySchema,
-    user?: JwtAuthPayload
+    updateCategoryData: UpdateCategorySchema
   ): Promise<CategoryDTO>;
   delete(categoryId: string, user?: JwtAuthPayload): Promise<CategoryDTO>;
 }

@@ -32,7 +32,6 @@ export class JwtManager {
 
   static verifyRefreshToken(token: string): JwtAuthPayload | null {
     try {
-      console.log(token);
       return jwt.verify(token, configs.jwtRefreshTokenSecret) as JwtAuthPayload;
     } catch {
       return null;

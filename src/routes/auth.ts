@@ -1,10 +1,5 @@
 import { Request, Response, Router } from "express";
-import { CreateUserSchema } from "../schemas/userSchema";
-import { authController, userController } from "../core";
-import { loginSchema, LoginSchema } from "../schemas/loginSchema";
-import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-import configs from "../configs";
+import { authController } from "../core";
 
 const router = Router();
 

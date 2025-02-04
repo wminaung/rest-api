@@ -36,14 +36,20 @@ export class AuthController extends Controller {
   }
 
   // Logout - Placeholder, ideally should invalidate the refresh token
-  async logout(req: Request<{}, {}, { refreshToken: string }>, res: Response) {
+  async logout(
+    req: Request<{}, {}, { refreshToken: string; accessToken: string }>,
+    res: Response
+  ) {
     try {
       const refreshToken = req.body.refreshToken;
-      if (!refreshToken) {
-        throw new UnauthorizedError("refreshToken is required");
+      const accessToken = req.body.accessToken;
+      if (!refreshToken || !accessToken) {
+        throw new UnauthorizedError(
+          "refreshToken and accessToken are required"
+        );
       }
 
-      await this.authService.logout(refreshToken);
+      await this.authService.logout({ accessToken, refreshToken });
       res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
       this.handleError(error, res);

@@ -8,6 +8,7 @@ import { redis } from "../../lib/redis";
 import {
   LoginReturnType,
   LogoutReturnType,
+  LogoutTokens,
   RefreshAccessTokenReturnType,
 } from "../../types/auth";
 import { IAuthService } from "./serviceInterface/IAuthService";
@@ -39,8 +40,7 @@ export class AuthService extends Service implements IAuthService {
   // Login and generate access and refresh tokens
   async login(email: string, password: string): Promise<LoginReturnType> {
     const user = await this.authRepository.findByEmail(email);
-    if (!user)
-      throw new UnauthorizedError("Invalid credentials - user not found");
+    if (!user) throw new UnauthorizedError("Invalid credentials");
 
     const isValidPassword = await this.passwordHasher.comparePassword(
       password,
@@ -63,18 +63,32 @@ export class AuthService extends Service implements IAuthService {
     await redis.set(`refreshToken:${id}`, refreshToken, {
       ex: 60 * 60 * 24 * 7,
     });
+
     return { accessToken, refreshToken };
   }
 
-  async logout(refreshToken: string): Promise<LogoutReturnType> {
+  async logout({
+    accessToken,
+    refreshToken,
+  }: LogoutTokens): Promise<LogoutReturnType> {
     // Decode and verify the refresh token
     const decoded = JwtManager.verifyRefreshToken(refreshToken);
     if (!decoded) throw new UnauthorizedError("Invalid refresh token");
 
-    // Add the refresh token to the blacklist
+    // Blacklist both refresh token and access token
     await redis.sadd(`blacklist:${decoded.id}`, refreshToken);
+    const decodedAccessToken = JwtManager.verifyAccessToken(accessToken);
+    if (decodedAccessToken && decodedAccessToken.exp) {
+      const timeToExpire =
+        decodedAccessToken.exp - Math.floor(Date.now() / 1000);
+      if (timeToExpire > 0) {
+        await redis.set(`blacklistedAccessToken:${accessToken}`, "true", {
+          ex: timeToExpire,
+        });
+      }
+    }
 
-    // remove the refresh token from Redis to make it invalid
+    // Remove the refresh token from Redis to invalidate it
     await redis.del(`refreshToken:${decoded.id}`);
 
     return { message: "Logged out successfully" };

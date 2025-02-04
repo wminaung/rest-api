@@ -3,6 +3,7 @@ import {
   CreateFollowSchema,
   DeleteFollowSchema,
 } from "../../../schemas/followSchema";
+import { JwtAuthPayload } from "../../../types/jwtAuthPayload";
 
 export interface IFollowService {
   followUser(data: CreateFollowSchema): Promise<FollowDTO>;

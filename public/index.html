@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Express Rest API</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <nav style="padding-left: 20px">
+      <h1><a href="./erd.html">erd</a></h1>
+      <h1><a href="./users.html">users</a></h1>
+      <h1><a href="./register.html">register</a></h1>
+    </nav>
+    <hr />
+    <main>
+      <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" action="/login" method="POST">
+          <input
+            id="email"
+            type="email"
+            name="email"
+            class="input-field"
+            placeholder="Email"
+            required
+          /><br />
+          <input
+            id="password"
+            type="password"
+            name="password"
+            class="input-field"
+            placeholder="Password"
+            required
+          /><br />
+          <button type="submit" class="login-btn">Login</button>
+        </form>
+        <div class="message">
+          <p>Don't have an account? <a href="/register">Register</a></p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
