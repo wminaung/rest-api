@@ -4,10 +4,10 @@ import {
   DeleteFollowSchema,
 } from "../../../schemas/followSchema";
 
-export interface IFollowRepo {
-  create(data: CreateFollowSchema): Promise<FollowDTO>;
-  getFollow(followerId: string, followingId: string): Promise<FollowDTO | null>;
+export interface IFollowService {
+  followUser(data: CreateFollowSchema): Promise<FollowDTO>;
+  unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO>;
+
   getFollowers(userId: string): Promise<FollowDTO[]>;
   getFollowing(userId: string): Promise<FollowDTO[]>;
-  delete(data: DeleteFollowSchema): Promise<FollowDTO>;
 }

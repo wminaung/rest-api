@@ -7,38 +7,39 @@ import {
   UpdateCategorySchema,
 } from "../../schemas/categorySchema";
 import { Service } from "./Service";
+import { ICategoryService } from "./serviceInterface/ICategoryService";
 
-export class CategoryService extends Service {
+export class CategoryService extends Service implements ICategoryService {
   constructor(private categoryRepo: ICategoryRepo) {
     super();
   }
 
-  async createCategory(data: CreateCategorySchema): Promise<CategoryDTO> {
-    const safeData = this.validate(data, createCategorySchema);
-    return this.categoryRepo.createCategory(safeData);
+  async create(createCategoryData: CreateCategorySchema): Promise<CategoryDTO> {
+    const safeData = this.validate(createCategoryData, createCategorySchema);
+    return this.categoryRepo.create(safeData);
   }
 
-  async getAllCategories(): Promise<CategoryDTO[]> {
-    return this.categoryRepo.getAllCategories();
+  async getAll(): Promise<CategoryDTO[]> {
+    return this.categoryRepo.getAll();
   }
 
-  async getCategoryById(id: string): Promise<CategoryDTO | null> {
-    const validId = this.getValidId(id);
-    return this.categoryRepo.getCategoryById(validId);
+  async get(categoryId: string): Promise<CategoryDTO | null> {
+    const validId = this.getValidId(categoryId);
+    return this.categoryRepo.get(validId);
   }
 
-  async updateCategory(
-    id: string,
-    data: UpdateCategorySchema
+  async update(
+    categoryId: string,
+    updateCategoryData: UpdateCategorySchema
   ): Promise<CategoryDTO> {
-    const validId = this.getValidId(id);
-    const safeData = this.validate(data, updateCategorySchema);
-    return this.categoryRepo.updateCategory(validId, safeData);
+    const validId = this.getValidId(categoryId);
+    const safeData = this.validate(updateCategoryData, updateCategorySchema);
+    return this.categoryRepo.update(validId, safeData);
   }
 
-  async deleteCategory(id: string): Promise<CategoryDTO> {
-    const validId = this.getValidId(id);
-    return this.categoryRepo.deleteCategory(validId);
+  async delete(categoryId: string): Promise<CategoryDTO> {
+    const validId = this.getValidId(categoryId);
+    return this.categoryRepo.delete(validId);
   }
 
   //******** CategoryService ******** */

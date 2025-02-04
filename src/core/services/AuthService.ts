@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { IAuthRepo } from "../repositories/interfaces/IAuthRepo";
 import { Service } from "./Service";
 import { createUserSchema, CreateUserSchema } from "../../schemas/userSchema";
@@ -7,11 +5,14 @@ import { ForbiddenError, UnauthorizedError } from "../../errors";
 import { PasswordHasher } from "../../helpers/PasswordHasher";
 import { JwtManager } from "../../helpers/JwtManager";
 import { redis } from "../../lib/redis";
+import {
+  LoginReturnType,
+  LogoutReturnType,
+  RefreshAccessTokenReturnType,
+} from "../../types/auth";
+import { IAuthService } from "./serviceInterface/IAuthService";
 
-type LoginReturnType = { accessToken: string; refreshToken: string };
-type RefreshAccessTokenReturnType = { accessToken: string };
-type LogoutReturnType = { message: string };
-export class AuthService extends Service {
+export class AuthService extends Service implements IAuthService {
   constructor(
     private authRepository: IAuthRepo,
     private passwordHasher: PasswordHasher
@@ -20,8 +21,8 @@ export class AuthService extends Service {
   }
 
   // Register new user
-  async register(data: CreateUserSchema) {
-    const validData = this.validate(data, createUserSchema);
+  async register(createUserData: CreateUserSchema) {
+    const validData = this.validate(createUserData, createUserSchema);
     const existingUser = await this.authRepository.findByEmail(validData.email);
     if (existingUser && existingUser.id)
       throw new UnauthorizedError("User already exists");

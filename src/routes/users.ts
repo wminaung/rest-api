@@ -4,15 +4,15 @@ import { followController, userController } from "../core";
 const router = Router();
 
 router.post("/", (req, res) => {
-  userController.createUser(req, res);
+  userController.create(req, res);
 });
 
 router.get("/", (req, res) => {
-  userController.getAllUsers(req, res);
+  userController.getAll(req, res);
 });
 
 router.get("/:id", (req, res) => {
-  userController.getUserById(req, res);
+  userController.get(req, res);
 });
 
 router.get("/:id/followers", (req, res) => {
@@ -24,7 +24,7 @@ router.get("/:id/following", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  userController.updateUser(req, res);
+  userController.update(req, res);
 });
 
 router.delete("/:id", (req, res) => {

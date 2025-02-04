@@ -13,7 +13,7 @@ export class CategoryRepo extends Repository implements ICategoryRepo {
     super();
   }
 
-  async createCategory(data: CreateCategorySchema): Promise<CategoryDTO> {
+  async create(data: CreateCategorySchema): Promise<CategoryDTO> {
     try {
       return this.prisma.category.create({
         data,
@@ -23,7 +23,7 @@ export class CategoryRepo extends Repository implements ICategoryRepo {
     }
   }
 
-  async getAllCategories(): Promise<CategoryDTO[]> {
+  async getAll(): Promise<CategoryDTO[]> {
     try {
       return this.prisma.category.findMany();
     } catch (error) {
@@ -31,7 +31,7 @@ export class CategoryRepo extends Repository implements ICategoryRepo {
     }
   }
 
-  async getCategoryById(id: string): Promise<CategoryDTO | null> {
+  async get(id: string): Promise<CategoryDTO | null> {
     try {
       const category = await this.prisma.category.findUnique({ where: { id } });
       if (!category) {
@@ -46,12 +46,9 @@ export class CategoryRepo extends Repository implements ICategoryRepo {
     }
   }
 
-  async updateCategory(
-    id: string,
-    data: UpdateCategorySchema
-  ): Promise<CategoryDTO> {
+  async update(id: string, data: UpdateCategorySchema): Promise<CategoryDTO> {
     try {
-      const categoryFromDb = await this.getCategoryById(id);
+      const categoryFromDb = await this.get(id);
       if (!categoryFromDb) {
         throw new NotFoundError("Category not found");
       }
@@ -64,9 +61,9 @@ export class CategoryRepo extends Repository implements ICategoryRepo {
     }
   }
 
-  async deleteCategory(id: string): Promise<CategoryDTO> {
+  async delete(id: string): Promise<CategoryDTO> {
     try {
-      const categoryFromDb = await this.getCategoryById(id);
+      const categoryFromDb = await this.get(id);
       if (!categoryFromDb) {
         throw new NotFoundError("Category not found");
       }

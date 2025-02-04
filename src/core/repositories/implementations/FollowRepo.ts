@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { FollowDTO } from "../../../dtos/FollowDTO";
-import { CreateFollowSchema } from "../../../schemas/followSchema";
+import {
+  CreateFollowSchema,
+  DeleteFollowSchema,
+} from "../../../schemas/followSchema";
 import { IFollowRepo } from "../interfaces/IFollowRepo";
 import { NotFoundError } from "../../../errors";
 import { Repository } from "../Repository";
@@ -21,7 +24,7 @@ export class FollowRepo extends Repository implements IFollowRepo {
     });
   }
 
-  async createFollow(data: CreateFollowSchema): Promise<FollowDTO> {
+  async create(data: CreateFollowSchema): Promise<FollowDTO> {
     return this.executePrismaQuery(
       () =>
         this.prisma.follow.create({
@@ -59,10 +62,10 @@ export class FollowRepo extends Repository implements IFollowRepo {
     );
   }
 
-  async deleteFollow(
-    followerId: string,
-    followingId: string
-  ): Promise<FollowDTO> {
+  async delete({
+    followerId,
+    followingId,
+  }: DeleteFollowSchema): Promise<FollowDTO> {
     return this.executePrismaQuery(async () => {
       const followIdToDelete = await this.findFollowId(followerId, followingId);
       if (!followIdToDelete) {

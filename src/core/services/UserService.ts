@@ -25,14 +25,14 @@ export class UserService extends Service implements IUserService {
   }
 
   async create(
-    data: CreateUserSchema,
+    createUserData: CreateUserSchema,
     user?: JwtAuthPayload
   ): Promise<UserDTO> {
     // authorization check for admin role
     if (user?.role !== "ADMIN") {
       throw new UnauthorizedError("Only admin can create User");
     }
-    const safeData = this.validate(data, createUserSchema);
+    const safeData = this.validate(createUserData, createUserSchema);
     const hashedPassword = await this.hashPassword(safeData.password);
     return this.userRepo.create({ ...safeData, password: hashedPassword });
   }
@@ -40,19 +40,22 @@ export class UserService extends Service implements IUserService {
   async getAll(): Promise<UserDTO[]> {
     return await this.userRepo.getAll();
   }
-  async get(id: string): Promise<UserDTO | null> {
-    const validId = this.getValidId(id);
+  async get(userId: string): Promise<UserDTO | null> {
+    const validId = this.getValidId(userId);
     return await this.userRepo.get(validId);
   }
 
-  async update(id: string, data: UpdateUserSchema): Promise<UserDTO> {
-    const validId = this.getValidId(id);
-    const safeData = this.validate(data, updateUserSchema);
+  async update(
+    userId: string,
+    updateUserData: UpdateUserSchema
+  ): Promise<UserDTO> {
+    const validId = this.getValidId(userId);
+    const safeData = this.validate(updateUserData, updateUserSchema);
     return await this.userRepo.update(validId, safeData);
   }
 
-  async delete(id: string): Promise<UserDTO> {
-    const validId = this.getValidId(id);
+  async delete(userId: string): Promise<UserDTO> {
+    const validId = this.getValidId(userId);
     return await this.userRepo.delete(validId);
   }
 

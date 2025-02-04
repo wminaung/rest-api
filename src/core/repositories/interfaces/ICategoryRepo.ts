@@ -5,9 +5,9 @@ import {
 } from "../../../schemas/categorySchema";
 
 export interface ICategoryRepo {
-  createCategory(data: CreateCategorySchema): Promise<CategoryDTO>;
-  getAllCategories(): Promise<CategoryDTO[]>;
-  getCategoryById(id: string): Promise<CategoryDTO | null>;
-  updateCategory(id: string, data: UpdateCategorySchema): Promise<CategoryDTO>;
-  deleteCategory(id: string): Promise<CategoryDTO>;
+  create(data: CreateCategorySchema): Promise<CategoryDTO>;
+  getAll(): Promise<CategoryDTO[]>;
+  get(id: string): Promise<CategoryDTO | null>;
+  update(id: string, data: UpdateCategorySchema): Promise<CategoryDTO>;
+  delete(id: string): Promise<CategoryDTO>;
 }

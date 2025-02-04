@@ -10,9 +10,6 @@ export class FollowController extends Controller {
   constructor(private followService: FollowService) {
     super();
   }
-  private ok(res: Response, data: any) {
-    res.status(200).json(data);
-  }
 
   // Follow a user
   async followUser(
@@ -25,7 +22,7 @@ export class FollowController extends Controller {
         followerId,
         followingId,
       });
-      this.ok(res, follow);
+      this.sendOk(res, follow);
     } catch (error) {
       this.handleError(error, res);
     }
@@ -42,7 +39,7 @@ export class FollowController extends Controller {
         followerId,
         followingId,
       });
-      this.ok(res, unfollow);
+      this.sendOk(res, unfollow);
     } catch (error) {
       this.handleError(error, res);
     }
@@ -55,7 +52,7 @@ export class FollowController extends Controller {
     try {
       const { id } = req.params;
       const followers = await this.followService.getFollowers(id);
-      this.ok(res, followers);
+      this.sendOk(res, followers);
     } catch (error) {
       this.handleError(error, res);
     }
@@ -69,7 +66,7 @@ export class FollowController extends Controller {
     try {
       const { id } = req.params;
       const following = await this.followService.getFollowing(id);
-      this.ok(res, following);
+      this.sendOk(res, following);
     } catch (error) {
       this.handleError(error, res);
     }

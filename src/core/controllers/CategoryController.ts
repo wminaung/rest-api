@@ -13,35 +13,32 @@ export class CategoryController extends Controller {
     super();
   }
 
-  async createCategory(
+  async create(
     req: Request<{}, {}, CreateCategorySchema>,
     res: Response
   ): Promise<void> {
     try {
       const data = req.body;
-      const category = await this.categoryService.createCategory(data);
+      const category = await this.categoryService.create(data);
       res.status(201).json(category);
     } catch (err: unknown) {
       this.handleError(err, res);
     }
   }
 
-  async getAllCategories(req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const categories = await this.categoryService.getAllCategories();
+      const categories = await this.categoryService.getAll();
       res.status(200).json(categories);
     } catch (err: unknown) {
       this.handleError(err, res);
     }
   }
 
-  async getCategoryById(
-    req: Request<{ id: string }>,
-    res: Response
-  ): Promise<void> {
+  async get(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const category = await this.categoryService.getCategoryById(id);
+      const category = await this.categoryService.get(id);
       if (!category) {
         res.status(404).json({ message: "Category not found" });
       } else {
@@ -52,27 +49,24 @@ export class CategoryController extends Controller {
     }
   }
 
-  async updateCategory(
+  async update(
     req: Request<{ id: string }, {}, UpdateCategorySchema>,
     res: Response
   ): Promise<void> {
     try {
       const id = req.params.id;
       const data = req.body;
-      const category = await this.categoryService.updateCategory(id, data);
+      const category = await this.categoryService.update(id, data);
       res.status(200).json(category);
     } catch (err: unknown) {
       this.handleError(err, res);
     }
   }
 
-  async deleteCategory(
-    req: Request<{ id: string }>,
-    res: Response
-  ): Promise<void> {
+  async delete(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const category = await this.categoryService.deleteCategory(id);
+      const category = await this.categoryService.delete(id);
       res.status(200).json(category);
     } catch (err: unknown) {
       this.handleError(err, res);

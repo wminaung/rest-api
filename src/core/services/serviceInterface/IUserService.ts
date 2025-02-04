@@ -6,13 +6,16 @@ import {
 import { JwtAuthPayload } from "../../../types/jwtAuthPayload";
 
 export interface IUserService {
-  create(data: CreateUserSchema, user?: JwtAuthPayload): Promise<UserDTO>;
-  getAll(): Promise<UserDTO[]>;
-  get(id: string): Promise<UserDTO | null>;
-  update(
-    id: string,
-    data: UpdateUserSchema,
+  create(
+    createUserData: CreateUserSchema,
     user?: JwtAuthPayload
   ): Promise<UserDTO>;
-  delete(id: string, user?: JwtAuthPayload): Promise<UserDTO>;
+  getAll(): Promise<UserDTO[]>;
+  get(userId: string): Promise<UserDTO | null>;
+  update(
+    userId: string,
+    updateUserData: UpdateUserSchema,
+    user?: JwtAuthPayload
+  ): Promise<UserDTO>;
+  delete(userId: string, user?: JwtAuthPayload): Promise<UserDTO>;
 }

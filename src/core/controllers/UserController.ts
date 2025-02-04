@@ -18,7 +18,7 @@ export class UserController extends Controller {
    * @throws {ZodError} If the request body is invalid
    * @throws {Error} If there is an error creating the user
    */
-  async createUser(req: Request, res: Response): Promise<void> {
+  async create(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
       const user = await this.userService.create(data, req.user);
@@ -35,7 +35,7 @@ export class UserController extends Controller {
    * @throws {NotFoundError} If no users are found
    * @throws {Error} If there is an error getting the users
    */
-  async getAllUsers(req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
       const users = await this.userService.getAll();
       res.status(200).json(users);
@@ -51,10 +51,7 @@ export class UserController extends Controller {
    * @throws {NotFoundError} If the user is not found
    * @throws {Error} If there is an error getting the user
    */
-  async getUserById(
-    req: Request<{ id: string }>,
-    res: Response
-  ): Promise<void> {
+  async get(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
       const user = await this.userService.get(id);
@@ -75,7 +72,7 @@ export class UserController extends Controller {
    * @throws {NotFoundError} If the user is not found
    * @throws {Error} If there is an error updating the user
    */
-  async updateUser(
+  async update(
     req: Request<{ id: string }, {}, UpdateUserSchema>,
     res: Response
   ): Promise<void> {

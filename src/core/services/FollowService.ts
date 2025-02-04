@@ -8,8 +8,9 @@ import {
   DeleteFollowSchema,
 } from "../../schemas/followSchema";
 import { Service } from "./Service";
+import { IFollowService } from "./serviceInterface/IFollowService";
 
-export class FollowService extends Service {
+export class FollowService extends Service implements IFollowService {
   constructor(private followRepo: IFollowRepo) {
     super();
   }
@@ -21,7 +22,7 @@ export class FollowService extends Service {
     if (follow) {
       throw new UnauthorizedError("You are already following this user");
     }
-    return this.followRepo.createFollow({ followerId, followingId });
+    return this.followRepo.create({ followerId, followingId });
   }
   async unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO> {
     const { followerId, followingId } = this.validate(data, deleteFollowSchema);
@@ -31,7 +32,7 @@ export class FollowService extends Service {
       throw new NotFoundError("You are not following this user");
     }
 
-    return this.followRepo.deleteFollow(followerId, followingId);
+    return this.followRepo.delete({ followerId, followingId });
   }
 
   async getFollowers(userId: string): Promise<FollowDTO[]> {
