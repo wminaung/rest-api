@@ -1,6 +1,6 @@
 import { NotFoundError, UnauthorizedError } from "../../errors";
 import { FollowDTO } from "../../dtos/FollowDTO";
-import { IFollowRepo } from "../repositories/interfaces/IFollowRepo";
+import { IFollowRepo } from "../interfaces/repo/IFollowRepo";
 import {
   createFollowSchema,
   CreateFollowSchema,
@@ -8,7 +8,7 @@ import {
   DeleteFollowSchema,
 } from "../../schemas/followSchema";
 import { Service } from "./Service";
-import { IFollowService } from "./serviceInterface/IFollowService";
+import { IFollowService } from "../interfaces/services/IFollowService";
 
 export class FollowService extends Service implements IFollowService {
   constructor(private followRepo: IFollowRepo) {

@@ -40,6 +40,7 @@ model Post {
   category   Category? @relation(fields: [categoryId], references: [id])
   user       User      @relation("UserPosts", fields: [userId], references: [id])
   tags       PostTag[]
+  Media      Media[]
 }
 
 model Comment {
@@ -85,12 +86,17 @@ model Notification {
 }
 
 model Media {
-  id        String    @id @default(uuid())
-  url       String
-  type      MediaType
-  createdAt DateTime  @default(now())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
+  id   String    @id @default(uuid())
+  url  String
+  type MediaType
+
+  createdAt DateTime @default(now())
+
+  userId String?
+  postId String?
+
+  user User? @relation(fields: [userId], references: [id])
+  post Post? @relation(fields: [postId], references: [id])
 }
 
 model Category {

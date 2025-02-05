@@ -1,5 +1,5 @@
 import { NotFoundError } from "../../errors";
-import { IPostRepo } from "../repositories/interfaces/IPostRepo";
+import { IPostRepo } from "../interfaces/repo/IPostRepo";
 import {
   createPostSchema,
   CreatePostSchema,
@@ -9,7 +9,7 @@ import {
 import { Service } from "./Service";
 import { PostDTO } from "../../dtos/PostDTO";
 import { CategoryDTO } from "../../dtos/CategoryDTO";
-import { IPostService } from "./serviceInterface/IPostService";
+import { IPostService } from "../interfaces/services/IPostService";
 import { JwtAuthPayload } from "../../types/jwtAuthPayload";
 
 export class PostService extends Service implements IPostService {

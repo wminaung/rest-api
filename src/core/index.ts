@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { createCategoryController } from "./categoryControllerFactory";
-import { createFollowController } from "./followControllerFactory";
-import { createUserController } from "./userControllerFactory";
-import { createPostController } from "./postController";
-import { createAuthController } from "./createAuthControllerFactory";
+import { createCategoryController } from "./factories/categoryControllerFactory";
+import { createFollowController } from "./factories/followControllerFactory";
+import { createUserController } from "./factories/userControllerFactory";
+import { createPostController } from "./factories/postControllerFactory";
+import { createAuthController } from "./factories/authControllerFactory";
 
 const prisma = new PrismaClient();
 

@@ -5,11 +5,10 @@ import {
   updateUserSchema,
   UpdateUserSchema,
 } from "../../schemas/userSchema";
-import { IUserRepo } from "../repositories/interfaces/IUserRepo";
+import { IUserRepo } from "../interfaces/repo/IUserRepo";
 import { Service } from "./Service";
 import { PasswordHasher } from "../../helpers/PasswordHasher";
-import { JwtAuthPayload } from "../../types/jwtAuthPayload";
-import { IUserService } from "./serviceInterface/IUserService";
+import { IUserService } from "../interfaces/services/IUserService";
 
 export class UserService extends Service implements IUserService {
   constructor(

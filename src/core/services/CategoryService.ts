@@ -1,5 +1,5 @@
 import { CategoryDTO } from "../../dtos/CategoryDTO";
-import { ICategoryRepo } from "../repositories/interfaces/ICategoryRepo";
+import { ICategoryRepo } from "../interfaces/repo/ICategoryRepo";
 import {
   createCategorySchema,
   CreateCategorySchema,
@@ -7,7 +7,7 @@ import {
   UpdateCategorySchema,
 } from "../../schemas/categorySchema";
 import { Service } from "./Service";
-import { ICategoryService } from "./serviceInterface/ICategoryService";
+import { ICategoryService } from "../interfaces/services/ICategoryService";
 
 export class CategoryService extends Service implements ICategoryService {
   constructor(private categoryRepo: ICategoryRepo) {

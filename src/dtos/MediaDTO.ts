@@ -5,6 +5,7 @@ export interface MediaDTO {
   url: string;
   type: MediaType;
   userId: string;
+  postId: string;
 
   createdAt: Date;
 }

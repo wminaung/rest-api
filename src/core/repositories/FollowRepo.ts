@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { FollowDTO } from "../../../dtos/FollowDTO";
+import { FollowDTO } from "../../dtos/FollowDTO";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
-} from "../../../schemas/followSchema";
-import { IFollowRepo } from "../interfaces/IFollowRepo";
-import { NotFoundError } from "../../../errors";
-import { Repository } from "../Repository";
+} from "../../schemas/followSchema";
+import { IFollowRepo } from "../interfaces/repo/IFollowRepo";
+import { NotFoundError } from "../../errors";
+import { Repository } from "./Repository";
 
 export class FollowRepo extends Repository implements IFollowRepo {
   constructor(private prisma: PrismaClient) {

@@ -7,14 +7,14 @@ import {
   CreatePostSchema,
   UpdatePostSchema,
 } from "../../../schemas/postSchema";
+import { ICreate, IDelete, IGet, IGetAll, IUpdate } from "./IBaseRepo";
 
-export interface IPostRepo {
-  getAll: () => Promise<PostDTO[]>;
-  get: (id: string) => Promise<PostDTO | null>;
-  create: (data: CreatePostSchema) => Promise<PostDTO>;
-  update: (id: string, data: UpdatePostSchema) => Promise<PostDTO>;
-  delete: (id: string) => Promise<PostDTO>;
-
+export interface IPostRepo
+  extends ICreate<PostDTO, CreatePostSchema>,
+    IGetAll<PostDTO>,
+    IGet<PostDTO>,
+    IUpdate<PostDTO, UpdatePostSchema>,
+    IDelete<PostDTO> {
   getCategoryByPostId: (id: string) => Promise<CategoryDTO | null>;
   getCommentsByPostId: (id: string) => Promise<CommentDTO[]>;
   getLikesByPostId: (id: string) => Promise<LikeDTO[]>;

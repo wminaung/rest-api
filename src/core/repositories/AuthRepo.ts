@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { IAuthRepo } from "../interfaces/IAuthRepo";
-import { Repository } from "../Repository";
-import { CreateUserSchema } from "../../../schemas/userSchema";
-import { InternalServerError } from "../../../errors";
-import { AuthDTO } from "../../../dtos/AuthDTO";
-import { UserDTO } from "../../../dtos/UserDTO";
+import { IAuthRepo } from "../interfaces/repo/IAuthRepo";
+import { Repository } from "./Repository";
+import { CreateUserSchema } from "../../schemas/userSchema";
+import { InternalServerError } from "../../errors";
+import { AuthDTO } from "../../dtos/AuthDTO";
+import { UserDTO } from "../../dtos/UserDTO";
 
 export class AuthRepo extends Repository implements IAuthRepo {
   constructor(private prisma: PrismaClient) {

@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { ICategoryRepo } from "../interfaces/ICategoryRepo";
-import { CategoryDTO } from "../../../dtos/CategoryDTO";
+import { ICategoryRepo } from "../interfaces/repo/ICategoryRepo";
+import { CategoryDTO } from "../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../../schemas/categorySchema";
-import { InternalServerError, NotFoundError } from "../../../errors";
-import { Repository } from "../Repository";
+} from "../../schemas/categorySchema";
+import { InternalServerError, NotFoundError } from "../../errors";
+import { Repository } from "./Repository";
 
 export class CategoryRepo extends Repository implements ICategoryRepo {
   constructor(private prisma: PrismaClient) {

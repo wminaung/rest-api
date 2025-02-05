@@ -1,4 +1,4 @@
-import { IAuthRepo } from "../repositories/interfaces/IAuthRepo";
+import { IAuthRepo } from "../interfaces/repo/IAuthRepo";
 import { Service } from "./Service";
 import { createUserSchema, CreateUserSchema } from "../../schemas/userSchema";
 import { ForbiddenError, UnauthorizedError } from "../../errors";
@@ -11,7 +11,7 @@ import {
   LogoutTokens,
   RefreshAccessTokenReturnType,
 } from "../../types/auth";
-import { IAuthService } from "./serviceInterface/IAuthService";
+import { IAuthService } from "../interfaces/services/IAuthService";
 
 export class AuthService extends Service implements IAuthService {
   constructor(

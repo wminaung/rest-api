@@ -1,15 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { IUserRepo } from "../interfaces/IUserRepo";
-import { UserDTO } from "../../../dtos/UserDTO";
-import {
-  CreateUserSchema,
-  UpdateUserSchema,
-} from "../../../schemas/userSchema";
-import { UserSelectQuery } from "../../../types/userSelectQuery";
-import { NotFoundError } from "../../../errors/NotFoundError";
-import { ConflictError, InternalServerError } from "../../../errors";
+import { IUserRepo } from "../interfaces/repo/IUserRepo";
+import { UserDTO } from "../../dtos/UserDTO";
+import { CreateUserSchema, UpdateUserSchema } from "../../schemas/userSchema";
+import { UserSelectQuery } from "../../types/userSelectQuery";
+import { NotFoundError } from "../../errors/NotFoundError";
+import { ConflictError, InternalServerError } from "../../errors";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { Repository } from "../Repository";
+import { Repository } from "./Repository";
 
 export class UserRepo extends Repository implements IUserRepo {
   constructor(private prisma: PrismaClient) {

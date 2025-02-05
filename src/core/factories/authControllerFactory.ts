@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { AuthRepo } from "./repositories/implementations/AuthRepo";
-import { AuthService } from "./services/AuthService";
-import { PasswordHasher } from "../helpers/PasswordHasher";
-import { AuthController } from "./controllers/AuthController";
+import { AuthRepo } from "../repositories/AuthRepo";
+import { AuthService } from "../services/AuthService";
+import { PasswordHasher } from "../../helpers/PasswordHasher";
+import { AuthController } from "../controllers/AuthController";
 
 export const createAuthController = (prisma: PrismaClient) => {
   const authRepo = new AuthRepo(prisma);
