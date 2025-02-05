@@ -1,31 +1,31 @@
 
 @apiUrl = http://localhost:3000/api
-// register
+### note! REGISTER
 POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
     "name": "winner1",
     "email": "winner1@gmail.com",
-    "password":"#@ABcdef1234"
+    "password":"#@ABcdef1234",
+    "role": "ADMIN"
 }
 
-
-
-### login
+### note! LOGIN
 # @name login
 POST {{ apiUrl }}/auth/login
 Content-Type: application/json
 
 {
-  "email":"j@d5232.com",
-  "password":"passwOrd10*"
+   "email": "winner1@gmail.com",
+    "password":"#@ABcdef1234"
 }
 
-### logout
 
 @accessToken = {{ login.response.body.$.accessToken }}
 @refreshToken ={{ login.response.body.$.refreshToken }}
+
+### note! LOGOUT
 POST http://localhost:3000/api/auth/logout
 Content-Type: application/json
 
@@ -33,7 +33,45 @@ Content-Type: application/json
   "accessToken": "{{ accessToken }}",
   "refreshToken": "{{refreshToken}}"
 }
+
+
+### ********** User **********
  
-### get all users
+### note! GET_ALL_USERS
+# @name getAllUsers
 GET http://localhost:3000/api/users
 Authorization: Bearer {{ accessToken }}
+
+
+###  
+@userId={{ getAllUsers.response.body.$.[0].id }}
+
+### note! GET_USER_BY_ID
+GET http://localhost:3000/api/users/{{userId}}
+Authorization: Bearer {{ accessToken }}
+
+### note! UPDATE_USER
+PUT http://localhost:3000/api/users/{{userId}}
+Authorization: Bearer {{ accessToken }}
+Content-Type: application/json
+
+{
+    "name": "Win Min Aung"
+}
+
+### note! DELETE_USER 
+DELETE http://localhost:3000/api/users/{{userId}}
+Authorization: Bearer {{ accessToken }}
+
+
+### note! CREATE_USER // only admin can create user
+PUT http://localhost:3000/api/users
+Authorization: Bearer {{ accessToken }}
+Content-Type: application/json
+
+{
+    "name": "winner2",
+    "email": "winner2@gmail.com",
+    "password":"#@ABcdef1234",
+    "role": "USER"
+}

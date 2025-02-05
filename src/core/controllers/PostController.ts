@@ -11,7 +11,7 @@ export class PostController extends Controller {
   async create(req: Request, res: Response) {
     try {
       const data = req.body;
-      const post = await this.postService.create(data, req.user);
+      const post = await this.postService.create(data);
       this.sendCreated(res, post);
     } catch (error) {
       this.handleError(error, res);
@@ -46,7 +46,7 @@ export class PostController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const post = await this.postService.update(id, data, req.user);
+      const post = await this.postService.update(id, data);
       this.sendOk(res, post);
     } catch (error) {
       this.handleError(error, res);
@@ -56,7 +56,7 @@ export class PostController extends Controller {
   async delete(req: Request<{ id: string }>, res: Response) {
     try {
       const id = req.params.id;
-      const post = await this.postService.delete(id, req.user);
+      const post = await this.postService.delete(id);
       this.sendOk(res, post);
     } catch (error) {
       this.handleError(error, res);

@@ -89,6 +89,7 @@ export class UserRepo extends Repository implements IUserRepo {
   async delete(id: string): Promise<UserDTO> {
     try {
       const userExists = await this.userExists(id);
+      console.log({ userExists });
       if (!userExists) {
         throw new NotFoundError("User not found");
       }
@@ -98,6 +99,7 @@ export class UserRepo extends Repository implements IUserRepo {
         select: this.selectQuery,
       });
     } catch (error) {
+      console.log(error);
       throw this.handlePrismaError(error, "Error deleting user");
     }
   }

@@ -17,11 +17,7 @@ export class PostService extends Service implements IPostService {
     super();
   }
 
-  async create(
-    createCategoryData: CreatePostSchema,
-    user?: JwtAuthPayload
-  ): Promise<PostDTO> {
-    this.authorizeUserOrThrow(user);
+  async create(createCategoryData: CreatePostSchema): Promise<PostDTO> {
     const safeData = this.validate(createCategoryData, createPostSchema);
     return this.postRepo.create(safeData);
   }
@@ -37,19 +33,13 @@ export class PostService extends Service implements IPostService {
     return post;
   }
 
-  async update(
-    postId: string,
-    data: UpdatePostSchema,
-    user?: JwtAuthPayload
-  ): Promise<PostDTO> {
-    this.authorizeUserOrThrow(user);
+  async update(postId: string, data: UpdatePostSchema): Promise<PostDTO> {
     const validId = this.getValidId(postId);
     const safeData = this.validate(data, updatePostSchema);
     return this.postRepo.update(validId, safeData);
   }
 
-  async delete(postId: string, user?: JwtAuthPayload): Promise<PostDTO> {
-    this.authorizeUserOrThrow(user);
+  async delete(postId: string): Promise<PostDTO> {
     const validId = this.getValidId(postId);
     return this.postRepo.delete(validId);
   }

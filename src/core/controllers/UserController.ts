@@ -1,10 +1,7 @@
-// src/controllers/UserController.ts
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { UpdateUserSchema } from "../../schemas/userSchema";
 import { Controller } from "./Controller";
-import { Role } from "../../enums/Role";
-import { UnauthorizedError } from "../../errors";
 
 export class UserController extends Controller {
   constructor(private userService: UserService) {
@@ -21,7 +18,7 @@ export class UserController extends Controller {
   async create(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
-      const user = await this.userService.create(data, req.user);
+      const user = await this.userService.create(data);
       this.sendCreated(res, user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -79,7 +76,7 @@ export class UserController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const user = await this.userService.update(id, data, req.user);
+      const user = await this.userService.update(id, data);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -96,7 +93,7 @@ export class UserController extends Controller {
   async deleteUser(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const user = await this.userService.delete(id, req.user);
+      const user = await this.userService.delete(id);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);

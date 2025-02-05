@@ -30,8 +30,7 @@ export class UserService extends Service implements IUserService {
     return this.userRepo.create({ ...safeData, password: hashedPassword });
   }
 
-  async getAll(user?: JwtAuthPayload): Promise<UserDTO[]> {
-    // this.authorizeUserOrThrow(user);
+  async getAll(): Promise<UserDTO[]> {
     return await this.userRepo.getAll();
   }
   async get(userId: string): Promise<UserDTO | null> {
