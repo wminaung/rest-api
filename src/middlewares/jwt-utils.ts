@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { JwtManager } from "../helpers/JwtManager";
+import { JwtManager } from "../shared/helpers/JwtManager";
 import { redis } from "../lib/redis";
 
 export const authenticationToken = async (

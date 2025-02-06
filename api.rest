@@ -18,10 +18,10 @@ Content-Type: application/json
 
 {
    "email": "winner1@gmail.com",
-    "password":"#@ABcdef1234"
+   "password":"#@ABcdef1234"
 }
 
-
+###
 @accessToken = {{ login.response.body.$.accessToken }}
 @refreshToken ={{ login.response.body.$.refreshToken }}
 
@@ -56,7 +56,7 @@ Authorization: Bearer {{ accessToken }}
 Content-Type: application/json
 
 {
-    "name": "Win Min Aung"
+    "name": "WinWinnerChickenDinner"
 }
 
 ### note! DELETE_USER 

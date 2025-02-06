@@ -1,11 +1,11 @@
 import express from "express";
-import usersRouter from "./routes/users";
-import categoriesRouter from "./routes/categories";
-import followsRouter from "./routes/follows";
-import postRouter from "./routes/posts";
-import authRouter from "./routes/auth";
+import userRouters from "./modules/user/routes/userRoutes";
 import { authenticationToken } from "./middlewares/jwt-utils";
 import path from "path";
+import authRouters from "./modules/auth/routes/authRoutes";
+import postRouters from "./modules/post/routes/postRouters";
+import categoryRouters from "./modules/category/routes/categoryRouters";
+import followRouters from "./modules/follow/routes/followRouters";
 
 export function createApp() {
   const app = express();
@@ -18,12 +18,12 @@ export function createApp() {
     next();
   });
 
-  app.use("/api/auth", authRouter);
+  app.use("/api/auth", authRouters);
   app.use("/api", authenticationToken);
-  app.use("/api/users", usersRouter);
-  app.use("/api/categories", categoriesRouter);
-  app.use("/api/follows", followsRouter);
-  app.use("/api/posts", postRouter);
+  app.use("/api/users", userRouters);
+  app.use("/api/categories", categoryRouters);
+  app.use("/api/follows", followRouters);
+  app.use("/api/posts", postRouters);
 
   return app;
 }

@@ -1,4 +1,4 @@
-import { MediaType } from "../enums/MediaType";
+import { MediaType } from "../shared/enums/MediaType";
 
 export interface MediaDTO {
   id: string;

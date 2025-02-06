@@ -18,9 +18,9 @@
     "__tests__/__mocks___",
     "src/utils",
     "lib",
-    "src/types",
+    "src/shared/types",
     "src/schemas",
-    "src/helpers"
+    "src/shared/helpers"
   ],
   "exclude": [
     "node_modules",
