@@ -1,5 +1,5 @@
 import { LikeDTO } from "../../../dtos/LikeDTO"; // Assuming you have a LikeDTO
-import { CreateLikeSchema } from "../../../schemas/likeSchema";
+import { CreateLikeSchema } from "../../../shared/schemas/likeSchema";
 import {
   ICreate,
   IDelete,

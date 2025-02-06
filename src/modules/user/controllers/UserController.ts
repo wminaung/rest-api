@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UpdateUserSchema } from "../../../schemas/userSchema";
+import { UpdateUserSchema } from "../../../shared/schemas/userSchema";
 import { Controller } from "../../../shared/abstracts/Controller";
 import { UserService } from "../services/UserService";
 

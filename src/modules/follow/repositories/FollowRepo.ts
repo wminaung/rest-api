@@ -5,7 +5,7 @@ import { FollowDTO } from "../../../dtos/FollowDTO";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
-} from "../../../schemas/followSchema";
+} from "../../../shared/schemas/followSchema";
 import { NotFoundError } from "../../../shared/errors";
 
 export class FollowRepo extends Repository implements IFollowRepo {

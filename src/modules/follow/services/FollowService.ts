@@ -5,7 +5,7 @@ import {
   CreateFollowSchema,
   deleteFollowSchema,
   DeleteFollowSchema,
-} from "../../../schemas/followSchema";
+} from "../../../shared/schemas/followSchema";
 import { Service } from "../../../shared/abstracts/Service";
 import { IFollowService } from "../interfaces/IFollowService";
 import { NotFoundError, UnauthorizedError } from "../../../shared/errors";

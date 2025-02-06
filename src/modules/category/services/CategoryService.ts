@@ -4,7 +4,7 @@ import {
   createCategorySchema,
   UpdateCategorySchema,
   updateCategorySchema,
-} from "../../../schemas/categorySchema";
+} from "../../../shared/schemas/categorySchema";
 import { Service } from "../../../shared/abstracts/Service";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";
 import { ICategoryService } from "../interfaces/ICategoryService";

@@ -3,7 +3,7 @@ import { CategoryDTO } from "../../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../../schemas/categorySchema";
+} from "../../../shared/schemas/categorySchema";
 import { Repository } from "../../../shared/abstracts/Repository";
 import { InternalServerError, NotFoundError } from "../../../shared/errors";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";

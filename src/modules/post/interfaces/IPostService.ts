@@ -2,7 +2,7 @@ import { PostDTO } from "../../../dtos/PostDTO";
 import {
   CreatePostSchema,
   UpdatePostSchema,
-} from "../../../schemas/postSchema";
+} from "../../../shared/schemas/postSchema";
 import {
   ICreate,
   IDelete,

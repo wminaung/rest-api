@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../shared/abstracts/Controller";
 import { AuthService } from "../services/AuthService";
-import { CreateUserSchema } from "../../../schemas/userSchema";
+import { CreateUserSchema } from "../../../shared/schemas/userSchema";
 import { UnauthorizedError } from "../../../shared/errors";
 
 export class AuthController extends Controller {

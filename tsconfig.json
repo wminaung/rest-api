@@ -12,16 +12,7 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": [
-    "src/**/*",
-    "__tests__",
-    "__tests__/__mocks___",
-    "src/utils",
-    "lib",
-    "src/shared/types",
-    "src/schemas",
-    "src/shared/helpers"
-  ],
+  "include": ["src/**/*", "__tests__", "__tests__/__mocks___"],
   "exclude": [
     "node_modules",
     "dist",

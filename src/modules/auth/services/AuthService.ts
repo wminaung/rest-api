@@ -3,10 +3,9 @@ import { Service } from "../../../shared/abstracts/Service";
 import {
   createUserSchema,
   CreateUserSchema,
-} from "../../../schemas/userSchema";
+} from "../../../shared/schemas/userSchema";
 import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";
 import { JwtManager } from "../../../shared/helpers/JwtManager";
-import { redis } from "../../../lib/redis";
 import {
   LoginReturnType,
   LogoutReturnType,
@@ -15,6 +14,7 @@ import {
 } from "../../../shared/types/auth";
 import { IAuthService } from "../interfaces/IAuthService";
 import { UnauthorizedError, ForbiddenError } from "../../../shared/errors";
+import { redis } from "../../../shared/lib/redis";
 
 export class AuthService extends Service implements IAuthService {
   constructor(

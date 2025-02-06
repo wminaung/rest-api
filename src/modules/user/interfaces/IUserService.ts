@@ -2,7 +2,7 @@ import { UserDTO } from "../../../dtos/UserDTO";
 import {
   CreateUserSchema,
   UpdateUserSchema,
-} from "../../../schemas/userSchema";
+} from "../../../shared/schemas/userSchema";
 import {
   ICreate,
   IDelete,

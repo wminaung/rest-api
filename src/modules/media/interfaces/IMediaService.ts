@@ -2,7 +2,7 @@ import { MediaDTO } from "../../../dtos/MediaDTO";
 import {
   CreateMediaSchema,
   UpdateMediaSchema,
-} from "../../../schemas/mediaSchema";
+} from "../../../shared/schemas/mediaSchema";
 import {
   ICreate,
   IDelete,

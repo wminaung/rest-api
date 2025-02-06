@@ -4,7 +4,7 @@ import {
   createUserSchema,
   updateUserSchema,
   UpdateUserSchema,
-} from "../../../schemas/userSchema";
+} from "../../../shared/schemas/userSchema";
 import { IUserRepo } from "../interfaces/IUserRepo";
 import { Service } from "../../../shared/abstracts/Service";
 import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";

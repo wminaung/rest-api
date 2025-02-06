@@ -1,5 +1,5 @@
 import { ValidationError } from "../errors";
-import { checkIdSchema } from "../../schemas/checkIdSchema";
+import { checkIdSchema } from "../schemas/checkIdSchema";
 
 export class ServiceHelper {
   static saltRounds: number = 10;

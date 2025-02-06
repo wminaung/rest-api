@@ -6,7 +6,7 @@ import { TagDTO } from "../../../dtos/TagDTO";
 import {
   CreatePostSchema,
   UpdatePostSchema,
-} from "../../../schemas/postSchema";
+} from "../../../shared/schemas/postSchema";
 import {
   ICreate,
   IDelete,

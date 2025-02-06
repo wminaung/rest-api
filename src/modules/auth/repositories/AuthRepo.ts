@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { AuthDTO } from "../../../dtos/AuthDTO";
 import { UserDTO } from "../../../dtos/UserDTO";
-import { CreateUserSchema } from "../../../schemas/userSchema";
+import { CreateUserSchema } from "../../../shared/schemas/userSchema";
 import { Repository } from "../../../shared/abstracts/Repository";
 import { InternalServerError } from "../../../shared/errors";
 import { IAuthRepo } from "../interfaces/IAuthRepo";

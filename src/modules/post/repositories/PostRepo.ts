@@ -7,7 +7,7 @@ import { TagDTO } from "../../../dtos/TagDTO";
 import {
   CreatePostSchema,
   UpdatePostSchema,
-} from "../../../schemas/postSchema";
+} from "../../../shared/schemas/postSchema";
 import { Repository } from "../../../shared/abstracts/Repository";
 import { NotFoundError } from "../../../shared/errors";
 import { IPostRepo } from "../interfaces/IPostRepo";

@@ -2,7 +2,7 @@ import { CategoryDTO } from "../../../dtos/CategoryDTO";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../../schemas/categorySchema";
+} from "../../../shared/schemas/categorySchema";
 import {
   ICreate,
   IDelete,

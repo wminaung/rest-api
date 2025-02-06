@@ -1,5 +1,8 @@
 import { TagDTO } from "../../../dtos/TagDTO";
-import { CreateTagSchema, UpdateTagSchema } from "../../../schemas/tagSchema";
+import {
+  CreateTagSchema,
+  UpdateTagSchema,
+} from "../../../shared/schemas/tagSchema";
 import {
   ICreate,
   IDelete,

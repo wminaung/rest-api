@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { PostService } from "../services/PostService";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { UpdatePostSchema } from "../../../schemas/postSchema";
+import { UpdatePostSchema } from "../../../shared/schemas/postSchema";
 
 export class PostController extends Controller {
   constructor(private postService: PostService) {

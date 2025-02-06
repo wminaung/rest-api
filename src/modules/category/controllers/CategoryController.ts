@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "../../../schemas/categorySchema";
+} from "../../../shared/schemas/categorySchema";
 import { Controller } from "../../../shared/abstracts/Controller";
 import { CategoryService } from "../services/CategoryService";
 export class CategoryController extends Controller {

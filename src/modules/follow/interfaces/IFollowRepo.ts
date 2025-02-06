@@ -2,7 +2,7 @@ import { FollowDTO } from "../../../dtos/FollowDTO";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
-} from "../../../schemas/followSchema";
+} from "../../../shared/schemas/followSchema";
 
 export interface IFollowRepo {
   create(data: CreateFollowSchema): Promise<FollowDTO>;

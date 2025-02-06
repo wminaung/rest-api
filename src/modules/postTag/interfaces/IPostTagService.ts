@@ -1,5 +1,5 @@
 import { PostDTO } from "../../../dtos/PostDTO";
-import { CreatePostTagSchema } from "../../../schemas/postTagSchema";
+import { CreatePostTagSchema } from "../../../shared/schemas/postTagSchema";
 import {
   ICreate,
   IDelete,

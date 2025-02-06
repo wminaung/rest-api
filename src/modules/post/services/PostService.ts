@@ -4,7 +4,7 @@ import {
   CreatePostSchema,
   updatePostSchema,
   UpdatePostSchema,
-} from "../../../schemas/postSchema";
+} from "../../../shared/schemas/postSchema";
 import { Service } from "../../../shared/abstracts/Service";
 import { PostDTO } from "../../../dtos/PostDTO";
 import { CategoryDTO } from "../../../dtos/CategoryDTO";

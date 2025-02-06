@@ -4,7 +4,7 @@ import { UserDTO } from "../../../dtos/UserDTO";
 import {
   CreateUserSchema,
   UpdateUserSchema,
-} from "../../../schemas/userSchema";
+} from "../../../shared/schemas/userSchema";
 import { Repository } from "../../../shared/abstracts/Repository";
 import {
   NotFoundError,
