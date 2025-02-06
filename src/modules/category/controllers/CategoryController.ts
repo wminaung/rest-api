@@ -5,9 +5,9 @@ import {
   UpdateCategorySchema,
 } from "../../../shared/schemas/categorySchema";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { CategoryService } from "../services/CategoryService";
+import { ICategoryService } from "../interfaces/ICategoryService";
 export class CategoryController extends Controller {
-  constructor(private categoryService: CategoryService) {
+  constructor(private categoryService: ICategoryService) {
     super();
   }
 

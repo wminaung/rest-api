@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { FollowService } from "../services/FollowService";
 import {
   CreateFollowSchema,
   DeleteFollowSchema,
 } from "../../../shared/schemas/followSchema";
+import { IFollowService } from "../interfaces/IFollowService";
 
 export class FollowController extends Controller {
-  constructor(private followService: FollowService) {
+  constructor(private followService: IFollowService) {
     super();
   }
 

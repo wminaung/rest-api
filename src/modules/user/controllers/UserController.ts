@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { UpdateUserSchema } from "../../../shared/schemas/userSchema";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { UserService } from "../services/UserService";
+import { IUserService } from "../interfaces/IUserService";
 
 export class UserController extends Controller {
-  constructor(private userService: UserService) {
+  constructor(private userService: IUserService) {
     super();
   }
 

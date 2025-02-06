@@ -10,10 +10,13 @@ import {
   IGetAll,
   IUpdate,
 } from "../../../shared/interfaces/crud.interfaces";
+import { CategoryDTO } from "../../../dtos/CategoryDTO";
 
 export interface IPostService
   extends ICreate<PostDTO, CreatePostSchema>,
     IGetAll<PostDTO>,
     IGet<PostDTO>,
     IUpdate<PostDTO, UpdatePostSchema>,
-    IDelete<PostDTO> {}
+    IDelete<PostDTO> {
+  getCategory(postId: string): Promise<CategoryDTO | null>;
+}

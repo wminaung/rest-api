@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { AuthService } from "../services/AuthService";
 import { CreateUserSchema } from "../../../shared/schemas/userSchema";
 import { UnauthorizedError } from "../../../shared/errors";
+import { IAuthService } from "../interfaces/IAuthService";
 
 export class AuthController extends Controller {
-  constructor(private authService: AuthService) {
+  constructor(private authService: IAuthService) {
     super();
   }
 
