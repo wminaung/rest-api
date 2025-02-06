@@ -22,7 +22,7 @@ export function createApp() {
   app.use("/api", authenticationToken);
   app.use("/api/users", userRouters);
   app.use("/api/categories", categoryRouters);
-  app.use("/api/follows", followRouters);
+  // app.use("/api/follows", followRouters);
   app.use("/api/posts", postRouters);
 
   return app;

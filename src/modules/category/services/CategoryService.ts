@@ -8,6 +8,7 @@ import {
 import { Service } from "../../../shared/abstracts/Service";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";
 import { ICategoryService } from "../interfaces/ICategoryService";
+import { NotFoundError } from "../../../shared/errors";
 
 export class CategoryService extends Service implements ICategoryService {
   constructor(private categoryRepo: ICategoryRepo) {
@@ -34,6 +35,7 @@ export class CategoryService extends Service implements ICategoryService {
   ): Promise<CategoryDTO> {
     const validId = this.getValidId(categoryId);
     const safeData = this.validate(updateCategoryData, updateCategorySchema);
+
     return this.categoryRepo.update(validId, safeData);
   }
 

@@ -19,4 +19,5 @@ export interface IPostService
     IUpdate<PostDTO, UpdatePostSchema>,
     IDelete<PostDTO> {
   getCategory(postId: string): Promise<CategoryDTO | null>;
+  getPostsByUserId(userId: string): Promise<PostDTO[]>;
 }

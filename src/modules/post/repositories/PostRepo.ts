@@ -16,6 +16,12 @@ export class PostRepo extends Repository implements IPostRepo {
   constructor(private prisma: PrismaClient) {
     super();
   }
+  getPostsByUserId(userId: string): Promise<PostDTO[]> {
+    return this.executePrismaQuery(
+      () => this.prisma.post.findMany({ where: { userId: userId } }),
+      `something went wrong in getPostsByUserId`
+    );
+  }
 
   async getAll(): Promise<PostDTO[]> {
     return this.executePrismaQuery(
@@ -31,7 +37,7 @@ export class PostRepo extends Repository implements IPostRepo {
   async create(data: CreatePostSchema): Promise<PostDTO> {
     return this.executePrismaQuery(
       () => this.prisma.post.create({ data }),
-      `post not found`
+      `post not found `
     );
   }
 

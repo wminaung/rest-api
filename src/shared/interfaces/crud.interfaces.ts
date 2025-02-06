@@ -1,5 +1,7 @@
+import { JwtAuthPayload } from "../types/jwtAuthPayload";
+
 export interface ICreate<ReturnDTO, CreateSchema> {
-  create(data: CreateSchema): Promise<ReturnDTO>;
+  create(data: CreateSchema, user?: JwtAuthPayload): Promise<ReturnDTO>;
 }
 
 export interface IGetAll<ReturnDTO> {
@@ -11,9 +13,13 @@ export interface IGet<ReturnDTO> {
 }
 
 export interface IUpdate<ReturnDTO, UpdateSchema> {
-  update(id: string, data: UpdateSchema): Promise<ReturnDTO>;
+  update(
+    id: string,
+    data: UpdateSchema,
+    user?: JwtAuthPayload
+  ): Promise<ReturnDTO>;
 }
 
 export interface IDelete<ReturnDTO> {
-  delete(id: string): Promise<ReturnDTO>;
+  delete(id: string, user?: JwtAuthPayload): Promise<ReturnDTO>;
 }

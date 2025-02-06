@@ -54,6 +54,7 @@ export class CategoryController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
+
       const category = await this.categoryService.update(id, data);
       res.status(200).json(category);
     } catch (err: unknown) {

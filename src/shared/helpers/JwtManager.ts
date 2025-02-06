@@ -6,7 +6,7 @@ import configs from "../configs";
 export class JwtManager {
   static generateAccessToken(
     payload: JwtAuthPayload,
-    expiresIn: number | StringValue | undefined = "15M"
+    expiresIn: number | StringValue | undefined = "1H"
   ): string {
     return jwt.sign(payload, configs.jwtAccessTokenSecret, {
       expiresIn: expiresIn,

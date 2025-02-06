@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UpdateUserSchema } from "../../../shared/schemas/userSchema";
 import { Controller } from "../../../shared/abstracts/Controller";
 import { IUserService } from "../interfaces/IUserService";
+import { IPostService } from "../../post/interfaces/IPostService";
 
 export class UserController extends Controller {
   constructor(private userService: IUserService) {
@@ -18,7 +19,7 @@ export class UserController extends Controller {
   async create(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
-      const user = await this.userService.create(data);
+      const user = await this.userService.create(data, req.user);
       this.sendCreated(res, user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -76,7 +77,7 @@ export class UserController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const user = await this.userService.update(id, data);
+      const user = await this.userService.update(id, data, req.user);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);
@@ -93,7 +94,7 @@ export class UserController extends Controller {
   async deleteUser(req: Request<{ id: string }>, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const user = await this.userService.delete(id);
+      const user = await this.userService.delete(id, req.user);
       res.status(200).json(user);
     } catch (err: unknown) {
       this.handleError(err, res);

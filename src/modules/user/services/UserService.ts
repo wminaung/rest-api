@@ -9,6 +9,8 @@ import { IUserRepo } from "../interfaces/IUserRepo";
 import { Service } from "../../../shared/abstracts/Service";
 import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";
 import { IUserService } from "../interfaces/IUserService";
+import { ForbiddenError } from "../../../shared/errors";
+import { JwtAuthPayload } from "../../../shared/types/jwtAuthPayload";
 
 export class UserService extends Service implements IUserService {
   constructor(
@@ -22,8 +24,21 @@ export class UserService extends Service implements IUserService {
     return this.passwordHasher.hashPassword(password);
   }
 
-  async create(createUserData: CreateUserSchema): Promise<UserDTO> {
-    // Olny admin can create user
+  private isAdminRoleOrThrow(user: JwtAuthPayload) {
+    if (user.role !== "ADMIN") {
+      throw new ForbiddenError("You are not allowed to create user");
+    }
+  }
+
+  // NOTE: Only admin can create user
+  async create(
+    createUserData: CreateUserSchema,
+    user?: JwtAuthPayload
+  ): Promise<UserDTO> {
+    const authUser = this.hasAuthUserOrThrow(user);
+    // note: will pass if user is admin or throw ForbiddenError
+    // note: however i already check in middleware so no need to check again here but just in case i will keep it here for now
+    this.isAdminRoleOrThrow(authUser);
     const safeData = this.validate(createUserData, createUserSchema);
     const hashedPassword = await this.hashPassword(safeData.password);
     return this.userRepo.create({ ...safeData, password: hashedPassword });
@@ -39,16 +54,30 @@ export class UserService extends Service implements IUserService {
   }
 
   async update(
-    userId: string,
-    updateUserData: UpdateUserSchema
+    id: string,
+    updateUserData: UpdateUserSchema,
+    user?: JwtAuthPayload
   ): Promise<UserDTO> {
-    const validId = this.getValidId(userId);
+    const validId = this.getValidId(id);
     const safeData = this.validate(updateUserData, updateUserSchema);
+    const authUser = this.hasAuthUserOrThrow(user);
+    if (authUser.id !== validId) {
+      throw new ForbiddenError("You are not allowed to update this user");
+    }
+
     return await this.userRepo.update(validId, safeData);
   }
 
-  async delete(userId: string): Promise<UserDTO> {
+  // NOTE: Only admin can delete user
+  async delete(userId: string, user?: JwtAuthPayload): Promise<UserDTO> {
+    const authUser = this.hasAuthUserOrThrow(user);
+    this.isAdminRoleOrThrow(authUser);
     const validId = this.getValidId(userId);
+
+    if (authUser.id === validId) {
+      throw new ForbiddenError("You are not allowed to delete yourself");
+    }
+
     return await this.userRepo.delete(validId);
   }
 

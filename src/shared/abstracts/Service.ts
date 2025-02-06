@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { ServiceHelper } from "../helpers/ServiceHelper";
 import { ValidationHelper } from "../helpers/ValidationHelper";
+import { JwtAuthPayload } from "../types/jwtAuthPayload";
+import { UnauthorizedError } from "../errors";
 
 export abstract class Service {
   /**
@@ -25,6 +27,20 @@ export abstract class Service {
 
   protected validate<T>(dataToValidate: T, schema: z.ZodType<T>): T {
     return ValidationHelper.validate(dataToValidate, schema);
+  }
+
+  /**
+   * Throws UnauthorizedError if user payload is not available.
+   * If user payload is available, returns the user payload.
+   * @param user - The user payload to be checked.
+   * @returns The user payload if it is available.
+   * @throws {UnauthorizedError} If the user payload is not available.
+   */
+  protected hasAuthUserOrThrow(user?: JwtAuthPayload) {
+    if (!user || !user.id || !user.email) {
+      throw new UnauthorizedError("need user jwt payload");
+    }
+    return user;
   }
 
   //***  end class ***/

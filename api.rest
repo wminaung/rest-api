@@ -1,6 +1,6 @@
 
 @apiUrl = http://localhost:3000/api
-### note! REGISTER
+### note: REGISTER
 POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
     "role": "ADMIN"
 }
 
-### note! LOGIN
+### note: LOGIN
 # @name login
 POST {{ apiUrl }}/auth/login
 Content-Type: application/json
@@ -25,7 +25,7 @@ Content-Type: application/json
 @accessToken = {{ login.response.body.$.accessToken }}
 @refreshToken ={{ login.response.body.$.refreshToken }}
 
-### note! LOGOUT
+### note: LOGOUT
 POST http://localhost:3000/api/auth/logout
 Content-Type: application/json
 
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ### ********** User **********
  
-### note! GET_ALL_USERS
+### note: GET_ALL_USERS
 # @name getAllUsers
 GET http://localhost:3000/api/users
 Authorization: Bearer {{ accessToken }}
@@ -46,25 +46,25 @@ Authorization: Bearer {{ accessToken }}
 ###  
 @userId={{ getAllUsers.response.body.$.[0].id }}
 
-### note! GET_USER_BY_ID
+### note: GET_USER_BY_ID
 GET http://localhost:3000/api/users/{{userId}}
 Authorization: Bearer {{ accessToken }}
 
-### note! UPDATE_USER
+### note: UPDATE_USER
 PUT http://localhost:3000/api/users/{{userId}}
 Authorization: Bearer {{ accessToken }}
 Content-Type: application/json
 
 {
-    "name": "WinWinnerChickenDinner"
+    "name": "WinWinnerChickenDinner2"
 }
 
-### note! DELETE_USER 
+### note: DELETE_USER 
 DELETE http://localhost:3000/api/users/{{userId}}
 Authorization: Bearer {{ accessToken }}
 
 
-### note! CREATE_USER // only admin can create user
+### note: CREATE_USER // only admin can create user
 PUT http://localhost:3000/api/users
 Authorization: Bearer {{ accessToken }}
 Content-Type: application/json
@@ -75,3 +75,61 @@ Content-Type: application/json
     "password":"#@ABcdef1234",
     "role": "USER"
 }
+
+### note: CREATE_POST 
+POST http://localhost:3000/api/posts
+Authorization: Bearer {{ accessToken }}
+Content-Type: application/json
+
+{
+    "title": "Title 2",
+    "content": "Title 2 content",
+    "userId": "{{userId}}"
+}
+
+
+### note: ME
+# @name getLoginUser
+GET http://localhost:3000/api/users/me
+Authorization: Bearer {{ accessToken }}
+
+###
+@loginUserId = {{ getLoginUser.response.body.$.id }}
+
+###
+### note: GET_POST_LOGIN_USER
+# @name getPostLoginUser
+GET http://localhost:3000/api/users/{{loginUserId}}/posts
+Authorization: Bearer {{ accessToken }}
+
+
+### 
+@postByLoginUserId={{ getPostLoginUser.response.body.$.[0].id }}
+###
+
+
+
+### note: GET_ALL_POSTS 
+# @name getAllPosts
+GET http://localhost:3000/api/posts
+Authorization: Bearer {{ accessToken }}
+
+###
+@postId={{ getAllPosts.response.body.$.[0].id }}
+
+### note: GET_POST_BY_ID 
+GET http://localhost:3000/api/posts/{{postByLoginUserId}}
+Authorization: Bearer {{ accessToken }}
+
+### note: UPDATE_POST 
+PUT http://localhost:3000/api/posts/{{postByLoginUserId}}
+Authorization: Bearer {{ accessToken }}
+Content-Type: application/json
+
+{
+    "title": "Title 1 Updated"
+}
+
+### note: DELETE_POST 
+DELETE  http://localhost:3000/api/posts/{{postByLoginUserId}}
+Authorization: Bearer {{ accessToken }}

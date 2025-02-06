@@ -8,10 +8,20 @@ export class PostController extends Controller {
     super();
   }
 
+  async GetPostsByUserId(req: Request<{ id: string }>, res: Response) {
+    try {
+      const id = req.params.id;
+      const posts = await this.postService.getPostsByUserId(id);
+      this.sendOk(res, posts);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   async create(req: Request, res: Response) {
     try {
       const data = req.body;
-      const post = await this.postService.create(data);
+      const post = await this.postService.create({ ...data }, req.user);
       this.sendCreated(res, post);
     } catch (error) {
       this.handleError(error, res);
@@ -20,8 +30,6 @@ export class PostController extends Controller {
 
   async getAll(req: Request, res: Response) {
     try {
-      // Check if the request is authenticated and has a user object
-
       const posts = await this.postService.getAll();
       this.sendOk(res, posts);
     } catch (error) {
@@ -46,7 +54,7 @@ export class PostController extends Controller {
     try {
       const id = req.params.id;
       const data = req.body;
-      const post = await this.postService.update(id, data);
+      const post = await this.postService.update(id, data, req.user);
       this.sendOk(res, post);
     } catch (error) {
       this.handleError(error, res);
@@ -56,7 +64,7 @@ export class PostController extends Controller {
   async delete(req: Request<{ id: string }>, res: Response) {
     try {
       const id = req.params.id;
-      const post = await this.postService.delete(id);
+      const post = await this.postService.delete(id, req.user);
       this.sendOk(res, post);
     } catch (error) {
       this.handleError(error, res);

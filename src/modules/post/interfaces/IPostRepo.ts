@@ -21,8 +21,9 @@ export interface IPostRepo
     IGet<PostDTO>,
     IUpdate<PostDTO, UpdatePostSchema>,
     IDelete<PostDTO> {
-  getCategoryByPostId: (id: string) => Promise<CategoryDTO | null>;
-  getCommentsByPostId: (id: string) => Promise<CommentDTO[]>;
-  getLikesByPostId: (id: string) => Promise<LikeDTO[]>;
-  getTagsByPostId: (id: string) => Promise<TagDTO[]>;
+  getCategoryByPostId(id: string): Promise<CategoryDTO | null>;
+  getCommentsByPostId(id: string): Promise<CommentDTO[]>;
+  getLikesByPostId(id: string): Promise<LikeDTO[]>;
+  getTagsByPostId(id: string): Promise<TagDTO[]>;
+  getPostsByUserId(userId: string): Promise<PostDTO[]>;
 }
