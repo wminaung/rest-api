@@ -2,8 +2,8 @@ import { Response } from "express";
 import { ErrorHandler } from "../utils/ErrorHandler";
 
 export abstract class Controller {
-  protected handleError(err: unknown, res: Response): void {
-    ErrorHandler.handleError(err, res);
+  protected handleError(error: unknown, res: Response): void {
+    ErrorHandler.handleError(error, res);
   }
 
   protected sendOk(res: Response, data: any): void {

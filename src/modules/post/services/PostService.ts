@@ -9,11 +9,7 @@ import { Service } from "../../../shared/abstracts/Service";
 import { PostDTO } from "../../../dtos/PostDTO";
 import { CategoryDTO } from "../../../dtos/CategoryDTO";
 import { IPostService } from "../interfaces/IPostService";
-import {
-  ForbiddenError,
-  NotFoundError,
-  UnauthorizedError,
-} from "../../../shared/errors";
+import { ForbiddenError, NotFoundError } from "../../../shared/errors";
 import { JwtAuthPayload } from "../../../shared/types/jwtAuthPayload";
 import { IUserRepo } from "../../user/interfaces/IUserRepo";
 
@@ -21,28 +17,16 @@ export class PostService extends Service implements IPostService {
   constructor(private postRepo: IPostRepo, private userRepo: IUserRepo) {
     super();
   }
-  async getPostsByUserId(userId: string): Promise<PostDTO[]> {
-    const validUserId = this.getValidId(userId);
-
-    // note: check user exists
-    const userFomDb = await this.userRepo.get(validUserId);
-    if (!userFomDb) {
-      throw new NotFoundError("User not found");
-    }
-    return this.postRepo.getPostsByUserId(validUserId);
-  }
 
   async create(
     createCategoryData: CreatePostSchema,
     user?: JwtAuthPayload
   ): Promise<PostDTO> {
-    const validUser = this.hasAuthUserOrThrow(user);
-    if (!validUser.id)
-      throw new UnauthorizedError("You are not authorized user");
+    const authorizedUser = this.hasAuthUserOrThrow(user);
 
     // note: automatically add userId to post data for safety
-    const safeData = this.validate(
-      { ...createCategoryData, userId: validUser.id },
+    const safeData = this.validateOrThrow(
+      { ...createCategoryData, userId: authorizedUser.id },
       createPostSchema
     );
 
@@ -54,10 +38,7 @@ export class PostService extends Service implements IPostService {
   }
 
   async get(postId: string): Promise<PostDTO | null> {
-    const validId = this.getValidId(postId);
-    const post = await this.postRepo.get(validId);
-    if (!post) throw new NotFoundError("Post not found");
-    return post;
+    return this.postRepo.get(this.getValidIdOrThrow(postId));
   }
 
   async update(
@@ -65,9 +46,9 @@ export class PostService extends Service implements IPostService {
     data: UpdatePostSchema,
     user?: JwtAuthPayload
   ): Promise<PostDTO> {
-    const validId = this.getValidId(postId);
+    const validId = this.getValidIdOrThrow(postId);
 
-    const safeData = this.validate(data, updatePostSchema);
+    const safeData = this.validateOrThrow(data, updatePostSchema);
     const validUser = this.hasAuthUserOrThrow(user);
 
     const post = await this.postRepo.get(validId);
@@ -81,7 +62,7 @@ export class PostService extends Service implements IPostService {
   }
 
   async delete(postId: string, user?: JwtAuthPayload): Promise<PostDTO> {
-    const validId = this.getValidId(postId);
+    const validId = this.getValidIdOrThrow(postId);
     const validUser = this.hasAuthUserOrThrow(user);
 
     // note: check authorization
@@ -93,8 +74,21 @@ export class PostService extends Service implements IPostService {
     return this.postRepo.delete(validId, user);
   }
 
-  async getCategory(postId: string): Promise<CategoryDTO | null> {
-    const validPostId = this.getValidId(postId);
+  // note: by-methods
+
+  async getPostsByUserId(userId: string): Promise<PostDTO[]> {
+    const validUserId = this.getValidIdOrThrow(userId);
+
+    // note: check user exists
+    const userFomDb = await this.userRepo.get(validUserId);
+    if (!userFomDb) {
+      throw new NotFoundError("User not found");
+    }
+    return this.postRepo.getPostsByUserId(validUserId);
+  }
+
+  async getCategoryByPostId(postId: string): Promise<CategoryDTO | null> {
+    const validPostId = this.getValidIdOrThrow(postId);
     return this.postRepo.getCategoryByPostId(validPostId);
   }
 

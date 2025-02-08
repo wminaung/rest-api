@@ -16,7 +16,10 @@ export class FollowService extends Service implements IFollowService {
   }
 
   async followUser(data: CreateFollowSchema): Promise<FollowDTO> {
-    const { followerId, followingId } = this.validate(data, createFollowSchema);
+    const { followerId, followingId } = this.validateOrThrow(
+      data,
+      createFollowSchema
+    );
 
     const follow = await this.followRepo.getFollow(followerId, followingId);
     if (follow) {
@@ -25,7 +28,10 @@ export class FollowService extends Service implements IFollowService {
     return this.followRepo.create({ followerId, followingId });
   }
   async unfollowUser(data: DeleteFollowSchema): Promise<FollowDTO> {
-    const { followerId, followingId } = this.validate(data, deleteFollowSchema);
+    const { followerId, followingId } = this.validateOrThrow(
+      data,
+      deleteFollowSchema
+    );
     const follow = await this.followRepo.getFollow(followerId, followingId);
 
     if (!follow) {

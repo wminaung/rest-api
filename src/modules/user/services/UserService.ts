@@ -39,7 +39,7 @@ export class UserService extends Service implements IUserService {
     // note: will pass if user is admin or throw ForbiddenError
     // note: however i already check in middleware so no need to check again here but just in case i will keep it here for now
     this.isAdminRoleOrThrow(authUser);
-    const safeData = this.validate(createUserData, createUserSchema);
+    const safeData = this.validateOrThrow(createUserData, createUserSchema);
     const hashedPassword = await this.hashPassword(safeData.password);
     return this.userRepo.create({ ...safeData, password: hashedPassword });
   }
@@ -48,9 +48,7 @@ export class UserService extends Service implements IUserService {
     return await this.userRepo.getAll();
   }
   async get(userId: string): Promise<UserDTO | null> {
-    // this.authorizeUserOrThrow(user);
-    const validId = this.getValidId(userId);
-    return await this.userRepo.get(validId);
+    return this.userRepo.get(this.getValidIdOrThrow(userId));
   }
 
   async update(
@@ -58,8 +56,8 @@ export class UserService extends Service implements IUserService {
     updateUserData: UpdateUserSchema,
     user?: JwtAuthPayload
   ): Promise<UserDTO> {
-    const validId = this.getValidId(id);
-    const safeData = this.validate(updateUserData, updateUserSchema);
+    const validId = this.getValidIdOrThrow(id);
+    const safeData = this.validateOrThrow(updateUserData, updateUserSchema);
     const authUser = this.hasAuthUserOrThrow(user);
     if (authUser.id !== validId) {
       throw new ForbiddenError("You are not allowed to update this user");
@@ -72,7 +70,7 @@ export class UserService extends Service implements IUserService {
   async delete(userId: string, user?: JwtAuthPayload): Promise<UserDTO> {
     const authUser = this.hasAuthUserOrThrow(user);
     this.isAdminRoleOrThrow(authUser);
-    const validId = this.getValidId(userId);
+    const validId = this.getValidIdOrThrow(userId);
 
     if (authUser.id === validId) {
       throw new ForbiddenError("You are not allowed to delete yourself");

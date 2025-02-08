@@ -16,15 +16,9 @@ export class PostRepo extends Repository implements IPostRepo {
   constructor(private prisma: PrismaClient) {
     super();
   }
-  getPostsByUserId(userId: string): Promise<PostDTO[]> {
-    return this.executePrismaQuery(
-      () => this.prisma.post.findMany({ where: { userId: userId } }),
-      `something went wrong in getPostsByUserId`
-    );
-  }
 
   async getAll(): Promise<PostDTO[]> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () => this.prisma.post.findMany(),
       `something went wrong`
     );
@@ -35,14 +29,14 @@ export class PostRepo extends Repository implements IPostRepo {
   }
 
   async create(data: CreatePostSchema): Promise<PostDTO> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () => this.prisma.post.create({ data }),
       `post not found `
     );
   }
 
   async update(id: string, data: UpdatePostSchema): Promise<PostDTO> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () => this.prisma.post.update({ where: { id }, data }),
       `post cannot update`
     );
@@ -53,9 +47,17 @@ export class PostRepo extends Repository implements IPostRepo {
     if (!post) {
       throw new NotFoundError("Post not found");
     }
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () => this.prisma.post.delete({ where: { id } }),
       `post cannot delete`
+    );
+  }
+
+  // note: By-Methods
+  async getPostsByUserId(userId: string): Promise<PostDTO[]> {
+    return this.executePrismaQueryOrThrow(
+      () => this.prisma.post.findMany({ where: { userId: userId } }),
+      `something went wrong in getPostsByUserId`
     );
   }
 

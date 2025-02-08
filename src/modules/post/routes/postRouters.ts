@@ -1,5 +1,4 @@
 import { Request, Router } from "express";
-import { PrismaClient } from "@prisma/client";
 import { postController } from "../../../shared/factories";
 
 const postRouters = Router();

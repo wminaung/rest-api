@@ -25,7 +25,7 @@ export class FollowRepo extends Repository implements IFollowRepo {
   }
 
   async create(data: CreateFollowSchema): Promise<FollowDTO> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () =>
         this.prisma.follow.create({
           data: {
@@ -43,7 +43,7 @@ export class FollowRepo extends Repository implements IFollowRepo {
    * @returns A list of FollowDTOs representing the followers of the given user.
    */
   async getFollowers(userId: string): Promise<FollowDTO[]> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () =>
         this.prisma.follow.findMany({
           where: { followingId: userId },
@@ -53,7 +53,7 @@ export class FollowRepo extends Repository implements IFollowRepo {
   }
 
   async getFollowing(userId: string): Promise<FollowDTO[]> {
-    return this.executePrismaQuery(
+    return this.executePrismaQueryOrThrow(
       () =>
         this.prisma.follow.findMany({
           where: { followerId: userId },
@@ -66,7 +66,7 @@ export class FollowRepo extends Repository implements IFollowRepo {
     followerId,
     followingId,
   }: DeleteFollowSchema): Promise<FollowDTO> {
-    return this.executePrismaQuery(async () => {
+    return this.executePrismaQueryOrThrow(async () => {
       const followIdToDelete = await this.findFollowId(followerId, followingId);
       if (!followIdToDelete) {
         throw new NotFoundError("Follow not found");

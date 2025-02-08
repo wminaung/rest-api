@@ -18,6 +18,6 @@ export interface IPostService
     IGet<PostDTO>,
     IUpdate<PostDTO, UpdatePostSchema>,
     IDelete<PostDTO> {
-  getCategory(postId: string): Promise<CategoryDTO | null>;
+  getCategoryByPostId(postId: string): Promise<CategoryDTO | null>;
   getPostsByUserId(userId: string): Promise<PostDTO[]>;
 }

@@ -16,7 +16,10 @@ export class CategoryService extends Service implements ICategoryService {
   }
 
   async create(createCategoryData: CreateCategorySchema): Promise<CategoryDTO> {
-    const safeData = this.validate(createCategoryData, createCategorySchema);
+    const safeData = this.validateOrThrow(
+      createCategoryData,
+      createCategorySchema
+    );
     return this.categoryRepo.create(safeData);
   }
 
@@ -25,22 +28,24 @@ export class CategoryService extends Service implements ICategoryService {
   }
 
   async get(categoryId: string): Promise<CategoryDTO | null> {
-    const validId = this.getValidId(categoryId);
-    return this.categoryRepo.get(validId);
+    return this.categoryRepo.get(this.getValidIdOrThrow(categoryId));
   }
 
   async update(
     categoryId: string,
     updateCategoryData: UpdateCategorySchema
   ): Promise<CategoryDTO> {
-    const validId = this.getValidId(categoryId);
-    const safeData = this.validate(updateCategoryData, updateCategorySchema);
+    const validId = this.getValidIdOrThrow(categoryId);
+    const safeData = this.validateOrThrow(
+      updateCategoryData,
+      updateCategorySchema
+    );
 
     return this.categoryRepo.update(validId, safeData);
   }
 
   async delete(categoryId: string): Promise<CategoryDTO> {
-    const validId = this.getValidId(categoryId);
+    const validId = this.getValidIdOrThrow(categoryId);
     return this.categoryRepo.delete(validId);
   }
 

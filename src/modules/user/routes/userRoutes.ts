@@ -37,6 +37,8 @@ userRouters.delete(
   }
 );
 
+// note: by-userId
+
 userRouters.get("/:id/posts", (req, res) => {
   postController.GetPostsByUserId(req, res);
 });

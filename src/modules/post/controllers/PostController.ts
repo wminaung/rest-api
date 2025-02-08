@@ -8,16 +8,6 @@ export class PostController extends Controller {
     super();
   }
 
-  async GetPostsByUserId(req: Request<{ id: string }>, res: Response) {
-    try {
-      const id = req.params.id;
-      const posts = await this.postService.getPostsByUserId(id);
-      this.sendOk(res, posts);
-    } catch (error) {
-      this.handleError(error, res);
-    }
-  }
-
   async create(req: Request, res: Response) {
     try {
       const data = req.body;
@@ -71,10 +61,21 @@ export class PostController extends Controller {
     }
   }
 
+  // note: by-methods
+  async GetPostsByUserId(req: Request<{ id: string }>, res: Response) {
+    try {
+      const id = req.params.id;
+      const posts = await this.postService.getPostsByUserId(id);
+      this.sendOk(res, posts);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
   async getCategory(req: Request<{ id: string }>, res: Response) {
     try {
       const id = req.params.id;
-      const category = await this.postService.getCategory(id);
+      const category = await this.postService.getCategoryByPostId(id);
       this.sendOk(res, category);
     } catch (error) {
       this.handleError(error, res);

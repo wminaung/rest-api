@@ -1,17 +1,10 @@
-import { ValidationError } from "../errors";
+import { z } from "zod";
+import { UnauthorizedError, ValidationError } from "../errors";
 import { checkIdSchema } from "../schemas/checkIdSchema";
+import { JwtAuthPayload } from "../types/jwtAuthPayload";
 
 export class ServiceHelper {
-  static saltRounds: number = 10;
-
-  /**
-   * Returns the validated id if it is valid, otherwise throws ValidationError.
-   * Uses checkIdSchema to validate the id.
-   * @param id - The id to be validated.
-   * @returns The validated id if validation is successful.
-   * @throws {ValidationError} If the validation fails.
-   */
-  static getValidId(id: string): string {
+  protected getValidIdOrThrow(id: string): string {
     const { success, data, error } = checkIdSchema.safeParse({ id });
 
     if (error || !success) {
@@ -20,13 +13,22 @@ export class ServiceHelper {
     return data.id;
   }
 
-  /**
-   * Returns the validated password if it is valid, otherwise throws ValidationError.
-   * Uses passwordValidationSchema to validate the password.
-   * @param password - The password to be validated.
-   * @returns The validated password if validation is successful.
-   * @throws {ValidationError} If the validation fails.
-   */
+  protected hasAuthUserOrThrow(user?: JwtAuthPayload) {
+    if (!user || !user.id || !user.email || !user.role) {
+      throw new UnauthorizedError("need user jwt payload");
+    }
+    return user;
+    //*** end of class */
+  }
 
+  protected validateOrThrow<T>(dataToValidate: T, schema: z.ZodType<T>): T {
+    const { success, data, error } = schema.safeParse(dataToValidate);
+
+    if (error || !success) {
+      throw new ValidationError(error);
+    }
+
+    return data;
+  }
   //*** end of class */
 }

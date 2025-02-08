@@ -6,6 +6,7 @@ import authRouters from "./modules/auth/routes/authRoutes";
 import postRouters from "./modules/post/routes/postRouters";
 import categoryRouters from "./modules/category/routes/categoryRouters";
 import followRouters from "./modules/follow/routes/followRouters";
+import likeRouters from "./modules/like/routes/likeRouters";
 
 export function createApp() {
   const app = express();
@@ -24,6 +25,7 @@ export function createApp() {
   app.use("/api/categories", categoryRouters);
   // app.use("/api/follows", followRouters);
   app.use("/api/posts", postRouters);
+  app.use("/api/likes", likeRouters);
 
   return app;
 }

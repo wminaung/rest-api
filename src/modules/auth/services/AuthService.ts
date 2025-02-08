@@ -26,7 +26,7 @@ export class AuthService extends Service implements IAuthService {
 
   // Register new user
   async register(createUserData: CreateUserSchema) {
-    const validData = this.validate(createUserData, createUserSchema);
+    const validData = this.validateOrThrow(createUserData, createUserSchema);
     const existingUser = await this.authRepository.findByEmail(validData.email);
     if (existingUser && existingUser.id)
       throw new UnauthorizedError("User already exists");
