@@ -10,6 +10,14 @@ import { ILikeRepo } from "../interfaces/ILikeRepo";
 import { UnauthorizedError } from "../../../shared/errors";
 
 export class LikeService extends Service implements ILikeService {
+  private static instance: LikeService;
+  static getInstance(likeRepo: ILikeRepo): LikeService {
+    if (!LikeService.instance) {
+      LikeService.instance = new LikeService(likeRepo);
+    }
+    return LikeService.instance;
+  }
+
   constructor(private likeRepo: ILikeRepo) {
     super();
   }

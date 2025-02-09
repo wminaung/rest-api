@@ -1,10 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response, Router } from "express";
-import { AuthRepo } from "../repositories/AuthRepo";
-import { AuthService } from "../services/AuthService";
-import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";
-import { AuthController } from "../controllers/AuthController";
-import { authController } from "../../../shared/factories";
+import { authController } from "..";
 
 const authRouters = Router();
 

@@ -1,10 +1,8 @@
 import { Request, Response, Router } from "express";
-import {
-  followController,
-  postController,
-  userController,
-} from "../../../shared/factories";
+
 import { adminRoleCheck } from "../../../middlewares/jwt-utils";
+import { userController } from "..";
+import { postController } from "../../post";
 
 const userRouters = Router();
 
@@ -43,12 +41,12 @@ userRouters.get("/:id/posts", (req, res) => {
   postController.GetPostsByUserId(req, res);
 });
 
-userRouters.get("/:id/followers", (req, res) => {
-  followController.getFollowers(req, res);
-});
+// userRouters.get("/:id/followers", (req, res) => {
+//   followController.getFollowers(req, res);
+// });
 
-userRouters.get("/:id/following", (req, res) => {
-  followController.getFollowing(req, res);
-});
+// userRouters.get("/:id/following", (req, res) => {
+//   followController.getFollowing(req, res);
+// });
 
 export default userRouters;

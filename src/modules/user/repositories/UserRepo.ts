@@ -15,6 +15,15 @@ import { UserSelectQuery } from "../../../shared/types/userSelectQuery";
 import { IUserRepo } from "../interfaces/IUserRepo";
 
 export class UserRepo extends Repository implements IUserRepo {
+  private static instance: UserRepo;
+
+  static getInstance(prisma: PrismaClient): UserRepo {
+    if (!UserRepo.instance) {
+      UserRepo.instance = new UserRepo(prisma);
+    }
+    return UserRepo.instance;
+  }
+
   constructor(private prisma: PrismaClient) {
     super();
   }
@@ -37,87 +46,66 @@ export class UserRepo extends Repository implements IUserRepo {
   }
 
   async getAll(): Promise<UserDTO[]> {
-    try {
-      return this.prisma.user.findMany({ select: this.selectQuery });
-    } catch (error) {
-      throw this.handlePrismaError(error, "Error fetching users");
-    }
+    return this.executePrismaQueryOrThrow(
+      () => this.prisma.user.findMany({ select: this.selectQuery }),
+      "Error getting all users"
+    );
   }
 
   async create(data: CreateUserSchema): Promise<UserDTO> {
-    try {
-      return await this.prisma.user.create({
-        data,
-        select: this.selectQuery,
-      });
-    } catch (error) {
-      throw this.handlePrismaError(error, "Error creating user");
-    }
+    return this.executePrismaQueryOrThrow(
+      () =>
+        this.prisma.user.create({
+          data,
+          select: this.selectQuery,
+        }),
+      "error creating user"
+    );
   }
 
   async get(id: string): Promise<UserDTO | null> {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: { id },
-        select: this.selectQuery,
-      });
-      if (!user) {
-        throw new NotFoundError("User not found");
-      }
-
-      return user;
-    } catch (error) {
-      throw this.handlePrismaError(error, "Error fetching user by ID");
-    }
+    return this.executePrismaQueryOrThrow(
+      () =>
+        this.prisma.user.findUnique({
+          where: { id },
+          select: this.selectQuery,
+        }),
+      `Error getting user by id ${id}`
+    );
   }
 
   async update(id: string, data: UpdateUserSchema): Promise<UserDTO> {
-    try {
-      const userExists = await this.userExists(id);
+    const userExists = await this.userExists(id);
 
-      if (!userExists) {
-        throw new NotFoundError("User not found");
-      }
-
-      return await this.prisma.user.update({
-        where: { id },
-        data,
-        select: this.selectQuery,
-      });
-    } catch (error) {
-      throw this.handlePrismaError(error, "Error updating user");
+    if (!userExists) {
+      throw new NotFoundError("User not found");
     }
+
+    return this.executePrismaQueryOrThrow(
+      () =>
+        this.prisma.user.update({
+          where: { id },
+          data,
+          select: this.selectQuery,
+        }),
+      `Error updating user by id ${id}`
+    );
   }
 
   async delete(id: string): Promise<UserDTO> {
-    try {
-      const userExists = await this.userExists(id);
-      console.log({ userExists });
-      if (!userExists) {
-        throw new NotFoundError("User not found");
-      }
-
-      return await this.prisma.user.delete({
-        where: { id },
-        select: this.selectQuery,
-      });
-    } catch (error) {
-      console.log(error);
-      throw this.handlePrismaError(error, "Error deleting user");
+    const userExists = await this.userExists(id);
+    if (!userExists) {
+      throw new NotFoundError("User not found");
     }
-  }
 
-  private handlePrismaError(error: any, message: string): Error {
-    if (error instanceof PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return new ConflictError(
-          `The username or email address you provided is already in use. Please choose a different one.`
-        );
-      }
-    } else if (error instanceof NotFoundError) {
-      throw error;
-    }
-    return new InternalServerError(message);
+    return this.executePrismaQueryOrThrow(
+      () =>
+        this.prisma.user.delete({
+          where: { id },
+          select: this.selectQuery,
+        }),
+      `Error deleting user by id ${id}`
+    );
   }
 
   //***** UserRepo ******/

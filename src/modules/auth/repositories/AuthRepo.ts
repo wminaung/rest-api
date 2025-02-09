@@ -7,6 +7,15 @@ import { InternalServerError } from "../../../shared/errors";
 import { IAuthRepo } from "../interfaces/IAuthRepo";
 
 export class AuthRepo extends Repository implements IAuthRepo {
+  private static instance: AuthRepo;
+
+  public static getInstance(prisma: PrismaClient): AuthRepo {
+    if (!AuthRepo.instance) {
+      AuthRepo.instance = new AuthRepo(prisma);
+    }
+    return AuthRepo.instance;
+  }
+
   constructor(private prisma: PrismaClient) {
     super();
   }

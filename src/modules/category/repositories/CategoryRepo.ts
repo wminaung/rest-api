@@ -9,6 +9,14 @@ import { InternalServerError, NotFoundError } from "../../../shared/errors";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";
 
 export class CategoryRepo extends Repository implements ICategoryRepo {
+  private static instance: CategoryRepo;
+  static getInstance(prisma: PrismaClient): CategoryRepo {
+    if (!CategoryRepo.instance) {
+      CategoryRepo.instance = new CategoryRepo(prisma);
+    }
+    return CategoryRepo.instance;
+  }
+
   constructor(private prisma: PrismaClient) {
     super();
   }

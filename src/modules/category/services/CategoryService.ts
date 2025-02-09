@@ -8,9 +8,17 @@ import {
 import { Service } from "../../../shared/abstracts/Service";
 import { ICategoryRepo } from "../interfaces/ICategoryRepo";
 import { ICategoryService } from "../interfaces/ICategoryService";
-import { NotFoundError } from "../../../shared/errors";
 
 export class CategoryService extends Service implements ICategoryService {
+  private static instance: CategoryService;
+
+  static getInstance(categoryRepo: ICategoryRepo): CategoryService {
+    if (!CategoryService.instance) {
+      CategoryService.instance = new CategoryService(categoryRepo);
+    }
+    return CategoryService.instance;
+  }
+
   constructor(private categoryRepo: ICategoryRepo) {
     super();
   }

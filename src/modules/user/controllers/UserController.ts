@@ -5,6 +5,15 @@ import { IUserService } from "../interfaces/IUserService";
 import { IPostService } from "../../post/interfaces/IPostService";
 
 export class UserController extends Controller {
+  private static instance: UserController;
+
+  static getInstance(userService: IUserService) {
+    if (!UserController.instance) {
+      UserController.instance = new UserController(userService);
+    }
+    return UserController.instance;
+  }
+
   constructor(private userService: IUserService) {
     super();
   }

@@ -1,5 +1,5 @@
 import { Request, Router } from "express";
-import { likeController } from "../../../shared/factories";
+import { likeController } from "..";
 
 const likeRouters = Router();
 

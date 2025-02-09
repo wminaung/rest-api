@@ -7,6 +7,8 @@ import {
   IGetAll,
   IUpdate,
 } from "../../../shared/interfaces/crud.interfaces";
+import { PrismaClient } from "@prisma/client";
+import { Repository } from "../../../shared/abstracts/Repository";
 
 export interface ILikeRepo
   extends ICreate<LikeDTO, CreateLikeSchema>,

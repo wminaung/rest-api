@@ -7,12 +7,21 @@ import {
 } from "../../../shared/schemas/userSchema";
 import { IUserRepo } from "../interfaces/IUserRepo";
 import { Service } from "../../../shared/abstracts/Service";
-import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";
+import { PasswordHasher } from "../../../shared/security/PasswordHasher";
 import { IUserService } from "../interfaces/IUserService";
 import { ForbiddenError } from "../../../shared/errors";
 import { JwtAuthPayload } from "../../../shared/types/jwtAuthPayload";
 
 export class UserService extends Service implements IUserService {
+  private static instance: UserService;
+
+  static getInstance(userRepo: IUserRepo, passwordHasher: PasswordHasher) {
+    if (!UserService.instance) {
+      UserService.instance = new UserService(userRepo, passwordHasher);
+    }
+    return UserService.instance;
+  }
+
   constructor(
     private userRepo: IUserRepo,
     private passwordHasher: PasswordHasher

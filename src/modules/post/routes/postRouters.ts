@@ -1,5 +1,5 @@
 import { Request, Router } from "express";
-import { postController } from "../../../shared/factories";
+import { postController } from "..";
 
 const postRouters = Router();
 

@@ -7,6 +7,14 @@ import {
 import { Controller } from "../../../shared/abstracts/Controller";
 import { ICategoryService } from "../interfaces/ICategoryService";
 export class CategoryController extends Controller {
+  private static instance: CategoryController;
+  static getInstance(categoryService: ICategoryService): CategoryController {
+    if (!CategoryController.instance) {
+      CategoryController.instance = new CategoryController(categoryService);
+    }
+    return CategoryController.instance;
+  }
+
   constructor(private categoryService: ICategoryService) {
     super();
   }

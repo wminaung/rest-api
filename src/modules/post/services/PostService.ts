@@ -14,6 +14,14 @@ import { JwtAuthPayload } from "../../../shared/types/jwtAuthPayload";
 import { IUserRepo } from "../../user/interfaces/IUserRepo";
 
 export class PostService extends Service implements IPostService {
+  private static instance: PostService;
+  static getInstance(postRepo: IPostRepo, userRepo: IUserRepo): PostService {
+    if (!PostService.instance) {
+      PostService.instance = new PostService(postRepo, userRepo);
+    }
+    return PostService.instance;
+  }
+
   constructor(private postRepo: IPostRepo, private userRepo: IUserRepo) {
     super();
   }

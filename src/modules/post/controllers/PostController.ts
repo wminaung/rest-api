@@ -4,6 +4,14 @@ import { UpdatePostSchema } from "../../../shared/schemas/postSchema";
 import { IPostService } from "../interfaces/IPostService";
 
 export class PostController extends Controller {
+  private static instance: PostController;
+  static getInstance(postService: IPostService): PostController {
+    if (!PostController.instance) {
+      PostController.instance = new PostController(postService);
+    }
+    return PostController.instance;
+  }
+
   constructor(private postService: IPostService) {
     super();
   }

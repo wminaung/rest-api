@@ -70,8 +70,8 @@ Authorization: Bearer {{ accessToken }}
 Content-Type: application/json
 
 {
-    "name": "winner2",
-    "email": "winner2@gmail.com",
+    "name": "abc",
+    "email": "abc@gmail.com",
     "password":"#@ABcdef1234",
     "role": "USER"
 }

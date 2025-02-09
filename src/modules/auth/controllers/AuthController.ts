@@ -5,6 +5,14 @@ import { UnauthorizedError } from "../../../shared/errors";
 import { IAuthService } from "../interfaces/IAuthService";
 
 export class AuthController extends Controller {
+  private static instance: AuthController;
+  public static getInstance(authService: IAuthService): AuthController {
+    if (!AuthController.instance) {
+      AuthController.instance = new AuthController(authService);
+    }
+    return AuthController.instance;
+  }
+
   constructor(private authService: IAuthService) {
     super();
   }
@@ -24,10 +32,12 @@ export class AuthController extends Controller {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
+
       const { accessToken, refreshToken } = await this.authService.login(
         email,
         password
       );
+
       this.sendOk(res, { accessToken, refreshToken });
     } catch (error) {
       this.handleError(error, res);

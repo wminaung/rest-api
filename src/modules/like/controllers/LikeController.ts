@@ -1,9 +1,17 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../shared/abstracts/Controller";
-import { IController } from "../../../shared/interfaces/IController";
 import { ILikeService } from "../interfaces/ILikeService";
 
 export class LikeController extends Controller {
+  private static instance: LikeController;
+
+  static getInstance(likeService: ILikeService): LikeController {
+    if (!LikeController.instance) {
+      LikeController.instance = new LikeController(likeService);
+    }
+    return LikeController.instance;
+  }
+
   constructor(private readonly likeService: ILikeService) {
     super();
   }

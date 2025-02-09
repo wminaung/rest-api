@@ -4,8 +4,8 @@ import {
   createUserSchema,
   CreateUserSchema,
 } from "../../../shared/schemas/userSchema";
-import { PasswordHasher } from "../../../shared/helpers/PasswordHasher";
-import { JwtManager } from "../../../shared/helpers/JwtManager";
+import { PasswordHasher } from "../../../shared/security/PasswordHasher";
+import { JwtManager } from "../../../shared/security/JwtManager";
 import {
   LoginReturnType,
   LogoutReturnType,
@@ -17,6 +17,18 @@ import { UnauthorizedError, ForbiddenError } from "../../../shared/errors";
 import { redis } from "../../../shared/lib/redis";
 
 export class AuthService extends Service implements IAuthService {
+  private static instance: AuthService;
+
+  public static getInstance(
+    authRepository: IAuthRepo,
+    passwordHasher: PasswordHasher
+  ): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService(authRepository, passwordHasher);
+    }
+    return AuthService.instance;
+  }
+
   constructor(
     private authRepository: IAuthRepo,
     private passwordHasher: PasswordHasher
@@ -40,7 +52,7 @@ export class AuthService extends Service implements IAuthService {
     });
   }
 
-  // Login and generate access and refresh tokens
+  // ** Login and generate access and refresh tokens
   async login(email: string, password: string): Promise<LoginReturnType> {
     const user = await this.authRepository.findByEmail(email);
     if (!user) throw new UnauthorizedError("Invalid credentials");
@@ -49,8 +61,10 @@ export class AuthService extends Service implements IAuthService {
       password,
       user.password
     );
-    if (!isValidPassword)
+
+    if (!isValidPassword) {
       throw new UnauthorizedError("Invalid credentials - wrong password");
+    }
 
     const { email: db_email, id, name, role } = user;
     const payload = {
@@ -63,6 +77,7 @@ export class AuthService extends Service implements IAuthService {
     const accessToken = JwtManager.generateAccessToken(payload);
 
     const refreshToken = JwtManager.generateRefreshToken(payload);
+
     await redis.set(`refreshToken:${id}`, refreshToken, {
       ex: 60 * 60 * 24 * 7,
     });

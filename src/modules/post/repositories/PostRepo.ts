@@ -13,6 +13,15 @@ import { NotFoundError } from "../../../shared/errors";
 import { IPostRepo } from "../interfaces/IPostRepo";
 
 export class PostRepo extends Repository implements IPostRepo {
+  private static instance: PostRepo;
+
+  public static getInstance(prisma: PrismaClient): PostRepo {
+    if (!PostRepo.instance) {
+      PostRepo.instance = new PostRepo(prisma);
+    }
+    return PostRepo.instance;
+  }
+
   constructor(private prisma: PrismaClient) {
     super();
   }

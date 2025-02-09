@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
-import { categoryController } from "../../../shared/factories";
 import { adminRoleCheck } from "../../../middlewares/jwt-utils";
+import { categoryController } from "..";
 
 const categoryRouters = Router();
 

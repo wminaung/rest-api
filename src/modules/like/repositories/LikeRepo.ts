@@ -5,6 +5,15 @@ import { CreateLikeSchema } from "../../../shared/schemas/likeSchema";
 import { PrismaClient } from "@prisma/client";
 
 export class LikeRepo extends Repository implements ILikeRepo {
+  private static instance: LikeRepo;
+
+  static getInstance(prisma: PrismaClient): LikeRepo {
+    if (!LikeRepo.instance) {
+      LikeRepo.instance = new LikeRepo(prisma);
+    }
+    return LikeRepo.instance;
+  }
+
   constructor(private prisma: PrismaClient) {
     super();
   }
