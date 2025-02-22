@@ -29,7 +29,7 @@ export class AuthRepo extends Repository implements IAuthRepo {
     profilePicture: true,
   };
 
-  findByEmail(email: string): Promise<AuthDTO | null> {
+  async findByEmail(email: string): Promise<AuthDTO | null> {
     return this.prisma.user.findUnique({
       where: { email },
       select: this.select,
@@ -48,7 +48,7 @@ export class AuthRepo extends Repository implements IAuthRepo {
       });
       const { password, ...userDTO } = user;
       return userDTO;
-    } catch {
+    } catch (error) {
       throw new InternalServerError("Error creating user");
     }
   }

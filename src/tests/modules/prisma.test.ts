@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
-import { getFakeUsers } from "./__mocks___/data/fakeUsers";
-import prisma from "./prisma";
+import prisma from "../mocks/prisma";
+import { getFakeUsers } from "../mocks/data";
 
 describe("prismaMock", () => {
   let fakeUsers: User[];

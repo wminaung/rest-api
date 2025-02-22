@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+
 export class PasswordHasher {
   private static instance: PasswordHasher;
   public static getInstance(saltRounds: number = 10): PasswordHasher {

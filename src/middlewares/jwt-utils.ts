@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtManager } from "../shared/security/JwtManager";
-import { redis } from "../shared/lib/redis";
+import { redis } from "../shared/lib/RedisClient";
 
 export const authenticationToken = async (
   req: Request,
@@ -16,6 +16,7 @@ export const authenticationToken = async (
   }
 
   // Check if the access token is blacklisted
+
   const isBlacklisted = await redis.get(`blacklistedAccessToken:${token}`);
   console.log({ isBlacklisted });
   if (isBlacklisted) {

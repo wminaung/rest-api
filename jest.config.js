@@ -3,6 +3,6 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   verbose: true,
-  testMatch: ["**/__tests__/**/*.test.ts"],
-  setupFilesAfterEnv: ["<rootDir>/__tests__/prisma.ts"],
+  testMatch: ["<rootDir>/src/tests/**/*.test.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/tests/mocks/prisma.ts"],
 };

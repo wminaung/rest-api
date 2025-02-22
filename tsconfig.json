@@ -12,13 +12,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*", "__tests__", "__tests__/__mocks___", "prisma"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "dist/**/*",
-    "__tests__/**/*.ts",
-    "__tests__/**/*.test.ts",
-    "__tests__/__mocks___/**/*.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "dist/**/*"]
 }

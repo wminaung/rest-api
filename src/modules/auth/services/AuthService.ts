@@ -14,24 +14,30 @@ import {
 } from "../../../shared/types/auth";
 import { IAuthService } from "../interfaces/IAuthService";
 import { UnauthorizedError, ForbiddenError } from "../../../shared/errors";
-import { redis } from "../../../shared/lib/redis";
+import { RedisClient } from "../../../shared/lib/RedisClient";
 
 export class AuthService extends Service implements IAuthService {
   private static instance: AuthService;
 
   public static getInstance(
     authRepository: IAuthRepo,
-    passwordHasher: PasswordHasher
+    passwordHasher: PasswordHasher,
+    redisClient: RedisClient
   ): AuthService {
     if (!AuthService.instance) {
-      AuthService.instance = new AuthService(authRepository, passwordHasher);
+      AuthService.instance = new AuthService(
+        authRepository,
+        passwordHasher,
+        redisClient
+      );
     }
     return AuthService.instance;
   }
 
   constructor(
     private authRepository: IAuthRepo,
-    private passwordHasher: PasswordHasher
+    private passwordHasher: PasswordHasher,
+    private redisClient: RedisClient
   ) {
     super();
   }
@@ -40,6 +46,7 @@ export class AuthService extends Service implements IAuthService {
   async register(createUserData: CreateUserSchema) {
     const validData = this.validateOrThrow(createUserData, createUserSchema);
     const existingUser = await this.authRepository.findByEmail(validData.email);
+
     if (existingUser && existingUser.id)
       throw new UnauthorizedError("User already exists");
 
@@ -55,7 +62,10 @@ export class AuthService extends Service implements IAuthService {
   // ** Login and generate access and refresh tokens
   async login(email: string, password: string): Promise<LoginReturnType> {
     const user = await this.authRepository.findByEmail(email);
-    if (!user) throw new UnauthorizedError("Invalid credentials");
+
+    if (!user) {
+      throw new UnauthorizedError("Invalid credentials");
+    }
 
     const isValidPassword = await this.passwordHasher.comparePassword(
       password,
@@ -78,8 +88,8 @@ export class AuthService extends Service implements IAuthService {
 
     const refreshToken = JwtManager.generateRefreshToken(payload);
 
-    await redis.set(`refreshToken:${id}`, refreshToken, {
-      ex: 60 * 60 * 24 * 7,
+    this.redisClient.setRefreshToken(id, refreshToken).then((data) => {
+      console.log(`set refresh token: (string|null) ${data}`);
     });
 
     return { accessToken, refreshToken };
@@ -93,21 +103,29 @@ export class AuthService extends Service implements IAuthService {
     const decoded = JwtManager.verifyRefreshToken(refreshToken);
     if (!decoded) throw new UnauthorizedError("Invalid refresh token");
 
-    // Blacklist both refresh token and access token
-    await redis.sadd(`blacklist:${decoded.id}`, refreshToken);
+    const dump = await this.redisClient.blacklistRefreshToken(
+      decoded.id,
+      refreshToken
+    );
+    console.log(`blacklist refresh token: (number) ${dump}`);
+
     const decodedAccessToken = JwtManager.verifyAccessToken(accessToken);
     if (decodedAccessToken && decodedAccessToken.exp) {
       const timeToExpire =
         decodedAccessToken.exp - Math.floor(Date.now() / 1000);
       if (timeToExpire > 0) {
-        await redis.set(`blacklistedAccessToken:${accessToken}`, "true", {
-          ex: timeToExpire,
-        });
+        const dump = await this.redisClient.blacklistAccessToken(
+          accessToken,
+          timeToExpire
+        );
+        console.log(`blacklist access token: (string|null) ${dump}`);
       }
     }
 
     // Remove the refresh token from Redis to invalidate it
-    await redis.del(`refreshToken:${decoded.id}`);
+    this.redisClient.deleteRefreshToken(decoded.id).then((data) => {
+      console.log(`delete refresh token: (number) ${data}`);
+    });
 
     return { message: "Logged out successfully" };
   }
@@ -123,10 +141,11 @@ export class AuthService extends Service implements IAuthService {
     const { id, email, name, role } = decoded;
 
     // Check if the refresh token is blacklisted
-    const isBlacklisted = await redis.sismember(
-      `blacklist:${id}`,
+    const isBlacklisted = await this.redisClient.isTokenBlacklisted(
+      id,
       refreshToken
     );
+    console.log(`blacklist refresh token: (number) ${isBlacklisted}`);
     if (isBlacklisted) {
       throw new ForbiddenError(
         "Refresh token has been invalidated or blacklisted"
@@ -134,7 +153,8 @@ export class AuthService extends Service implements IAuthService {
     }
 
     // Retrieve the stored refresh token from Redis
-    const storedToken = await redis.get(`refreshToken:${id}`);
+    const storedToken = await this.redisClient.getRefreshToken(id);
+
     if (!storedToken || storedToken !== refreshToken) {
       throw new ForbiddenError("Refresh token is invalid or expired");
     }
