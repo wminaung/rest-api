@@ -15,6 +15,7 @@ import {
 import { IAuthService } from "../interfaces/IAuthService";
 import { UnauthorizedError, ForbiddenError } from "../../../shared/errors";
 import { RedisClient } from "../../../shared/lib/RedisClient";
+import { IRedisClient } from "../../../shared/interfaces/redisClient.interface";
 
 export class AuthService extends Service implements IAuthService {
   private static instance: AuthService;
@@ -22,7 +23,7 @@ export class AuthService extends Service implements IAuthService {
   public static getInstance(
     authRepository: IAuthRepo,
     passwordHasher: PasswordHasher,
-    redisClient: RedisClient
+    redisClient: IRedisClient
   ): AuthService {
     if (!AuthService.instance) {
       AuthService.instance = new AuthService(
@@ -37,7 +38,7 @@ export class AuthService extends Service implements IAuthService {
   constructor(
     private authRepository: IAuthRepo,
     private passwordHasher: PasswordHasher,
-    private redisClient: RedisClient
+    private redisClient: IRedisClient
   ) {
     super();
   }

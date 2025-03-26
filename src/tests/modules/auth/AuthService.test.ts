@@ -5,18 +5,47 @@ import { passwordHasher } from "../../../shared/security/PasswordHasher"; // Act
 import prisma from "../../mocks/prisma";
 import { JwtManager } from "../../../shared/security/JwtManager";
 import { redis, RedisClient } from "../../../shared/lib/RedisClient";
+import { IRedisClient } from "../../../shared/interfaces/redisClient.interface";
+import { Redis } from "@upstash/redis";
+
+class RedisClientMock implements IRedisClient {
+  constructor(private redis: Redis) {}
+  setRefreshToken = jest.fn();
+
+  getRefreshToken = jest.fn();
+  deleteRefreshToken(userId: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+  blacklistRefreshToken(userId: string, token: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+  isTokenBlacklisted = jest.fn();
+  blacklistAccessToken(
+    accessToken: string,
+    timeToExpire: number
+  ): Promise<string | null> {
+    throw new Error("Method not implemented.");
+  }
+}
+
+const redis_client_static_getInstance = (redis: Redis) => {
+  return new RedisClientMock(redis);
+};
 
 describe("AuthService", () => {
   let authService: AuthService;
   let authRepo: AuthRepo;
-  let redisClient: RedisClient;
+  let redisClientMod: RedisClientMock;
+  // let redisClient: RedisClient;
+
   beforeAll(() => {
     authRepo = new AuthRepo(prisma);
-    redisClient = RedisClient.getInstance(redis);
+    // redisClient = RedisClient.getInstance(redis);
+    redisClientMod = redis_client_static_getInstance(redis);
     authService = AuthService.getInstance(
       authRepo,
       passwordHasher,
-      redisClient
+      redisClientMod
     );
   });
   beforeEach(() => {
@@ -63,8 +92,10 @@ describe("AuthService", () => {
       name: "test user",
     });
 
+    redisClientMod.setRefreshToken = jest
+      .fn()
+      .mockResolvedValue("mocked-token");
     const result = await authService.login(loginData.email, loginData.password);
-
     expect(authRepo.findByEmail).toHaveBeenCalledWith(loginData.email);
     expect(
       await passwordHasher.comparePassword(loginData.password, hashedPassword)
@@ -80,15 +111,18 @@ describe("AuthService", () => {
       name: `test user`,
       role: `USER`,
     });
+
     const refreshToken = JwtManager.generateRefreshToken({
       id: `abc-def-ghi`,
       email: `test@domain.com`,
       name: `test user`,
       role: `USER`,
     });
-
+    const storedToken = refreshToken; // mod
+    redisClientMod.isTokenBlacklisted = jest.fn().mockResolvedValue(0); // assume token is not blacklisted
+    redisClientMod.getRefreshToken = jest.fn().mockResolvedValue(storedToken);
     const result = await authService.refreshAccessToken(refreshToken);
 
-    expect(result).resolves.toHaveProperty("accessToken");
+    expect(result).toHaveProperty("accessToken");
   });
 });

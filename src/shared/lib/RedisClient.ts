@@ -1,12 +1,13 @@
 import { Redis } from "@upstash/redis";
 import configs from "../configs";
+import { IRedisClient } from "../interfaces/redisClient.interface";
 
 export const redis = new Redis({
   url: configs.upstashRedisRestUrl,
   token: configs.upstashRedisRestToken,
 });
 
-export class RedisClient {
+export class RedisClient implements IRedisClient {
   private static instance: RedisClient;
   static getInstance(redis: Redis) {
     if (!RedisClient.instance) {
